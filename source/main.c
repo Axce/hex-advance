@@ -102,13 +102,13 @@ void switch_player() {
 
 	if (player == PLAYER_1) {
 		memcpy(pal_obj_mem, beePal, beePalLen);
-		memcpy(&tile_mem[4][64], stonewhiteTiles, stonewhiteTilesLen);
-		memcpy(&pal_obj_bank[1], stonewhitePal, stonewhitePalLen);
+		memcpy(&tile_mem[4][64], stoneblackTiles, stoneblackTilesLen);
+		memcpy(&pal_obj_bank[1], stoneblackPal, stoneblackPalLen);
 	}
 	else {
 		memcpy(pal_obj_mem, beedarkPal, beedarkPalLen);
-		memcpy(&tile_mem[4][64], stoneblackTiles, stoneblackTilesLen);
-		memcpy(&pal_obj_bank[1], stoneblackPal, stoneblackPalLen);
+		memcpy(&tile_mem[4][64], stonewhiteTiles, stonewhiteTilesLen);
+		memcpy(&pal_obj_bank[1], stonewhitePal, stonewhitePalLen);
 	}
 }
 
@@ -154,6 +154,19 @@ void evaluate_movement() {
 	*/
 }
 
+bool is_stone_in_board(int x, int y) {
+	if (5*y - 3*x < -271)	//test si y_orth < 0
+		return false;
+	if (5*y - 3*x > 329)	//test si y_orth > 10
+		return false;
+	if (5*y + 3*x < 401)	//test si x_orth < 0
+		return false;
+	if (5*y + 3*x > 1001)	//test si x_orth > 10
+		return false;
+
+	return true;
+}
+
 void display_ghost_stone() {
 	int ghost_x = (bee.x+37)/10*10 - 8;  //adjust de +32px (moitié de largeur de bee) et -8px (moitié de largeur de ghost), et puis fine-tuning
 	int ghost_y;
@@ -161,9 +174,14 @@ void display_ghost_stone() {
 		ghost_y = (bee.y+32)/12*12 - 8 + 6 + 3;
 	else
 		ghost_y = (bee.y+32+6)/12*12 - 8 + 3;
-
+	
 	obj_set_pos(ghost_stone, ghost_x, ghost_y);
-	ghost_stone->attr0 ^= ATTR0_HIDE;
+
+	if (is_stone_in_board(ghost_x, ghost_y)) {
+		ghost_stone->attr0 ^= ATTR0_HIDE;
+	} else {
+		obj_hide(ghost_stone);
+	}
 }
 
 void update_sprites() {
@@ -177,8 +195,8 @@ int main()
 
 	memcpy(&tile_mem[4][0], beeTiles, beeTilesLen/16); // on ne prend qu'un sprite dans la sheet de 16
 	memcpy(pal_obj_mem, beePal, beePalLen);
-	memcpy(&tile_mem[4][64], stonewhiteTiles, stonewhiteTilesLen);
-	memcpy(&pal_obj_bank[1], stonewhitePal, stonewhitePalLen);
+	memcpy(&tile_mem[4][64], stoneblackTiles, stoneblackTilesLen);
+	memcpy(&pal_obj_bank[1], stoneblackPal, stoneblackPalLen);
 
 	
 

@@ -1,40 +1,29 @@
 #include <tonc.h>
 #include <string.h>
 
+#include "coordinates.h"
+#include "movement.h"
+#include "toolbox.h"
+#include "PlayerSprite.h"
+
+//graphics
 #include "bee.h"
 #include "beedark.h"
 #include "hex.h"
 #include "stonewhite.h"
 #include "stoneblack.h"
 
-#define OBJ_COUNT 128
+/*
 #define PLAYER_CENTER_X 87
 #define PLAYER_CENTER_Y 40
+*/
 
-OBJ_ATTR obj_buffer[OBJ_COUNT];
 
-enum ORIENTATIONS {
-	NORTH,
-	WEST,
-	EAST,
-	SOUTH
-};
 
 enum PLAYERS {
 	PLAYER_1,	// yellow bee, black stones
 	PLAYER_2	// red bee, white stones
 };
-
-typedef struct {
-	OBJ_ATTR* obj;
-	int width, height;	//in tiles
-	int anim_delay;		//in frames
-	int anim_frames;
-	int orientation;
-	int x,y;
-	int max_speed;
-	int x_speed, y_speed;
-} PlayerSprite;
 
 // in tiles
 int get_sprite_frame_2D(PlayerSprite* sprite, int global_frame) {
@@ -50,136 +39,55 @@ int get_sprite_frame_1D(PlayerSprite* sprite, int global_frame) {
 	return sprite_frame + orientation_offset;
 }
 
-int closer_to_zero(int n) {
-	if (n)
-		n += (n>0) ? (-1) : 1;
-	return n;
-}
-int cap_speed_and_apply_friction(int n, int accel_friction, int max_speed) {
-	
-	return clamp(n, -max_speed, max_speed+1);
-	/*
-	if (n==0) return 0;
-	if (accel_friction==0) return ;
-
-	n = clamp(n, (-accel_friction)*max_speed, accel_friction*max_speed+1);
-	
-	n += (n<0) ? (-accel_friction) : accel_friction;
-	
-	return n/accel_friction;*/
-}
 
 
 
 int global_frame = 0;
 int player = PLAYER_1;
 
-PlayerSprite bee = {
-	&obj_buffer[0],
-	8, 8,
-	5,
-	4,
-	SOUTH,
-	PLAYER_CENTER_X, PLAYER_CENTER_Y,
-	2, // vitesse max
-	0, 0
-};
+OBJ_ATTR obj_buffer[OBJ_COUNT];
 
 OBJ_ATTR* ghost_stone = &obj_buffer[1];
-
-
-void get_stone_hex_coor(int x, int y) {
-	
-}
 
 void switch_player() {
 
 	player ^= 1;
 
-	bee.x = PLAYER_CENTER_X;
-	bee.y = PLAYER_CENTER_Y;
-	bee.orientation = SOUTH;
 
 	if (player == PLAYER_1) {
+		bee.orientation = WEST;
+		bee.x = PLAYER1_SPAWN_X;
+		bee.y = PLAYER1_SPAWN_Y;
 		memcpy(pal_obj_mem, beePal, beePalLen);
 		memcpy(&tile_mem[4][64], stoneblackTiles, stoneblackTilesLen);
 		memcpy(&pal_obj_bank[1], stoneblackPal, stoneblackPalLen);
 	}
 	else {
+		bee.orientation = EAST;
+		bee.x = PLAYER2_SPAWN_X;
+		bee.y = PLAYER2_SPAWN_Y;
 		memcpy(pal_obj_mem, beedarkPal, beedarkPalLen);
 		memcpy(&tile_mem[4][64], stonewhiteTiles, stonewhiteTilesLen);
 		memcpy(&pal_obj_bank[1], stonewhitePal, stonewhitePalLen);
 	}
 }
 
-void evaluate_movement() {
-	
-	int accel_friction = 2; // 1 = instantané ; 2 = une frame mid-speed, etc.
-
-	int delta_speed = bee.max_speed / accel_friction;
-
-	if(key_is_down(KEY_UP)) {
-		bee.orientation = NORTH;
-		bee.y_speed-= delta_speed;
-	}
-	else if(key_is_down(KEY_DOWN)) {
-		bee.orientation = SOUTH;
-		bee.y_speed+= delta_speed;
-	}
-	else {
-		bee.y_speed = closer_to_zero(bee.y_speed);
-	}
-
-	if(key_is_down(KEY_LEFT)) {
-		bee.orientation = WEST;
-		bee.x_speed-= delta_speed;
-	}
-	else if(key_is_down(KEY_RIGHT)) {
-		bee.orientation = EAST;
-		bee.x_speed+= delta_speed;
-	}
-	else {
-		bee.x_speed = closer_to_zero(bee.x_speed);
-	}
-
-	bee.x_speed = cap_speed_and_apply_friction(bee.x_speed, accel_friction, bee.max_speed);
- 	bee.y_speed = cap_speed_and_apply_friction(bee.y_speed, accel_friction, bee.max_speed);
-
-	bee.x += bee.x_speed;
-	bee.y += bee.y_speed;
-	
-	/*
-	bee.x += key_tri_horz();
-	bee.y += key_tri_vert();
-	*/
-}
-
-bool is_stone_in_board(int x, int y) {
-	if (5*y - 3*x < -271)	//test si y_orth < 0
-		return false;
-	if (5*y - 3*x > 329)	//test si y_orth > 10
-		return false;
-	if (5*y + 3*x < 401)	//test si x_orth < 0
-		return false;
-	if (5*y + 3*x > 1001)	//test si x_orth > 10
-		return false;
-
-	return true;
-}
-
 void display_ghost_stone() {
-	int ghost_x = (bee.x+37)/10*10 - 8;  //adjust de +32px (moitié de largeur de bee) et -8px (moitié de largeur de ghost), et puis fine-tuning
-	int ghost_y;
-	if ((ghost_x/10) & 1)
-		ghost_y = (bee.y+32)/12*12 - 8 + 6 + 3;
-	else
-		ghost_y = (bee.y+32+6)/12*12 - 8 + 3;
-	
-	obj_set_pos(ghost_stone, ghost_x, ghost_y);
+	Board_XY ghost_coordinates;
 
-	if (is_stone_in_board(ghost_x, ghost_y)) {
+	ghost_coordinates.x = (bee.x+37)/10*10 - 8;  //adjust de +32px (moitié de largeur de bee) et -8px (moitié de largeur de ghost), et puis fine-tuning
+
+	if ((ghost_coordinates.x/10) & 1)
+		ghost_coordinates.y = (bee.y+32)/12*12 - 8 + 6 + 3;
+	else
+		ghost_coordinates.y = (bee.y+32+6)/12*12 - 8 + 3;
+	
+	obj_set_pos(ghost_stone, ghost_coordinates.x, ghost_coordinates.y);
+
+	if (is_stone_in_board(ghost_coordinates)) {
 		ghost_stone->attr0 ^= ATTR0_HIDE;
-	} else {
+	}
+	else {
 		obj_hide(ghost_stone);
 	}
 }

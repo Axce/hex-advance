@@ -9,6 +9,11 @@
 #define PLAYER2_SPAWN_X 0
 #define PLAYER2_SPAWN_Y 100
 
+enum PLAYERS {
+	PLAYER_1,	// yellow bee, black stones
+	PLAYER_2	// red bee, white stones
+};
+
 typedef struct {
 	OBJ_ATTR* obj;
 	int width, height;	//in tiles
@@ -21,3 +26,5 @@ typedef struct {
 } PlayerSprite;
 
 extern PlayerSprite bee;
+
+extern int player;

@@ -1,5 +1,4 @@
-#ifndef PLAYERSPRITE_H
-#define PLAYERSPRITE_H
+#pragma once
 
 #include <tonc.h>
 
@@ -22,5 +21,3 @@ typedef struct {
 } PlayerSprite;
 
 extern PlayerSprite bee;
-
-#endif  /* !PLAYERSPRITE_H */

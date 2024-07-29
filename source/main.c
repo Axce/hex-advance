@@ -98,6 +98,10 @@ void update_sprites() {
 	obj_set_pos(bee.obj, bee.x, bee.y);
 }
 
+void play() {
+	switch_player();
+}
+
 int main()
 {
 
@@ -141,7 +145,7 @@ int main()
 		key_poll();
 
 		if (key_hit(KEY_A)) {
-			switch_player();
+			play();
 		}
 		
 		evaluate_movement();

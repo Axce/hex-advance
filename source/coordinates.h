@@ -1,5 +1,4 @@
-#ifndef COORDINATES_H
-#define COORDINATES_H
+#pragma once
 
 typedef struct
 {
@@ -20,5 +19,3 @@ bool is_stone_in_board(Board_XY xy);
 Board_XY to_board_xy(Screen_XY xy);
 
 Screen_XY to_screen_xy(Board_XY xy);
-
-#endif  /* !COORDINATES_H */

@@ -1,5 +1,4 @@
-#ifndef TOOLBOX_H
-#define TOOLBOX_H
+#pragma once
 
 #include <tonc.h>
 
@@ -13,6 +12,3 @@ enum ORIENTATIONS {
 	EAST,
 	SOUTH
 };
-
-
-#endif  /* !TOOLBOX_H */

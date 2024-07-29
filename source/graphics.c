@@ -51,13 +51,18 @@ void display_ghost_stone() {
 	else
 		ghost_coordinates.y = (bee.y+32+6)/12*12 - 8 + 3;
 	
-	obj_set_pos(ghost_stone, ghost_coordinates.x, ghost_coordinates.y);
 
 	if (is_stone_in_board(ghost_coordinates)) {
+	    obj_set_pos(ghost_stone, ghost_coordinates.x, ghost_coordinates.y);
 		ghost_stone->attr0 ^= ATTR0_HIDE;
 	}
 	else {
-		obj_hide(ghost_stone);
+        ghost_coordinates.x = bee.x + 24;
+
+        ghost_coordinates.y = bee.y + 23;
+
+	    obj_set_pos(ghost_stone, ghost_coordinates.x, ghost_coordinates.y);
+		obj_unhide(ghost_stone, DCNT_MODE0);
 	}
 }
 

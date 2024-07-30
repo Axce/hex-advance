@@ -8,14 +8,8 @@
 #include "graphics.h"
 #include "game.h"
 
-/*
-#define PLAYER_CENTER_X 87
-#define PLAYER_CENTER_Y 40
-*/
-
 int global_frame = 0;
-int player = PLAYER_1;
-
+int current_player = PLAYER_1_BLACK;
 OBJ_ATTR obj_buffer[OBJ_COUNT];
 
 int main()
@@ -25,8 +19,6 @@ int main()
 	memcpy(pal_obj_mem, beePal, beePalLen);
 	memcpy(&tile_mem[4][64], stoneblackTiles, stoneblackTilesLen);
 	memcpy(&pal_obj_bank[1], stoneblackPal, stoneblackPalLen);
-
-	
 
 	oam_init(obj_buffer, OBJ_COUNT);
 
@@ -51,6 +43,8 @@ int main()
 		ATTR1_SIZE_16x16,
 		ATTR2_PALBANK(1) | 64);
 
+	init_stones_sprites();
+
 	while(1)
 	{
 
@@ -68,7 +62,7 @@ int main()
 
 		display_ghost_stone();
 		
-		update_sprites();
+		update_bee_sprite();
 
 		obj_copy(obj_mem, obj_buffer, OBJ_COUNT);
 	}

@@ -2,18 +2,28 @@
 #include "graphics.h"
 #include <string.h>
 #include "coordinates.h"
+#include "game.h"
 
-extern OBJ_ATTR* ghost_stone = &obj_buffer[1];
+#define PAL_BLACKSET 2
+#define PAL_WHITESET 3
+
+OBJ_ATTR* ghost_stone = &obj_buffer[1];
+
+OBJ_ATTR* stone_set_black[6][6];
+
+OBJ_ATTR* stone_set_white[6][6];
 
 // in tiles
-int get_sprite_frame_2D(PlayerSprite* sprite, int global_frame) {
+int get_sprite_frame_2D(PlayerSprite* sprite, int global_frame)
+{
 	int sprite_frame = sprite->width * ((global_frame/sprite->anim_delay) % sprite->anim_frames);
 	int orientation_offset = (sprite->width * sprite->height * sprite->anim_frames * sprite->orientation);
 	return sprite_frame + orientation_offset;
 }
 
 // in tiles
-int get_sprite_frame_1D(PlayerSprite* sprite, int global_frame) {
+int get_sprite_frame_1D(PlayerSprite* sprite, int global_frame)
+{
 	int sprite_frame = sprite->width * sprite->height * ((global_frame/sprite->anim_delay) % sprite->anim_frames);
 	int orientation_offset = (sprite->width * sprite->height * sprite->anim_frames * sprite->orientation);
 	return sprite_frame + orientation_offset;
@@ -21,7 +31,7 @@ int get_sprite_frame_1D(PlayerSprite* sprite, int global_frame) {
 
 void switch_player_graphics()
 {
-    if (player == PLAYER_1)
+    if (current_player == PLAYER_1_BLACK)
     {
         bee.orientation = WEST;
         bee.x = PLAYER1_SPAWN_X;
@@ -41,8 +51,9 @@ void switch_player_graphics()
     }
 }
 
-void display_ghost_stone() {
-	Board_XY ghost_coordinates;
+void display_ghost_stone()
+{
+	Screen_XY ghost_coordinates;
 
 	ghost_coordinates.x = (bee.x+37)/10*10 - 8;  //adjust de +32px (moitié de largeur de bee) et -8px (moitié de largeur de ghost), et puis fine-tuning
 
@@ -52,7 +63,8 @@ void display_ghost_stone() {
 		ghost_coordinates.y = (bee.y+32+6)/12*12 - 8 + 3;
 	
 
-	if (is_stone_in_board(ghost_coordinates)) {
+	if (is_stone_in_board(ghost_coordinates))
+	{
 	    obj_set_pos(ghost_stone, ghost_coordinates.x, ghost_coordinates.y);
 		ghost_stone->attr0 ^= ATTR0_HIDE;
 	}
@@ -66,8 +78,73 @@ void display_ghost_stone() {
 	}
 }
 
-void update_sprites() {
+void update_bee_sprite()
+{
 	//bee.obj->attr2 = ATTR2_PALBANK(0) | get_sprite_frame_2D(&bee, global_frame);
-	memcpy(&tile_mem[4][0], beeTiles + (get_sprite_frame_1D(&bee, global_frame)) * 8 /*one 4bpp tile = 8 ints*/, beeTilesLen/16);
+	memcpy(&tile_mem[4][0], &beeTiles[(get_sprite_frame_1D(&bee, global_frame)) * 8] /*one 4bpp tile = 8 ints*/, beeTilesLen/16);
 	obj_set_pos(bee.obj, bee.x, bee.y);
+}
+
+void init_stones_sprites()
+{
+
+	memcpy(&tile_mem[4][68], stonesetblackTiles, stonesetblackTilesLen);
+	memcpy(&pal_obj_bank[PAL_BLACKSET], stonesetblackPal, stonesetblackPalLen);
+	memcpy(&pal_obj_bank[PAL_WHITESET], stonesetwhitePal, stonesetwhitePalLen);
+
+	int stone_set_id = 0;
+
+	for (int iy = 0 ; iy < 6 ; iy++)
+	{
+		for (int ix = 0 ; ix < 6 ; ix++)
+		{
+			stone_set_black[iy][ix] = &obj_buffer[stone_set_id+2];
+			stone_set_white[iy][ix] = &obj_buffer[stone_set_id+38];
+
+			Board_XY sprite_board_pos;
+			sprite_board_pos.x = ix*2;
+			sprite_board_pos.y = iy*2;
+			
+			Screen_XY sprite_screen_pos = to_screen_xy(sprite_board_pos);
+			sprite_screen_pos.x -= 8; // offset for a sprite of four stones
+			sprite_screen_pos.y -= 2;  // offset for a sprite of four stones
+
+			obj_set_attr(stone_set_black[iy][ix],
+				ATTR0_SQUARE,
+				ATTR1_SIZE_32x32,
+				ATTR2_PALBANK(PAL_BLACKSET) | ATTR2_ID(68/*+16*15*/));
+			obj_set_pos(stone_set_black[iy][ix], sprite_screen_pos.x, sprite_screen_pos.y);
+
+			obj_set_attr(stone_set_white[iy][ix],
+				ATTR0_SQUARE,
+				ATTR1_SIZE_32x32,
+				ATTR2_PALBANK(PAL_WHITESET) | ATTR2_ID(68/*+16*15*/));
+			obj_set_pos(stone_set_white[iy][ix], sprite_screen_pos.x, sprite_screen_pos.y);
+			
+			stone_set_id++;
+		}
+	}
+}
+
+void update_stones_sprites(Player player, Board_XY stone_board_pos)
+{
+
+	// sprite board_xy
+	int x = stone_board_pos.x / 2;
+	int y = stone_board_pos.y / 2;
+
+	int sprite_number = 0;
+	if (board[2*y  ][2*x  ] == player)	sprite_number += 1;
+	if (board[2*y  ][2*x+1] == player)	sprite_number += 2;
+	if (board[2*y+1][2*x  ] == player)	sprite_number += 4;
+	if (board[2*y+1][2*x+1] == player)	sprite_number += 8;
+
+	if (player == PLAYER_1_BLACK)
+	{
+		BFN_SET(stone_set_black[y][x]->attr2, 68+16*sprite_number, ATTR2_ID);
+	}
+	else
+	{
+		BFN_SET(stone_set_white[y][x]->attr2, 68+16*sprite_number, ATTR2_ID);
+	}
 }

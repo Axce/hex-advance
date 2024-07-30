@@ -12,10 +12,10 @@ typedef struct
     int y;
 } Board_XY;
 
-extern int board[11][11];
-
-bool is_stone_in_board(Board_XY xy);
+bool is_stone_in_board(Screen_XY xy);
 
 Board_XY to_board_xy(Screen_XY xy);
 
 Screen_XY to_screen_xy(Board_XY xy);
+
+Screen_XY get_sprite_position(OBJ_ATTR* sprite);

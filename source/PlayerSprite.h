@@ -8,11 +8,15 @@
 #define PLAYER1_SPAWN_Y 100
 #define PLAYER2_SPAWN_X 0
 #define PLAYER2_SPAWN_Y 100
+/*
+#define PLAYER_CENTER_X 87
+#define PLAYER_CENTER_Y 40
+*/
 
-enum PLAYERS {
-	PLAYER_1,	// yellow bee, black stones
-	PLAYER_2	// red bee, white stones
-};
+typedef enum {
+	PLAYER_1_BLACK = 1,	// yellow bee, black stones
+	PLAYER_2_WHITE = 2	// red bee, white stones
+} Player;
 
 typedef struct {
 	OBJ_ATTR* obj;
@@ -27,4 +31,4 @@ typedef struct {
 
 extern PlayerSprite bee;
 
-extern int player;
+extern int current_player;

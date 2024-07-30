@@ -19,3 +19,6 @@ Board_XY to_board_xy(Screen_XY xy);
 Screen_XY to_screen_xy(Board_XY xy);
 
 Screen_XY get_sprite_position(OBJ_ATTR* sprite);
+
+Board_XY new_board_xy(int x, int y);
+Screen_XY new_screen_xy(int x, int y);

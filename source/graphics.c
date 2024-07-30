@@ -129,15 +129,21 @@ void init_stones_sprites()
 void update_stones_sprites(Player player, Board_XY stone_board_pos)
 {
 
-	// sprite board_xy
+	// sprite (stone_set) xy
 	int x = stone_board_pos.x / 2;
 	int y = stone_board_pos.y / 2;
 
+	// concerned stones board pos
+	int x0 = 2*x;
+	int x1 = 2*x+1;
+	int y0 = 2*y;
+	int y1 = 2*y+1;
+	
 	int sprite_number = 0;
-	if (board[2*y  ][2*x  ] == player)	sprite_number += 1;
-	if (board[2*y  ][2*x+1] == player)	sprite_number += 2;
-	if (board[2*y+1][2*x  ] == player)	sprite_number += 4;
-	if (board[2*y+1][2*x+1] == player)	sprite_number += 8;
+	if (						  board[y0][x0] == player)	sprite_number += 1;
+	if ((x1) < 11 &&    		  board[y0][x1] == player)	sprite_number += 2;
+	if (			 (y1) < 11 && board[y1][x0] == player)	sprite_number += 4;
+	if ((x1) < 11 && (y1) < 11 && board[y1][x1] == player)	sprite_number += 8;
 
 	if (player == PLAYER_1_BLACK)
 	{

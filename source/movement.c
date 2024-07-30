@@ -56,8 +56,10 @@ void evaluate_movement() {
 	bee.x_speed = cap_speed_and_apply_friction(bee.x_speed, accel_friction, bee.max_speed);
  	bee.y_speed = cap_speed_and_apply_friction(bee.y_speed, accel_friction, bee.max_speed);
 
-	bee.x += bee.x_speed;
-	bee.y += bee.y_speed;
+	if (bee.x+bee.x_speed > 0-32 && bee.x+bee.x_speed < SCREEN_WIDTH-32)
+		bee.x += bee.x_speed;
+	if (bee.y+bee.y_speed > 0-32 && bee.y+bee.y_speed < SCREEN_HEIGHT-32)
+		bee.y += bee.y_speed;
 	
 	/*
 	bee.x += key_tri_horz();

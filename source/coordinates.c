@@ -52,3 +52,19 @@ Screen_XY get_sprite_position(OBJ_ATTR* sprite)
     pos.x = sprite->attr1 & ATTR1_X_MASK;
     return pos;
 }
+
+Board_XY new_board_xy(int x, int y)
+{
+    Board_XY xy;
+    xy.x = x;
+    xy.y = y;
+    return xy;
+}
+
+Screen_XY new_screen_xy(int x, int y)
+{
+    Screen_XY xy;
+    xy.x = x;
+    xy.y = y;
+    return xy;
+}

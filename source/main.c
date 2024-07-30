@@ -31,9 +31,8 @@ int main()
 	// Load map into SBB 30
 	memcpy(&se_mem[30][0], hexMap, hexMapLen);
 
-	REG_BG0CNT= BG_PRIO(1) | BG_CBB(0) | BG_SBB(30) | BG_4BPP | BG_REG_32x32;
-	REG_BG1CNT= BG_PRIO(0);
-	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_OBJ | DCNT_OBJ_1D;
+	REG_BG0CNT= BG_CBB(0) | BG_SBB(30) | BG_4BPP | BG_REG_32x32;
+	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_OBJ | DCNT_OBJ_1D;
 
 
 	obj_set_attr(bee.obj,
@@ -47,25 +46,6 @@ int main()
 		ATTR2_PALBANK(1) | 64);
 
 	init_stones_sprites();
-
-	tte_init_chr4c(1, 			// BG 1
-		BG_CBB(1)|BG_SBB(31),	// Charblock 1; screenblock 31
-		0xF000,					// Screen-entry offset
-		bytes2word(1,2,3,4),	// Color attributes.
-		CLR_BLACK,	 			// Blue text
-		&verdana9Font,			// Verdana 9 font
-		NULL					// Use default chr4 renderer
-	);
-
-	// pal_bg_bank[15][0] = CLR_WHITE;
-	// pal_bg_bank[15][1] = CLR_WHITE;
-	pal_bg_bank[15][2] = CLR_WHITE;
-	pal_bg_bank[15][3] = CLR_WHITE;
-	pal_bg_bank[15][4] = CLR_WHITE;
-	pal_bg_bank[15][5] = CLR_WHITE;
-
-	tte_init_con();
-
 
 	while(1)
 	{

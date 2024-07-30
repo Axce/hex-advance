@@ -75,7 +75,18 @@ bool put_stone(Player player, Board_XY board_XY)
 
 void switch_player() {
 
-	current_player ^= 11; // switch between 1 and 2 (0b01 and 0b10)
+    /*
+    if (current_player == PLAYER_1_BLACK)
+    {
+        current_player = PLAYER_2_WHITE;
+    }
+    else if (current_player == PLAYER_2_WHITE)
+    {
+        current_player = PLAYER_1_BLACK;
+    }
+    */
+
+    current_player ^= 0b11; // switch between 1 and 2 (0b01 and 0b10) (doesn't work)
 
     switch_player_graphics();
 }
@@ -113,44 +124,60 @@ bool has_won(Player player) {
 
         for (int iy = 0 ; iy < 11 ; iy++)
         {
-            if (board[iy][0] == PLAYER_1_BLACK)
+            if (board[iy][0] == player)
             {
                 visit_board[iy][0] = 1;
                 queue[write_cursor++] = new_board_xy(0, iy);
             }
         }
-
-        while (read_cursor < write_cursor)
+    }
+    if (player == PLAYER_2_WHITE)
+    {
+        for (int ix = 0 ; ix < 11 ; ix++)
         {
-            Board_XY current_node = queue[read_cursor++];
-            int x = current_node.x;
-            int y = current_node.y;
-            
-            for (int ni = 0; ni < 6; ni++)                  // pour chaque voisin potentiel
+            if (board[0][ix] == player)
             {
-                int nx = x + neighbor_Xs[ni];
-                int ny = y + neighbor_Ys[ni];
-               
-                if ( nx>=0 && nx<11 && ny>=0 && ny<11 &&    // si dans le board,
-                    board[ny][nx] == PLAYER_1_BLACK &&      // si un pion du player est là,
-                    visit_board[ny][nx] == 0)               // et si pas encore visité
+                visit_board[0][ix] = 1;
+                queue[write_cursor++] = new_board_xy(ix, 0);
+            }
+        }
+    }
+
+    while (read_cursor < write_cursor)
+    {
+        Board_XY current_node = queue[read_cursor++];
+        int x = current_node.x;
+        int y = current_node.y;
+        
+        for (int ni = 0; ni < 6; ni++)                  // pour chaque voisin potentiel
+        {
+            int nx = x + neighbor_Xs[ni];
+            int ny = y + neighbor_Ys[ni];
+            
+            if ( nx>=0 && nx<11 && ny>=0 && ny<11 &&    // si dans le board,
+                board[ny][nx] == player &&              // si un pion du player est là,
+                visit_board[ny][nx] == 0)               // et si pas encore visité
+            {
+                if (player == PLAYER_1_BLACK && nx==10)
                 {
-                    if (nx==10)
-                    {
-                        while(1);
-                    }
-                    queue[write_cursor++] = new_board_xy(nx, ny);   // on l'ajoute à la queue
-                    visit_board[ny][nx] = 1;                        // et on le marque "à visiter"
-                    
+                    return true;
                 }
+                if (player == PLAYER_2_WHITE && ny==10)
+                {
+                    return true;
+                }
+                queue[write_cursor++] = new_board_xy(nx, ny);   // on l'ajoute à la queue
+                visit_board[ny][nx] = 1;                        // et on le marque "à visiter"
                 
             }
-
-            visit_board[y][x] = 2;
             
         }
-    
+
+        visit_board[y][x] = 2;
+        
     }
+    
+    
 
     return false;
 

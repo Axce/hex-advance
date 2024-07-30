@@ -14,9 +14,8 @@ int current_player = PLAYER_1_BLACK;
 OBJ_ATTR obj_buffer[OBJ_COUNT];
 GAME_STATE game_state = IN_GAME;
 
-int main()
+void init_game()
 {
-
 	memcpy(&tile_mem[4][0], beeTiles, beeTilesLen/16); // on ne prend qu'un sprite dans la sheet de 16
 	memcpy(pal_obj_mem, beePal, beePalLen);
 	memcpy(&tile_mem[4][64], stoneblackTiles, stoneblackTilesLen);
@@ -47,29 +46,59 @@ int main()
 
 	init_stones_sprites();
 
+}
+
+void game_loop()
+{
+
+	if (key_hit(KEY_A)) {
+		play();
+	}
+
+	if (key_hit(KEY_START)) {
+		restart_game();
+	}
+	
+	evaluate_movement();
+
+	update_bee_sprite();
+
+	display_ghost_stone();
+
+
+}
+
+void game_ended_loop()
+{
+	if (key_hit(KEY_START)) {
+		restart_game();
+	}
+
+}
+
+int main()
+{
+
+	init_game();
+
 	while(1)
 	{
 
 		vid_vsync();		
-		
+	
 		global_frame++;
 
 		key_poll();
 
-		if (key_hit(KEY_A) && !winner) {
-			play();
-		}
-
-		if (key_hit(KEY_START)) {
-			restart_game();
-		}
-		
-		evaluate_movement();
-
-		if (!winner)
+		switch (game_state)
 		{
-			update_bee_sprite();
-			display_ghost_stone();
+			case IN_GAME:
+				game_loop();
+				break;
+
+			case GAME_ENDED:
+				game_ended_loop();
+				break;
 		}
 
 		obj_copy(obj_mem, obj_buffer, OBJ_COUNT);

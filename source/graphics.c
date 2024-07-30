@@ -53,6 +53,13 @@ void switch_player_graphics()
 
 void display_ghost_stone()
 {
+
+	if (game_state != IN_GAME)
+	{
+		obj_hide(ghost_stone);
+		return;
+	}
+
 	Screen_XY ghost_coordinates;
 
 	ghost_coordinates.x = (bee.x+37)/10*10 - 8;  //adjust de +32px (moitié de largeur de bee) et -8px (moitié de largeur de ghost), et puis fine-tuning

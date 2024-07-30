@@ -50,7 +50,7 @@ void play() {
     if (has_won(current_player))
     {
         winner = current_player;
-
+        game_state = GAME_ENDED;
         display_victory();
     }
 
@@ -200,6 +200,9 @@ void restart_game()
     current_player = PLAYER_1_BLACK;
     switch_player_graphics();
     winner = 0;
-    obj_hide(&obj_buffer[74]);
+    obj_hide(&obj_buffer[74]);          //hide win text
     obj_unhide(bee.obj, DCNT_MODE0);
+    update_bee_sprite();
+
+    game_state = IN_GAME;
 };

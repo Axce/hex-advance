@@ -16,8 +16,8 @@ GAME_STATE game_state = IN_GAME;
 
 void init_game()
 {
-	memcpy(&tile_mem[4][0], beeTiles, beeTilesLen/16); // on ne prend qu'un sprite dans la sheet de 16
-	memcpy(pal_obj_mem, beePal, beePalLen);
+	memcpy(&tile_mem[4][0], bee32Tiles, bee32TilesLen/3/16); // on ne prend qu'un sprite dans la sheet de 16 sprites * 3 animations
+	memcpy(pal_obj_mem, bee32Pal, bee32PalLen);
 	memcpy(&tile_mem[4][64], stoneblackTiles, stoneblackTilesLen);
 	memcpy(&pal_obj_bank[1], stoneblackPal, stoneblackPalLen);
 
@@ -36,7 +36,7 @@ void init_game()
 
 	obj_set_attr(bee.obj,
 		ATTR0_SQUARE,				// Square, regular sprite
-		ATTR1_SIZE_64,				// 64x64p,
+		ATTR1_SIZE_32,				// 32*32p,
 		ATTR2_PALBANK(0) | 0);		// palbank 0, tile 0
 
 	obj_set_attr(ghost_stone,

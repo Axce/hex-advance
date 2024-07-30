@@ -2,7 +2,9 @@
 
 //graphics
 #include "bee.h"
+#include "bee32.h"
 #include "beedark.h"
+#include "bee32dark.h"
 #include "hex.h"
 #include "stonewhite.h"
 #include "stoneblack.h"

@@ -3,7 +3,7 @@
 
 PlayerSprite bee = {
 	&obj_buffer[0],
-	8, 8,
+	4, 4,
 	5,
 	4,
 	WEST,

@@ -25,7 +25,8 @@ int get_sprite_frame_2D(PlayerSprite* sprite, int global_frame)
 int get_sprite_frame_1D(PlayerSprite* sprite, int global_frame)
 {
 	int sprite_frame = sprite->width * sprite->height * ((global_frame/sprite->anim_delay) % sprite->anim_frames);
-	int orientation_offset = (sprite->width * sprite->height * sprite->anim_frames * sprite->orientation);
+	int orientation_offset = sprite->width * sprite->height * sprite->anim_frames * sprite->orientation;
+	// int animation_offset = sprite->width * sprite->height * sprite->anim_frames * 4 * ;
 	return sprite_frame + orientation_offset;
 }
 
@@ -36,7 +37,7 @@ void switch_player_graphics()
         bee.orientation = WEST;
         bee.x = PLAYER1_SPAWN_X;
         bee.y = PLAYER1_SPAWN_Y;
-        memcpy(pal_obj_mem, beePal, beePalLen);
+        memcpy(pal_obj_mem, bee32Pal, bee32PalLen);
         memcpy(&tile_mem[4][64], stoneblackTiles, stoneblackTilesLen);
         memcpy(&pal_obj_bank[1], stoneblackPal, stoneblackPalLen);
     }
@@ -45,7 +46,7 @@ void switch_player_graphics()
         bee.orientation = EAST;
         bee.x = PLAYER2_SPAWN_X;
         bee.y = PLAYER2_SPAWN_Y;
-        memcpy(pal_obj_mem, beedarkPal, beedarkPalLen);
+        memcpy(pal_obj_mem, bee32darkPal, beedarkPalLen);
         memcpy(&tile_mem[4][64], stonewhiteTiles, stonewhiteTilesLen);
         memcpy(&pal_obj_bank[1], stonewhitePal, stonewhitePalLen);
     }
@@ -88,8 +89,8 @@ void display_ghost_stone()
 void update_bee_sprite()
 {
 	//bee.obj->attr2 = ATTR2_PALBANK(0) | get_sprite_frame_2D(&bee, global_frame);
-	memcpy(&tile_mem[4][0], &beeTiles[(get_sprite_frame_1D(&bee, global_frame)) * 8] /*one 4bpp tile = 8 ints*/, beeTilesLen/16);
-	obj_set_pos(bee.obj, bee.x, bee.y);
+	memcpy(&tile_mem[4][0], &bee32Tiles[(get_sprite_frame_1D(&bee, global_frame)) * 8] /*one 4bpp tile = 8 ints*/, bee32TilesLen/16);
+	obj_set_pos(bee.obj, bee.x+16, bee.y+16);	// compense le fait que le sprite fut en 64*64 avant
 }
 
 void init_stones_sprites()

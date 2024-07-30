@@ -24,8 +24,10 @@ int board[11][11] =
     {0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0}
 };
+
+Player winner = 0;
 
 void play() {
 
@@ -47,7 +49,9 @@ void play() {
     
     if (has_won(current_player))
     {
-        while(1);
+        winner = current_player;
+
+        display_victory();
     }
 
     switch_player();
@@ -188,3 +192,14 @@ bool has_won(Player player) {
     return false;
 
 }
+
+void restart_game()
+{
+    memset(board, 0, sizeof(board));
+    init_stones_sprites();
+    current_player = PLAYER_1_BLACK;
+    switch_player_graphics();
+    winner = 0;
+    obj_hide(&obj_buffer[74]);
+    obj_unhide(bee.obj, DCNT_MODE0);
+};

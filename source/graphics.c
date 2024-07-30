@@ -154,3 +154,30 @@ void update_stones_sprites(Player player, Board_XY stone_board_pos)
 		BFN_SET(stone_set_white[y][x]->attr2, 68+16*sprite_number, ATTR2_ID);
 	}
 }
+
+void display_victory()
+{
+	switch (winner)
+	{
+		case PLAYER_1_BLACK:
+			GRIT_CPY(&tile_mem[5][0], txt_p1winsTiles);
+			GRIT_CPY(&pal_obj_bank[15], txt_p1winsPal);
+			break;
+		case PLAYER_2_WHITE:
+			GRIT_CPY(&tile_mem[5][0], txt_p2winsTiles);
+			GRIT_CPY(&pal_obj_bank[15], txt_p2winsPal);
+			break;
+		default:
+			return;
+	}
+
+	obj_hide(bee.obj);
+
+	obj_set_attr(&obj_buffer[74],
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64x64,
+		ATTR2_PALBANK(15) | ATTR2_ID(512));
+	obj_set_pos(&obj_buffer[74], 2, 2);
+	obj_unhide(&obj_buffer[74], DCNT_MODE0);
+
+}

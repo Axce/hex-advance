@@ -12,3 +12,10 @@ enum ORIENTATIONS {
 	EAST,
 	SOUTH
 };
+
+typedef enum {
+	IN_GAME
+
+} GAME_STATE;
+
+extern GAME_STATE game_state;

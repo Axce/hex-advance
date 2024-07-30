@@ -10,6 +10,9 @@
 #include "stonesetblack.h"
 #include "stonesetwhite.h"
 
+#include "txt_p1wins.h"
+#include "txt_p2wins.h"
+
 extern OBJ_ATTR* ghost_stone;
 extern int global_frame;
 
@@ -28,3 +31,5 @@ void update_bee_sprite();
 void init_stones_sprites();
 
 void update_stones_sprites(Player player, Board_XY stone_board_pos);
+
+void display_victory();

@@ -111,6 +111,8 @@ bool has_won(Player player) {
         {0,0,0,0,0,0,0,0,0,0,0},
     };
 
+    Board_XY parents[11][11] = { 0 };
+
     int neighbor_Ys[6] = {-1,-1, 0, 0,+1,+1};
     int neighbor_Xs[6] = {-1, 0,-1,+1, 0,+1};
 
@@ -118,7 +120,7 @@ bool has_won(Player player) {
     int write_cursor = 0;
     int read_cursor = 0;
 
-    //from x=0 to x=10
+    // path from x=0 to x=10
     if (player == PLAYER_1_BLACK)
     {
 
@@ -131,6 +133,7 @@ bool has_won(Player player) {
             }
         }
     }
+    // path from y=0 to y=10
     if (player == PLAYER_2_WHITE)
     {
         for (int ix = 0 ; ix < 11 ; ix++)
@@ -158,6 +161,8 @@ bool has_won(Player player) {
                 board[ny][nx] == player &&              // si un pion du player est là,
                 visit_board[ny][nx] == 0)               // et si pas encore visité
             {
+                parents[ny][nx] = new_board_xy(x, y);           // on note son node parent
+                
                 if (player == PLAYER_1_BLACK && nx==10)
                 {
                     return true;
@@ -166,8 +171,9 @@ bool has_won(Player player) {
                 {
                     return true;
                 }
+
                 queue[write_cursor++] = new_board_xy(nx, ny);   // on l'ajoute à la queue
-                visit_board[ny][nx] = 1;                        // et on le marque "à visiter"
+                visit_board[ny][nx] = 1;                        // on le marque "à visiter"
                 
             }
             

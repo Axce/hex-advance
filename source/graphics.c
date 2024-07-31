@@ -14,20 +14,20 @@ OBJ_ATTR* stone_set_black[6][6];
 OBJ_ATTR* stone_set_white[6][6];
 
 // in tiles
-int get_sprite_frame_2D(PlayerSprite* sprite, int global_frame)
-{
-	int sprite_frame = sprite->width * ((global_frame/sprite->anim_delay) % sprite->anim_frames);
-	int orientation_offset = (sprite->width * sprite->height * sprite->anim_frames * sprite->orientation);
-	return sprite_frame + orientation_offset;
-}
+// int get_sprite_frame_2D(PlayerSprite* sprite, int global_frame)
+// {
+// 	int sprite_frame = sprite->width * ((global_frame/sprite->anim_delay) % sprite->anim_frames);
+// 	int orientation_offset = (sprite->width * sprite->height * sprite->anim_frames * sprite->orientation);
+// 	return sprite_frame + orientation_offset;
+// }
 
 // in tiles
 int get_sprite_frame_1D(PlayerSprite* sprite, int global_frame)
 {
 	int sprite_frame = sprite->width * sprite->height * ((global_frame/sprite->anim_delay) % sprite->anim_frames);
 	int orientation_offset = sprite->width * sprite->height * sprite->anim_frames * sprite->orientation;
-	// int animation_offset = sprite->width * sprite->height * sprite->anim_frames * 4 * ;
-	return sprite_frame + orientation_offset;
+	int animation_offset = sprite->width * sprite->height * sprite->anim_frames * 4 * sprite->current_animation;
+	return sprite_frame + orientation_offset + animation_offset;
 }
 
 void switch_player_graphics()

@@ -18,12 +18,19 @@ typedef enum {
 	PLAYER_2_WHITE = 2	// red bee, white stones
 } Player;
 
+enum BEE_ANIMATIONS {
+	BEE_IDLE,
+	BEE_FLYING,
+	BEE_ATTACK
+};
+
 typedef struct {
 	OBJ_ATTR* obj;
 	int width, height;	//in tiles
 	int anim_delay;		//in frames
 	int anim_frames;
 	int orientation;
+	int current_animation;
 	int x,y;
 	int max_speed;
 	int x_speed, y_speed;

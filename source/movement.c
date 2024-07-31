@@ -29,12 +29,16 @@ void evaluate_movement() {
 
 	int delta_speed = bee.max_speed / accel_friction;
 
+	bee.current_animation = BEE_IDLE;
+
 	if(key_is_down(KEY_UP)) {
 		bee.orientation = NORTH;
+		bee.current_animation = BEE_FLYING;
 		bee.y_speed-= delta_speed;
 	}
 	else if(key_is_down(KEY_DOWN)) {
 		bee.orientation = SOUTH;
+		bee.current_animation = BEE_FLYING;
 		bee.y_speed+= delta_speed;
 	}
 	else {
@@ -43,10 +47,12 @@ void evaluate_movement() {
 
 	if(key_is_down(KEY_LEFT)) {
 		bee.orientation = WEST;
+		bee.current_animation = BEE_FLYING;
 		bee.x_speed-= delta_speed;
 	}
 	else if(key_is_down(KEY_RIGHT)) {
 		bee.orientation = EAST;
+		bee.current_animation = BEE_FLYING;
 		bee.x_speed+= delta_speed;
 	}
 	else {

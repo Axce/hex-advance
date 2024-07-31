@@ -7,6 +7,7 @@ PlayerSprite bee = {
 	5,
 	4,
 	WEST,
+	BEE_IDLE,
 	PLAYER1_SPAWN_X, PLAYER1_SPAWN_Y,
 	2, // vitesse max
 	0, 0

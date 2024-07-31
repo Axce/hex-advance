@@ -11,8 +11,15 @@
 #include "stonesetblack.h"
 #include "stonesetwhite.h"
 
+//menus
 #include "txt_p1wins.h"
 #include "txt_p2wins.h"
+#include "menu_cursor.h"
+
+//title screen bitmap
+#include "title_screen.h"
+
+#include "PlayerSprite.h"
 
 extern OBJ_ATTR* ghost_stone;
 extern int global_frame;

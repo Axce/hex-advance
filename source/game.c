@@ -108,7 +108,12 @@ void switch_player() {
     switch_player_graphics();
 }
 
-bool has_won(Player player) {
+Board_XY* reconstruct_path(Board_XY end, Board_XY parents[11][11])
+{
+    return NULL;
+}
+
+Board_XY* has_won(Player player) {
 
     // 0 = not visited
     // 1 = to visit
@@ -182,11 +187,11 @@ bool has_won(Player player) {
                 
                 if (player == PLAYER_1_BLACK && nx==10)
                 {
-                    return true;
+                    return reconstruct_path(new_board_xy(nx,ny), parents);
                 }
                 if (player == PLAYER_2_WHITE && ny==10)
                 {
-                    return true;
+                    return reconstruct_path(new_board_xy(nx,ny), parents);
                 }
 
                 queue[write_cursor++] = new_board_xy(nx, ny);   // on l'ajoute à la queue
@@ -202,7 +207,7 @@ bool has_won(Player player) {
     
     
 
-    return false;
+    return NULL;
 
 }
 

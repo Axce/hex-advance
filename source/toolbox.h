@@ -14,9 +14,18 @@ enum ORIENTATIONS {
 };
 
 typedef enum {
+	TITLE_SCREEN,
 	IN_GAME,
 	GAME_ENDED,
 	PUTTING_STONE
 } GAME_STATE;
 
 extern GAME_STATE game_state;
+
+inline int mod(int num, int den)
+{
+	int n = num % den;
+	if (n < 0)
+		n += den;
+	return n;
+}

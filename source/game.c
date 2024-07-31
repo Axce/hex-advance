@@ -56,16 +56,20 @@ void play() {
 }
 void end_turn() {
     
+    update_stones_sprites(current_player, stone_put_pos);
+
     if (has_won(current_player))
     {
         winner = current_player;
         game_state = GAME_ENDED;
         display_victory();
     }
+    else
+    {
+        game_state = IN_GAME;
+        switch_player();
+    }
 
-    game_state = IN_GAME;
-    update_stones_sprites(current_player, stone_put_pos);
-    switch_player();
 }
 
 // board_xy parameter wants coordinates inside the board

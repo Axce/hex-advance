@@ -81,7 +81,7 @@ void putting_stone_loop()
 	memcpy(&tile_mem[4][0], &bee32Tiles[(get_sprite_frame_1D(&bee, 20 - putting_stone_delay)) * 8] /*one 4bpp tile = 8 ints*/, bee32TilesLen/16/3);
 	display_ghost_stone();
 	
-	if (putting_stone_delay-- == 0)
+	if (--putting_stone_delay == 0)
 	{
 		end_turn();
 	}

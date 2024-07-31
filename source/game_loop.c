@@ -6,6 +6,8 @@
 #include "movement.h"
 #include "title_screen_loop.h"
 
+int mode_1_or_2_players;
+
 void init_game_loop()
 {
 	memcpy(&tile_mem[4][0], bee32Tiles, bee32TilesLen/3/16); // on ne prend qu'un sprite dans la sheet de 16 sprites * 3 animations
@@ -45,10 +47,48 @@ void init_game_loop()
 
 void game_loop()
 {
+	switch (mode_1_or_2_players)
+	{
+		case MODE_1_PLAYER:
+			game_loop_1p_vs_cpu();
+			break;
 
-	if (key_hit(KEY_A)) {
-		play();
+		case MODE_2_PLAYERS:
+			game_loop_2p();
+			break;
 	}
+}
+
+void game_loop_1p_vs_cpu()
+{
+
+	if (key_hit(KEY_START)) {
+		init_title_screen();
+		return;
+	}
+
+	if (current_player == PLAYER_1_BLACK)
+	{
+		evaluate_movement();
+		
+		if (key_hit(KEY_A)) {
+			player_play();
+		}
+	}
+	else
+	{
+		cpu_play();
+	}
+
+	update_bee_sprite();
+
+	display_ghost_stone();
+
+
+}
+
+void game_loop_2p()
+{
 
 	if (key_hit(KEY_START)) {
 		init_title_screen();
@@ -56,6 +96,10 @@ void game_loop()
 	}
 	
 	evaluate_movement();
+
+	if (key_hit(KEY_A)) {
+		player_play();
+	}
 
 	update_bee_sprite();
 
@@ -79,6 +123,7 @@ void putting_stone_loop()
 	
 	if (--putting_stone_delay == 0)
 	{
+		bee.current_animation = BEE_IDLE;
 		end_turn();
 	}
 }

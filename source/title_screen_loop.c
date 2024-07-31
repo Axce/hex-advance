@@ -50,9 +50,11 @@ void title_screen_loop()
 		switch (selected)
 		{
 			case TITLE_MENU_1_PLAYER:
-				// 2 players mode
+				mode_1_or_2_players = MODE_1_PLAYER;
+				init_game_loop();
 				return;
 			case TITLE_MENU_2_PLAYERS:
+				mode_1_or_2_players = MODE_2_PLAYERS;
 				init_game_loop();
 				return;
 		}

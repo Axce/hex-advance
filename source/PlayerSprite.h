@@ -38,6 +38,4 @@ typedef struct {
 
 extern PlayerSprite bee;
 
-extern int current_player;
-
 extern int putting_stone_delay;

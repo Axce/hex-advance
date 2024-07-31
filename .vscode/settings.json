@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "toolbox.h": "c",
+        "game_loop.h": "c",
+        "coordinates.h": "c",
+        "tonc.h": "c"
+    }
+}

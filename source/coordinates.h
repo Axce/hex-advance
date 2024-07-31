@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tonc.h>
+
 typedef struct
 {
     int x;

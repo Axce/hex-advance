@@ -1,10 +1,13 @@
 #include "coordinates.h"
+#include "PlayerSprite.h"
 
 extern int board[11][11];
 
 extern Player winner;
 
-void play();
+void player_play();
+
+void cpu_play();
 
 void end_turn();
 

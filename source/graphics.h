@@ -22,7 +22,6 @@
 #include "PlayerSprite.h"
 
 extern OBJ_ATTR* ghost_stone;
-extern int global_frame;
 
 // in tiles
 int get_sprite_frame_2D(PlayerSprite* sprite, int global_frame);

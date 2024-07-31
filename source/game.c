@@ -3,6 +3,7 @@
 #include "game.h"
 #include <string.h>
 #include "coordinates.h"
+#include "cpu_player.h"
 
 /*                                              x->
                <-y  ___  x->                     ___________________
@@ -31,7 +32,7 @@ Player winner = 0;
 
 Board_XY stone_put_pos;
 
-void play() {
+void player_play() {
 
     Screen_XY ghost_stone_screen_xy = get_sprite_position(ghost_stone);
     
@@ -54,11 +55,29 @@ void play() {
     game_state = PUTTING_STONE;
     
 }
+
+void cpu_play() {
+
+    Board_XY board_xy = cpu_find_next_move();
+
+    bool stone_put = put_stone(current_player, board_xy);
+
+    if (!stone_put)
+    {
+        while(1); // not supposed to happen
+    }
+
+    putting_stone_delay = bee.anim_frames * bee.anim_delay;
+    stone_put_pos = board_xy;
+    game_state = PUTTING_STONE;
+    
+}
+
 void end_turn() {
     
     update_stones_sprites(current_player, stone_put_pos);
 
-    if (has_won(current_player))
+    if (has_won(current_player) != NULL)
     {
         winner = current_player;
         game_state = GAME_ENDED;
@@ -110,7 +129,8 @@ void switch_player() {
 
 Board_XY* reconstruct_path(Board_XY end, Board_XY parents[11][11])
 {
-    return NULL;
+    // PLACEHOLDER
+    return (Board_XY*)1;
 }
 
 Board_XY* has_won(Player player) {

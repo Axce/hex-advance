@@ -4,6 +4,10 @@
 
 #define OBJ_COUNT 128
 
+extern int global_frame;
+
+extern int current_player;
+
 extern OBJ_ATTR obj_buffer[OBJ_COUNT];
 
 enum ORIENTATIONS {

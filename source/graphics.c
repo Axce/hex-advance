@@ -3,6 +3,7 @@
 #include <string.h>
 #include "coordinates.h"
 #include "game.h"
+#include "game_loop.h"
 
 #define PAL_BLACKSET 2
 #define PAL_WHITESET 3
@@ -63,13 +64,19 @@ void display_ghost_stone()
 
 	Screen_XY ghost_coordinates;
 
-	ghost_coordinates.x = (bee.x+37)/10*10 - 8;  //adjust de +32px (moitié de largeur de bee) et -8px (moitié de largeur de ghost), et puis fine-tuning
-
-	if ((ghost_coordinates.x/10) & 1)
-		ghost_coordinates.y = (bee.y+32)/12*12 - 8 + 6 + 3;
+	if (mode_1_or_2_players == MODE_1_PLAYER && current_player == PLAYER_2_WHITE)
+	{
+		ghost_coordinates = new_screen_xy(bee.x+32, bee.y+32);
+	}
 	else
-		ghost_coordinates.y = (bee.y+32+6)/12*12 - 8 + 3;
-	
+	{
+		ghost_coordinates.x = (bee.x+37)/10*10 - 8;  //adjust de +32px (moitié de largeur de bee) et -8px (moitié de largeur de ghost), et puis fine-tuning
+
+		if ((ghost_coordinates.x/10) & 1)
+			ghost_coordinates.y = (bee.y+32)/12*12 - 8 + 6 + 3;
+		else
+			ghost_coordinates.y = (bee.y+32+6)/12*12 - 8 + 3;
+	}
 
 	if (is_stone_in_board(ghost_coordinates))
 	{

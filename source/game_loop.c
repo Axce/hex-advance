@@ -123,6 +123,7 @@ void putting_stone_loop()
 	
 	if (--putting_stone_delay == 0)
 	{
+		obj_hide(ghost_stone);
 		bee.current_animation = BEE_IDLE;
 		end_turn();
 	}

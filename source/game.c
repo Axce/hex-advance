@@ -69,6 +69,12 @@ void cpu_play() {
 
     putting_stone_delay = bee.anim_frames * bee.anim_delay;
     stone_put_pos = board_xy;
+
+    Screen_XY stone_screen_pos = to_screen_xy(stone_put_pos);
+
+    bee.x = stone_screen_pos.x - 32;
+    bee.y = stone_screen_pos.y - 32;
+
     game_state = PUTTING_STONE;
     
 }

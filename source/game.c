@@ -29,6 +29,8 @@ int board[11][11] =
 
 Player winner = 0;
 
+Board_XY stone_put_pos;
+
 void play() {
 
     Screen_XY ghost_stone_screen_xy = get_sprite_position(ghost_stone);
@@ -46,6 +48,13 @@ void play() {
     {
         return;
     }
+
+    putting_stone_delay = bee.anim_frames * bee.anim_delay;
+    stone_put_pos = board_xy;
+    game_state = PUTTING_STONE;
+    
+}
+void end_turn() {
     
     if (has_won(current_player))
     {
@@ -54,6 +63,8 @@ void play() {
         display_victory();
     }
 
+    game_state = IN_GAME;
+    update_stones_sprites(current_player, stone_put_pos);
     switch_player();
 }
 
@@ -72,8 +83,6 @@ bool put_stone(Player player, Board_XY board_XY)
 
     board[y][x] = player; //(player == PLAYER_1_BLACK) ? 1 : 0;
     
-    update_stones_sprites(player, board_XY);
-
     return true;
 }
 

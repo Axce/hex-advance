@@ -12,3 +12,5 @@ PlayerSprite bee = {
 	2, // vitesse max
 	0, 0
 };
+
+int putting_stone_delay = 0;

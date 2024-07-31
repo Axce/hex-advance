@@ -55,7 +55,7 @@ void switch_player_graphics()
 void display_ghost_stone()
 {
 
-	if (game_state != IN_GAME)
+	if (game_state == GAME_ENDED)
 	{
 		obj_hide(ghost_stone);
 		return;
@@ -89,7 +89,7 @@ void display_ghost_stone()
 void update_bee_sprite()
 {
 	//bee.obj->attr2 = ATTR2_PALBANK(0) | get_sprite_frame_2D(&bee, global_frame);
-	memcpy(&tile_mem[4][0], &bee32Tiles[(get_sprite_frame_1D(&bee, global_frame)) * 8] /*one 4bpp tile = 8 ints*/, bee32TilesLen/16);
+	memcpy(&tile_mem[4][0], &bee32Tiles[(get_sprite_frame_1D(&bee, global_frame)) * 8] /*one 4bpp tile = 8 ints*/, bee32TilesLen/16/3);
 	obj_set_pos(bee.obj, bee.x+16, bee.y+16);	// compense le fait que le sprite fut en 64*64 avant
 }
 

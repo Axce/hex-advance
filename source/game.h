@@ -6,6 +6,8 @@ extern Player winner;
 
 void play();
 
+void end_turn();
+
 bool put_stone(Player player, Board_XY Board_XY);
 
 void switch_player();

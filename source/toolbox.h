@@ -15,7 +15,8 @@ enum ORIENTATIONS {
 
 typedef enum {
 	IN_GAME,
-	GAME_ENDED
+	GAME_ENDED,
+	PUTTING_STONE
 } GAME_STATE;
 
 extern GAME_STATE game_state;

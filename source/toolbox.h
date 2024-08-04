@@ -21,7 +21,8 @@ typedef enum {
 	TITLE_SCREEN,
 	IN_GAME,
 	GAME_ENDED,
-	PUTTING_STONE
+	PUTTING_STONE,
+	MINIGAME
 } GAME_STATE;
 
 extern GAME_STATE game_state;

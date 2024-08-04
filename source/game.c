@@ -249,4 +249,4 @@ void restart_game()
     update_bee_sprite();
 
     game_state = IN_GAME;
-};
+}

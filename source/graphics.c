@@ -100,6 +100,13 @@ void update_bee_sprite()
 	obj_set_pos(bee.obj, bee.x+16, bee.y+16);	// compense le fait que le sprite fut en 64*64 avant
 }
 
+void update_larva_sprite()
+{
+	//bee.obj->attr2 = ATTR2_PALBANK(0) | get_sprite_frame_2D(&bee, global_frame);
+	memcpy(&tile_mem[4][16], &larvaTiles[(get_sprite_frame_1D(&larva, global_frame)) * 8] /*one 4bpp tile = 8 ints*/, larvaTilesLen/4);
+	obj_set_pos(larva.obj, larva.x, larva.y);
+}
+
 void init_stones_sprites()
 {
 

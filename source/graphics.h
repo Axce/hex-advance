@@ -10,6 +10,7 @@
 #include "coordinates.h"
 #include "stonesetblack.h"
 #include "stonesetwhite.h"
+#include "larva.h"
 
 //menus
 #include "txt_p1wins.h"
@@ -34,6 +35,8 @@ void switch_player_graphics();
 void display_ghost_stone();
 
 void update_bee_sprite();
+
+void update_larva_sprite();
 
 void init_stones_sprites();
 

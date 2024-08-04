@@ -13,4 +13,17 @@ PlayerSprite bee = {
 	0, 0
 };
 
+PlayerSprite larva = {
+    &obj_buffer[75],
+    2, 2,
+    12,
+    4,
+    EAST,
+    0,
+    SCREEN_WIDTH/2-8, SCREEN_HEIGHT/2-8,
+    0,
+    0, 0
+};
+
+
 int putting_stone_delay = 0;

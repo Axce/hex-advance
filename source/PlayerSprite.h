@@ -15,7 +15,8 @@
 
 typedef enum {
 	PLAYER_1_BLACK = 1,	// yellow bee, black stones
-	PLAYER_2_WHITE = 2	// red bee, white stones
+	PLAYER_2_WHITE = 2,	// red bee, white stones
+	LARVA
 } Player;
 
 enum BEE_ANIMATIONS {
@@ -37,5 +38,6 @@ typedef struct {
 } PlayerSprite;
 
 extern PlayerSprite bee;
+extern PlayerSprite larva;
 
 extern int putting_stone_delay;

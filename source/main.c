@@ -11,6 +11,7 @@
 
 #include "title_screen_loop.h"
 #include "game_loop.h"
+#include "minigame_loop.h"
 
 
 int global_frame = 0;
@@ -47,6 +48,10 @@ int main()
 			
 			case PUTTING_STONE:
 				putting_stone_loop();
+				break;
+
+			case MINIGAME:
+				minigame_loop();
 				break;
 		}
 

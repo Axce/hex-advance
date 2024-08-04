@@ -38,3 +38,13 @@ inline int mod(int num, int den)
 		n += den;
 	return n;
 }
+
+inline int pow(int n, int power)
+{
+    int result = 1;
+	while(power--)
+	{
+		result *= n;
+	}
+	return result;
+}

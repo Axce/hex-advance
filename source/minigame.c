@@ -13,12 +13,8 @@ Board_XY larva_board_xy;
 void restart_minigame()
 {
     memset(board, 0, sizeof(board));
-
-
-    board[5][5] = LARVA;
-    larva_board_xy = new_board_xy(5,5);
-
     init_stones_sprites();
+/*
     // placeholder
     sqran(global_frame);
     for (int i = 0; i < 5; i++)
@@ -28,6 +24,9 @@ void restart_minigame()
         board[y][x] = PLAYER_1_BLACK;
         update_stones_sprites(PLAYER_1_BLACK, new_board_xy(x, y));
     }
+*/
+    board[5][5] = LARVA;
+    larva_board_xy = new_board_xy(5,5);
 
     current_player = PLAYER_1_BLACK;
     switch_player_graphics();
@@ -42,7 +41,7 @@ void restart_minigame()
 void minigame_player_play() {
 
     Screen_XY ghost_stone_screen_xy = get_sprite_position(ghost_stone);
-    
+
     if (!is_stone_in_board(ghost_stone_screen_xy))
     {
         return;
@@ -60,7 +59,7 @@ void minigame_player_play() {
     putting_stone_delay = bee.anim_frames * bee.anim_delay;
     minigame_stone_put_pos = board_xy;
     game_state = MINIGAME_PUTTING_STONE;
-    
+
 }
 
 void larva_play()
@@ -76,7 +75,6 @@ Board_XY larva_find_next_move()
 {
     int distance_to_win[BOARD_SIZE][BOARD_SIZE] = {0};
     int how_many_routes[BOARD_SIZE][BOARD_SIZE] = {0};
-    int distance, routes;
 
     int neighbor_Ys[6] = {-1,-1, 0, 0,+1,+1};
     int neighbor_Xs[6] = {-1, 0,-1,+1, 0,+1};
@@ -126,51 +124,62 @@ Board_XY larva_find_next_move()
         Board_XY current_node = queue[read_cursor++];
         int x = current_node.x;
         int y = current_node.y;
-        
+
         for (int ni = 0; ni < 6; ni++)                          // pour chaque voisin potentiel
         {
             int nx = x + neighbor_Xs[ni];
             int ny = y + neighbor_Ys[ni];
-            if ( is_in_board(nx, ny)                            // si dans le board,
-                && board[ny][nx] != PLAYER_1_BLACK              // si vide ou larve,
-                && distance_to_win[ny][nx] == 0 )               // et si pas encore visité
+            if (is_in_board(nx, ny))
             {
-                queue[write_cursor++] = new_board_xy(nx, ny);   // on l'ajoute à la queue
-                distance = distance_to_win[y][x] + 1;
-                distance_to_win[ny][nx] = distance;             // on marque sa distance,
-                
-                routes = 0;
-                for (int nni = 0; nni < 6; nni++)                   //// pour chaque voisin du nouveau nœud
+                if (board[ny][nx] != PLAYER_1_BLACK              // si vide ou larve,
+                    && distance_to_win[ny][nx] == 0 )               // et si pas encore visité
                 {
-                    int nnx = nx + neighbor_Xs[nni];
-                    int nny = ny + neighbor_Ys[nni];
-                    if (is_in_board(nnx, nny)                       //// si dans le board,
-                        && distance_to_win[nny][nnx] > 0
-                        && distance_to_win[nny][nnx] < distance)    //// et si suite de la route
-                    {
-                        routes += how_many_routes[nny][nnx];
-                    }
+                    queue[write_cursor++] = new_board_xy(nx, ny);   // on l'ajoute à la queue
+                    distance_to_win[ny][nx] = distance_to_win[y][x] + 1;             // on marque sa distance,
                 }
-                how_many_routes[ny][nx] = routes;               // et son nb de routes
+                                                            //// on en profite pour calculer le nombre de routes
+                if (distance_to_win[ny][nx] > 0
+                    && distance_to_win[ny][nx] < distance_to_win[y][x])    //// et si suite de la route
+                {
+                    how_many_routes[y][x] += how_many_routes[ny][nx];
+                }
             }
+
         }
+
+
+        // check endgame
+        // if (board[y][x] == LARVA)
+        // {
+        //     if (distance_to_win[y][x] == 0)
+        //         while(1);   // win
+        //     if (distance_to_win[y][x] == 1)
+        //         while(1);   // lose
+        // }
+
     }
 
     int best_score = -1;
     int best_ni;
     int score;
+    int distance, routes;
     for (int ni = 0; ni < 6; ni++)      // pour chaque case adjacente à la larve
     {
         int nx = larva_board_xy.x + neighbor_Xs[ni];
         int ny = larva_board_xy.y + neighbor_Ys[ni];
-
-        distance = distance_to_win[ny][nx];
-        routes = how_many_routes[ny][nx];
-        score = routes * 360360 / distance; // 360360 is divisible by [1…15], for higher chance working with integers only
-        if (score > best_score)
+        
+        if ( /*is_in_board(nx, ny)*/ // has to be
+            distance_to_win[ny][nx] > 0 )
         {
-            best_score = score;
-            best_ni = ni;
+            distance = distance_to_win[ny][nx];
+            routes = how_many_routes[ny][nx];
+            // tentative de calcul intelligent non prévue
+            score = routes * 360360 / (pow(2, (distance-1))); // 360360 is divisible by [1…15], for higher chance working with integers only
+            if (score > best_score)
+            {
+                best_score = score;
+                best_ni = ni;
+            }
         }
     }
 
@@ -178,7 +187,7 @@ Board_XY larva_find_next_move()
     int ny = larva_board_xy.y + neighbor_Ys[best_ni];
 
     return new_board_xy(nx,ny);
-    
+
 }
 
 void larva_move(Board_XY new_pos)
@@ -190,7 +199,7 @@ void larva_move(Board_XY new_pos)
 }
 
 void minigame_end_turn() {
-    
+
     update_stones_sprites(current_player, minigame_stone_put_pos);
 
     if (has_won(current_player) != NULL)

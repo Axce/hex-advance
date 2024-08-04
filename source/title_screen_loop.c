@@ -53,7 +53,7 @@ void title_screen_loop()
 
 	obj_set_pos(&obj_buffer[0], TITLE_MENU_X - offset, TITLE_MENU_Y + 12 * selected);
 	
-	if (key_hit(KEY_A))
+	if (key_hit(KEY_A) || key_hit(KEY_START))
 	{
 		switch (selected)
 		{

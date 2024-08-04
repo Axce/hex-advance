@@ -4,6 +4,10 @@
 #include "PlayerSprite.h"
 #include "game.h"
 
+extern bool minigame_won;
+
+extern bool minigame_lost;
+
 extern Board_XY larva_board_xy;
 
 void restart_minigame();
@@ -17,3 +21,5 @@ Board_XY larva_find_next_move();
 void larva_move(Board_XY new_pos);
 
 void minigame_end_turn();
+
+void check_lose();

@@ -6,27 +6,36 @@
 #include "cpu_player.h"
 #include "minigame.h"
 
+#define STARTING_STONES 20
+
+bool minigame_won = false;
+bool minigame_lost = false;
+
 Board_XY minigame_stone_put_pos;
 
 Board_XY larva_board_xy;
 
 void restart_minigame()
 {
+    minigame_won = false;
+    minigame_lost = false;
+
     memset(board, 0, sizeof(board));
     init_stones_sprites();
-/*
+
     // placeholder
     sqran(global_frame);
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < STARTING_STONES; i++)
     {
         int x = qran_range(0, BOARD_SIZE);
         int y = qran_range(0, BOARD_SIZE);
         board[y][x] = PLAYER_1_BLACK;
         update_stones_sprites(PLAYER_1_BLACK, new_board_xy(x, y));
     }
-*/
+
     board[5][5] = LARVA;
     larva_board_xy = new_board_xy(5,5);
+    update_stones_sprites(PLAYER_1_BLACK, new_board_xy(5, 5));  // in case need to remove stone at center
 
     current_player = PLAYER_1_BLACK;
     switch_player_graphics();
@@ -165,22 +174,26 @@ Board_XY larva_find_next_move()
     int distance, routes;
     for (int ni = 0; ni < 6; ni++)      // pour chaque case adjacente à la larve
     {
-        int nx = larva_board_xy.x + neighbor_Xs[ni];
-        int ny = larva_board_xy.y + neighbor_Ys[ni];
+        int x = larva_board_xy.x;
+        int y = larva_board_xy.y;
+        int nx = x + neighbor_Xs[ni];
+        int ny = y + neighbor_Ys[ni];
         
         if ( /*is_in_board(nx, ny)*/ // has to be
-            distance_to_win[ny][nx] > 0 )
+            distance_to_win[ny][nx] == distance_to_win[y][x] - 1)
         {
-            distance = distance_to_win[ny][nx];
             routes = how_many_routes[ny][nx];
-            // tentative de calcul intelligent non prévue
-            score = routes * 360360 / (pow(2, (distance-1))); // 360360 is divisible by [1…15], for higher chance working with integers only
-            if (score > best_score)
+            if (routes > best_score)
             {
-                best_score = score;
+                best_score = routes;
                 best_ni = ni;
             }
         }
+    }
+
+    if (best_score == -1)
+    {
+        minigame_won = true;
     }
 
     int nx = larva_board_xy.x + neighbor_Xs[best_ni];
@@ -202,15 +215,14 @@ void minigame_end_turn() {
 
     update_stones_sprites(current_player, minigame_stone_put_pos);
 
-    if (has_won(current_player) != NULL)
+    larva_play();
+    game_state = MINIGAME;
+}
+
+void check_lose()
+{
+    if (larva_board_xy.x == 0 || larva_board_xy.x == BOARD_SIZE-1 || larva_board_xy.y == 0 || larva_board_xy.y == BOARD_SIZE-1)
     {
-        winner = current_player;
-        game_state = MINIGAME_ENDED;
-        display_victory();
-    }
-    else
-    {
-		larva_play();
-        game_state = MINIGAME;
+        minigame_lost = true;
     }
 }

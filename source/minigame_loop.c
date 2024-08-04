@@ -61,18 +61,23 @@ void minigame_loop()
 		return;
 	}
 
-	evaluate_movement();
-	
-	if (key_hit(KEY_A))
+
+	if (!minigame_lost && !minigame_won)
 	{
-		minigame_player_play();
+		evaluate_movement();
+		
+		if (key_hit(KEY_A))
+		{
+			minigame_player_play();
+		}
+
+		update_larva_sprite();
+		update_bee_sprite();
+
+		display_ghost_stone();
 	}
-
-	update_larva_sprite();
-	update_bee_sprite();
-
-	display_ghost_stone();
-
+	
+	check_lose();
 }
 
 void minigame_putting_stone_loop() 

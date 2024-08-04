@@ -13,7 +13,7 @@
     ___/3,0\___/2,1\___/1,2\___/0,3\___         |3,0| … |   |   |  
 ___/ … \___/ … \___/ … \___/ … \___/ … \___     | … |   |   |   |  
 */
-int board[11][11] =
+int board[BOARD_SIZE][BOARD_SIZE] =
 {
     {0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0},
@@ -159,12 +159,12 @@ Board_XY* has_won(Player player) {
         {0,0,0,0,0,0,0,0,0,0,0},
     };
 
-    Board_XY parents[11][11] = { 0 };
+    Board_XY parents[BOARD_SIZE][BOARD_SIZE] = { 0 };
 
     int neighbor_Ys[6] = {-1,-1, 0, 0,+1,+1};
     int neighbor_Xs[6] = {-1, 0,-1,+1, 0,+1};
 
-    Board_XY queue[121] = {0};
+    Board_XY queue[BOARD_SIZE*BOARD_SIZE] = {0};
     int write_cursor = 0;
     int read_cursor = 0;
 
@@ -205,7 +205,7 @@ Board_XY* has_won(Player player) {
             int nx = x + neighbor_Xs[ni];
             int ny = y + neighbor_Ys[ni];
             
-            if ( nx>=0 && nx<11 && ny>=0 && ny<11 &&    // si dans le board,
+            if ( is_in_board(nx, ny) &&    // si dans le board,
                 board[ny][nx] == player &&              // si un pion du player est là,
                 visit_board[ny][nx] == 0)               // et si pas encore visité
             {

@@ -65,8 +65,7 @@ void minigame_loop()
 	
 	if (key_hit(KEY_A))
 	{
-		player_play();
-		larva_play();
+		minigame_player_play();
 	}
 
 	update_larva_sprite();
@@ -74,4 +73,18 @@ void minigame_loop()
 
 	display_ghost_stone();
 
+}
+
+void minigame_putting_stone_loop() 
+{
+    bee.current_animation = BEE_ATTACK;
+	memcpy(&tile_mem[4][0], &bee32Tiles[(get_sprite_frame_1D(&bee, 20 - putting_stone_delay)) * 8] /*one 4bpp tile = 8 ints*/, bee32TilesLen/16/3);
+	display_ghost_stone();
+	
+	if (--putting_stone_delay == 0)
+	{
+		obj_hide(ghost_stone);
+		bee.current_animation = BEE_IDLE;
+		minigame_end_turn();
+	}
 }

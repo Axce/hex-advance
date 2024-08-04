@@ -53,6 +53,10 @@ int main()
 			case MINIGAME:
 				minigame_loop();
 				break;
+
+			case MINIGAME_PUTTING_STONE:
+				minigame_putting_stone_loop();
+				break;
 		}
 
 		obj_copy(obj_mem, obj_buffer, OBJ_COUNT);

@@ -17,7 +17,7 @@ enum TITLE_MENU_CHOICES {
 	TITLE_MENU_NUMBER_OF_CHOICES
 };
 
-int selected;
+int selected = TITLE_MENU_1_PLAYER;
 
 void init_title_screen()
 {
@@ -35,7 +35,7 @@ void init_title_screen()
 		ATTR1_SIZE_8x16,
 		ATTR2_PALBANK(0) | 512);
 	
-	selected = TITLE_MENU_1_PLAYER;
+	// selected = TITLE_MENU_1_PLAYER;
 	obj_set_pos(&obj_buffer[0], TITLE_MENU_X, TITLE_MENU_Y);
 
 	game_state = TITLE_SCREEN;

@@ -4,6 +4,7 @@
 #include "coordinates.h"
 #include "game.h"
 #include "game_loop.h"
+#include "minigame.h"
 
 #define PAL_BLACKSET 2
 #define PAL_WHITESET 3
@@ -56,7 +57,7 @@ void switch_player_graphics()
 void display_ghost_stone()
 {
 
-	if (game_state == GAME_ENDED)
+	if (game_state == GAME_ENDED || game_state == MINIGAME_ENDED)
 	{
 		obj_hide(ghost_stone);
 		return;
@@ -104,6 +105,10 @@ void update_larva_sprite()
 {
 	//bee.obj->attr2 = ATTR2_PALBANK(0) | get_sprite_frame_2D(&bee, global_frame);
 	memcpy(&tile_mem[4][16], &larvaTiles[(get_sprite_frame_1D(&larva, global_frame)) * 8] /*one 4bpp tile = 8 ints*/, larvaTilesLen/4);
+	
+	Screen_XY larva_screen_pos = to_screen_xy(larva_board_xy);
+    larva.x = larva_screen_pos.x;
+    larva.y = larva_screen_pos.y;
 	obj_set_pos(larva.obj, larva.x, larva.y);
 }
 

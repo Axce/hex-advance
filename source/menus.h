@@ -14,3 +14,9 @@ extern MENU_TYPE current_menu_type;
 void menu_loop();
 
 void init_menu(MENU_TYPE type);
+
+void menu_pause();
+
+void menu_restart();
+
+void close_menu();

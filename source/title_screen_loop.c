@@ -18,7 +18,7 @@ enum TITLE_MENU_CHOICES {
 	TITLE_MENU_NUMBER_OF_CHOICES
 };
 
-int selected = TITLE_MENU_1_PLAYER;
+int titlemenu_selected = TITLE_MENU_1_PLAYER;
 
 void init_title_screen()
 {
@@ -29,16 +29,16 @@ void init_title_screen()
 	GRIT_CPY(vid_mem, title_screenBitmap);
 
 
-	GRIT_CPY(&tile_mem_obj_tile[TILE_TITLECURSOR], menu_cursorTiles);
+	GRIT_CPY(&tile_mem_obj_tile[TILE_CURSOR], menu_cursorTiles);
 	GRIT_CPY(&pal_obj_bank[PAL_MENUS], menu_palettePal);
 
-	obj_set_attr(&obj_buffer[OAM_TITLECURSOR], 
+	obj_set_attr(&obj_buffer[OAM_CURSOR], 
 		ATTR0_WIDE,
 		ATTR1_SIZE_8x16,
-		ATTR2_PALBANK(PAL_MENUS) | TILE_TITLECURSOR);
+		ATTR2_PALBANK(PAL_MENUS) | TILE_CURSOR);
 	
-	// selected = TITLE_MENU_1_PLAYER;
-	obj_set_pos(&obj_buffer[OAM_TITLECURSOR], TITLE_MENU_X, TITLE_MENU_Y);
+	// titlemenu_selected = TITLE_MENU_1_PLAYER;
+	obj_set_pos(&obj_buffer[OAM_CURSOR], TITLE_MENU_X, TITLE_MENU_Y);
 
 	game_state = TITLE_SCREEN;
 
@@ -47,17 +47,17 @@ void init_title_screen()
 void title_screen_loop()
 {
 	if (key_hit(KEY_UP))
-		selected = mod((selected - 1), TITLE_MENU_NUMBER_OF_CHOICES);
+		titlemenu_selected = mod((titlemenu_selected - 1), TITLE_MENU_NUMBER_OF_CHOICES);
 	if (key_hit(KEY_DOWN))
-		selected = mod((selected + 1), TITLE_MENU_NUMBER_OF_CHOICES);
+		titlemenu_selected = mod((titlemenu_selected + 1), TITLE_MENU_NUMBER_OF_CHOICES);
 
 	int offset = 1 * ((global_frame>>4)&1);
 
-	obj_set_pos(&obj_buffer[OAM_TITLECURSOR], TITLE_MENU_X - offset, TITLE_MENU_Y + TITLE_MENU_SPACE * selected);
+	obj_set_pos(&obj_buffer[OAM_CURSOR], TITLE_MENU_X - offset, TITLE_MENU_Y + TITLE_MENU_SPACE * titlemenu_selected);
 	
 	if (key_hit(KEY_A) || key_hit(KEY_START))
 	{
-		switch (selected)
+		switch (titlemenu_selected)
 		{
 			case TITLE_MENU_1_PLAYER:
 				mode_1_or_2_players = MODE_1_PLAYER;

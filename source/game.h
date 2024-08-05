@@ -30,3 +30,5 @@ Board_XY* reconstruct_path(Board_XY end, Board_XY parents[11][11]);
 Board_XY* has_won(Player player);
 
 void restart_game();
+
+void display_victory();

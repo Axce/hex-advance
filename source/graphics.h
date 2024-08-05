@@ -46,5 +46,3 @@ void update_larva_sprite();
 void init_stones_sprites();
 
 void update_stones_sprites(Player player, Board_XY stone_board_pos);
-
-void display_victory();

@@ -170,29 +170,3 @@ void update_stones_sprites(Player player, Board_XY stone_board_pos)
 	}
 }
 
-void display_victory()
-{
-	switch (winner)
-	{
-		case PLAYER_1_BLACK:
-			GRIT_CPY(&tile_mem_obj_tile[TILE_MENUS], menu_p1winsTiles);
-			GRIT_CPY(&pal_obj_bank[PAL_MENUS], menu_palettePal);
-			break;
-		case PLAYER_2_WHITE:
-			GRIT_CPY(&tile_mem_obj_tile[TILE_MENUS], menu_p2winsTiles);
-			GRIT_CPY(&pal_obj_bank[PAL_MENUS], menu_palettePal);
-			break;
-		default:
-			return;
-	}
-
-	obj_hide(bee.obj);
-
-	obj_set_attr(&obj_buffer[OAM_MENUS],
-		ATTR0_SQUARE,
-		ATTR1_SIZE_64x64,
-		ATTR2_PALBANK(PAL_MENUS) | ATTR2_ID(TILE_MENUS));
-	obj_set_pos(&obj_buffer[OAM_MENUS], 2, 2);
-	// obj_unhide(&obj_buffer[OAM_MENUS], DCNT_MODE0);	// useless ? vu qu'on écrase les attr avant
-
-}

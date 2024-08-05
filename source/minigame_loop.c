@@ -8,6 +8,7 @@
 #include "minigame.h"
 #include "minigame_loop.h"
 #include "mem_management.h"
+#include "menus.h"
 
 void init_minigame_loop()
 {
@@ -57,7 +58,7 @@ void init_minigame_loop()
 void minigame_loop()
 {
 	if (key_hit(KEY_START)) {
-		init_title_screen();
+		init_menu(MENU_PAUSE);
 		return;
 	}
 

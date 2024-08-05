@@ -28,6 +28,9 @@ int main()
 
 	while(1)
 	{
+
+		key_poll();
+
 		vid_vsync();		
 	
 		global_frame++;

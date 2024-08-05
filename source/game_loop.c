@@ -6,6 +6,7 @@
 #include "movement.h"
 #include "title_screen_loop.h"
 #include "mem_management.h"
+#include "menus.h"
 
 int mode_1_or_2_players;
 
@@ -41,7 +42,7 @@ void init_game_loop()
 		ATTR2_PALBANK(PAL_GHOST_STONE) | TILE_GHOST_STONE);
 	obj_hide(ghost_stone);
 
-	init_stones_sprites();
+	//init_stones_sprites();
 
 	restart_game();
 
@@ -66,7 +67,7 @@ void game_loop_1p_vs_cpu()
 {
 
 	if (key_hit(KEY_START)) {
-		init_title_screen();
+		init_menu(MENU_PAUSE);
 		return;
 	}
 
@@ -94,7 +95,7 @@ void game_loop_2p()
 {
 
 	if (key_hit(KEY_START)) {
-		init_title_screen();
+		init_menu(MENU_PAUSE);
 		return;
 	}
 	

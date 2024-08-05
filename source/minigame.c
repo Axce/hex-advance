@@ -5,8 +5,8 @@
 #include "coordinates.h"
 #include "cpu_player.h"
 #include "minigame.h"
+#include "mem_management.h"
 
-#define STARTING_STONES 20
 
 bool minigame_won = false;
 bool minigame_lost = false;
@@ -25,7 +25,8 @@ void restart_minigame()
 
     // placeholder
     sqran(global_frame);
-    for (int i = 0; i < STARTING_STONES; i++)
+    int starting_stones = qran_range(10,15);
+    for (int i = 0; i < starting_stones; i++)
     {
         int x = qran_range(0, BOARD_SIZE);
         int y = qran_range(0, BOARD_SIZE);
@@ -33,14 +34,14 @@ void restart_minigame()
         update_stones_sprites(PLAYER_1_BLACK, new_board_xy(x, y));
     }
 
-    board[5][5] = LARVA;
+    board[BOARD_SIZE/2][BOARD_SIZE/2] = LARVA;
     larva_board_xy = new_board_xy(5,5);
     update_stones_sprites(PLAYER_1_BLACK, new_board_xy(5, 5));  // in case need to remove stone at center
 
     current_player = PLAYER_1_BLACK;
     switch_player_graphics();
-    winner = 0;
-    obj_hide(&obj_buffer[74]);          //hide win text
+    winner = NOBODY;
+    obj_hide(&obj_buffer[OAM_MENUS]);          //hide win text
     obj_unhide(bee.obj, DCNT_MODE0);
     update_bee_sprite();
 
@@ -169,9 +170,8 @@ Board_XY larva_find_next_move()
     }
 
     int best_score = -1;
-    int best_ni;
-    int score;
-    int distance, routes;
+    int best_ni = 0;
+
     for (int ni = 0; ni < 6; ni++)      // pour chaque case adjacente à la larve
     {
         int x = larva_board_xy.x;
@@ -182,7 +182,7 @@ Board_XY larva_find_next_move()
         if ( /*is_in_board(nx, ny)*/ // has to be
             distance_to_win[ny][nx] == distance_to_win[y][x] - 1)
         {
-            routes = how_many_routes[ny][nx];
+            int routes = how_many_routes[ny][nx];
             if (routes > best_score)
             {
                 best_score = routes;

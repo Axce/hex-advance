@@ -4,6 +4,7 @@
 #include <string.h>
 #include "coordinates.h"
 #include "cpu_player.h"
+#include "mem_management.h"
 
 /*                                              x->
                <-y  ___  x->                     ___________________
@@ -244,7 +245,7 @@ void restart_game()
     current_player = PLAYER_1_BLACK;
     switch_player_graphics();
     winner = 0;
-    obj_hide(&obj_buffer[74]);          //hide win text
+    obj_hide(&obj_buffer[OAM_MENUS]);          //hide win text
     obj_unhide(bee.obj, DCNT_MODE0);
     update_bee_sprite();
 

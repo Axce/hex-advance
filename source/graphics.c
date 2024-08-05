@@ -5,23 +5,13 @@
 #include "game.h"
 #include "game_loop.h"
 #include "minigame.h"
+#include "mem_management.h"
 
-#define PAL_BLACKSET 2
-#define PAL_WHITESET 3
-
-OBJ_ATTR* ghost_stone = &obj_buffer[1];
+OBJ_ATTR* ghost_stone = &obj_buffer[OAM_GHOST_STONE];
 
 OBJ_ATTR* stone_set_black[6][6];
 
 OBJ_ATTR* stone_set_white[6][6];
-
-// in tiles
-// int get_sprite_frame_2D(PlayerSprite* sprite, int global_frame)
-// {
-// 	int sprite_frame = sprite->width * ((global_frame/sprite->anim_delay) % sprite->anim_frames);
-// 	int orientation_offset = (sprite->width * sprite->height * sprite->anim_frames * sprite->orientation);
-// 	return sprite_frame + orientation_offset;
-// }
 
 // in tiles
 int get_sprite_frame_1D(PlayerSprite* sprite, int global_frame)
@@ -39,18 +29,18 @@ void switch_player_graphics()
         bee.orientation = WEST;
         bee.x = PLAYER1_SPAWN_X;
         bee.y = PLAYER1_SPAWN_Y;
-        memcpy(pal_obj_mem, bee32Pal, bee32PalLen);
-        memcpy(&tile_mem[4][64], stoneblackTiles, stoneblackTilesLen);
-        memcpy(&pal_obj_bank[1], stoneblackPal, stoneblackPalLen);
+        GRIT_CPY(pal_obj_mem, bee32Pal);
+        GRIT_CPY(&tile_mem_obj_tile[TILE_GHOST_STONE], stoneblackTiles);
+        GRIT_CPY(&pal_obj_bank[PAL_GHOST_STONE], stoneblackPal);
     }
     else
     {
         bee.orientation = EAST;
         bee.x = PLAYER2_SPAWN_X;
         bee.y = PLAYER2_SPAWN_Y;
-        memcpy(pal_obj_mem, bee32darkPal, beedarkPalLen);
-        memcpy(&tile_mem[4][64], stonewhiteTiles, stonewhiteTilesLen);
-        memcpy(&pal_obj_bank[1], stonewhitePal, stonewhitePalLen);
+        GRIT_CPY(pal_obj_mem, bee32darkPal);
+        GRIT_CPY(&tile_mem_obj_tile[TILE_GHOST_STONE], stonewhiteTiles);
+        GRIT_CPY(&pal_obj_bank[PAL_GHOST_STONE], stonewhitePal);
     }
 }
 
@@ -96,15 +86,13 @@ void display_ghost_stone()
 
 void update_bee_sprite()
 {
-	//bee.obj->attr2 = ATTR2_PALBANK(0) | get_sprite_frame_2D(&bee, global_frame);
-	memcpy(&tile_mem[4][0], &bee32Tiles[(get_sprite_frame_1D(&bee, global_frame)) * 8] /*one 4bpp tile = 8 ints*/, bee32TilesLen/16/3);
+	memcpy(&tile_mem_obj_tile[TILE_BEE], &bee32Tiles[(get_sprite_frame_1D(&bee, global_frame)) * 8] /*one 4bpp tile = 8 ints*/, bee32TilesLen/16/3);
 	obj_set_pos(bee.obj, bee.x+16, bee.y+16);	// compense le fait que le sprite fut en 64*64 avant
 }
 
 void update_larva_sprite()
 {
-	//bee.obj->attr2 = ATTR2_PALBANK(0) | get_sprite_frame_2D(&bee, global_frame);
-	memcpy(&tile_mem[4][16], &larvaTiles[(get_sprite_frame_1D(&larva, global_frame)) * 8] /*one 4bpp tile = 8 ints*/, larvaTilesLen/4);
+	memcpy(&tile_mem_obj_tile[TILE_LARVA], &larvaTiles[(get_sprite_frame_1D(&larva, global_frame)) * 8] /*one 4bpp tile = 8 ints*/, larvaTilesLen/4);
 	
 	Screen_XY larva_screen_pos = to_screen_xy(larva_board_xy);
     larva.x = larva_screen_pos.x;
@@ -115,9 +103,9 @@ void update_larva_sprite()
 void init_stones_sprites()
 {
 
-	memcpy(&tile_mem[4][68], stonesetblackTiles, stonesetblackTilesLen);
-	memcpy(&pal_obj_bank[PAL_BLACKSET], stonesetblackPal, stonesetblackPalLen);
-	memcpy(&pal_obj_bank[PAL_WHITESET], stonesetwhitePal, stonesetwhitePalLen);
+	GRIT_CPY(&tile_mem_obj_tile[TILE_STONESET], stonesetblackTiles);
+	GRIT_CPY(&pal_obj_bank[PAL_STONESET_BLACK], stonesetblackPal);
+	GRIT_CPY(&pal_obj_bank[PAL_STONESET_WHITE], stonesetwhitePal);
 
 	int stone_set_id = 0;
 
@@ -125,8 +113,8 @@ void init_stones_sprites()
 	{
 		for (int ix = 0 ; ix < 6 ; ix++)
 		{
-			stone_set_black[iy][ix] = &obj_buffer[stone_set_id+2];
-			stone_set_white[iy][ix] = &obj_buffer[stone_set_id+38];
+			stone_set_black[iy][ix] = &obj_buffer[stone_set_id+OAM_STONESET_FIRSTBLACK];
+			stone_set_white[iy][ix] = &obj_buffer[stone_set_id+OAM_STONESET_FIRSTWHITE];
 
 			Board_XY sprite_board_pos;
 			sprite_board_pos.x = ix*2;
@@ -139,13 +127,13 @@ void init_stones_sprites()
 			obj_set_attr(stone_set_black[iy][ix],
 				ATTR0_SQUARE,
 				ATTR1_SIZE_32x32,
-				ATTR2_PALBANK(PAL_BLACKSET) | ATTR2_ID(68/*+16*15*/));
+				ATTR2_PALBANK(PAL_STONESET_BLACK) | ATTR2_ID(TILE_STONESET));
 			obj_set_pos(stone_set_black[iy][ix], sprite_screen_pos.x, sprite_screen_pos.y);
 
 			obj_set_attr(stone_set_white[iy][ix],
 				ATTR0_SQUARE,
 				ATTR1_SIZE_32x32,
-				ATTR2_PALBANK(PAL_WHITESET) | ATTR2_ID(68/*+16*15*/));
+				ATTR2_PALBANK(PAL_STONESET_WHITE) | ATTR2_ID(TILE_STONESET));
 			obj_set_pos(stone_set_white[iy][ix], sprite_screen_pos.x, sprite_screen_pos.y);
 			
 			stone_set_id++;
@@ -167,18 +155,18 @@ void update_stones_sprites(Player player, Board_XY stone_board_pos)
 	int y1 = 2*y+1;
 	
 	int sprite_number = 0;
-	if (						  board[y0][x0] == player)	sprite_number += 1;
-	if ((x1) < 11 &&    		  board[y0][x1] == player)	sprite_number += 2;
-	if (			 (y1) < 11 && board[y1][x0] == player)	sprite_number += 4;
-	if ((x1) < 11 && (y1) < 11 && board[y1][x1] == player)	sprite_number += 8;
+	if (						  				  board[y0][x0] == player)	sprite_number += 1;
+	if ((x1) < BOARD_SIZE &&    		  		  board[y0][x1] == player)	sprite_number += 2;
+	if (			 		 (y1) < BOARD_SIZE && board[y1][x0] == player)	sprite_number += 4;
+	if ((x1) < BOARD_SIZE && (y1) < BOARD_SIZE && board[y1][x1] == player)	sprite_number += 8;
 
 	if (player == PLAYER_1_BLACK)
 	{
-		BFN_SET(stone_set_black[y][x]->attr2, 68+16*sprite_number, ATTR2_ID);
+		BFN_SET(stone_set_black[y][x]->attr2, TILE_STONESET + 16*sprite_number, ATTR2_ID);
 	}
 	else
 	{
-		BFN_SET(stone_set_white[y][x]->attr2, 68+16*sprite_number, ATTR2_ID);
+		BFN_SET(stone_set_white[y][x]->attr2, TILE_STONESET + 16*sprite_number, ATTR2_ID);
 	}
 }
 
@@ -187,12 +175,12 @@ void display_victory()
 	switch (winner)
 	{
 		case PLAYER_1_BLACK:
-			GRIT_CPY(&tile_mem[5][0], txt_p1winsTiles);
-			GRIT_CPY(&pal_obj_bank[15], txt_p1winsPal);
+			GRIT_CPY(&tile_mem_obj_tile[TILE_MENUS], menu_p1winsTiles);
+			GRIT_CPY(&pal_obj_bank[PAL_MENUS], menu_palettePal);
 			break;
 		case PLAYER_2_WHITE:
-			GRIT_CPY(&tile_mem[5][0], txt_p2winsTiles);
-			GRIT_CPY(&pal_obj_bank[15], txt_p2winsPal);
+			GRIT_CPY(&tile_mem_obj_tile[TILE_MENUS], menu_p2winsTiles);
+			GRIT_CPY(&pal_obj_bank[PAL_MENUS], menu_palettePal);
 			break;
 		default:
 			return;
@@ -200,11 +188,11 @@ void display_victory()
 
 	obj_hide(bee.obj);
 
-	obj_set_attr(&obj_buffer[74],
+	obj_set_attr(&obj_buffer[OAM_MENUS],
 		ATTR0_SQUARE,
 		ATTR1_SIZE_64x64,
-		ATTR2_PALBANK(15) | ATTR2_ID(512));
-	obj_set_pos(&obj_buffer[74], 2, 2);
-	obj_unhide(&obj_buffer[74], DCNT_MODE0);
+		ATTR2_PALBANK(PAL_MENUS) | ATTR2_ID(TILE_MENUS));
+	obj_set_pos(&obj_buffer[OAM_MENUS], 2, 2);
+	// obj_unhide(&obj_buffer[OAM_MENUS], DCNT_MODE0);	// useless ? vu qu'on écrase les attr avant
 
 }

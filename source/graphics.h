@@ -4,7 +4,7 @@
 #include "bee32.h"
 #include "beedark.h"
 #include "bee32dark.h"
-#include "hex.h"
+#include "board11.h"
 #include "stonewhite.h"
 #include "stoneblack.h"
 #include "coordinates.h"
@@ -13,9 +13,14 @@
 #include "larva.h"
 
 //menus
-#include "txt_p1wins.h"
-#include "txt_p2wins.h"
 #include "menu_cursor.h"
+#include "menu_gameover.h"
+#include "menu_p1wins.h"
+#include "menu_p2wins.h"
+#include "menu_palette.h"
+#include "menu_pause.h"
+#include "menu_youwin.h"
+
 
 //title screen bitmap
 #include "title_screen.h"

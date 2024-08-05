@@ -10,14 +10,16 @@ extern int current_player;
 
 extern OBJ_ATTR obj_buffer[OBJ_COUNT];
 
-enum ORIENTATIONS {
+enum ORIENTATIONS
+{
 	NORTH,
 	WEST,
 	EAST,
 	SOUTH
 };
 
-typedef enum {
+typedef enum GAME_STATE
+{
 	TITLE_SCREEN,
 
 	IN_GAME,
@@ -26,7 +28,9 @@ typedef enum {
 	
 	MINIGAME,
 	MINIGAME_PUTTING_STONE,
-	MINIGAME_ENDED
+	MINIGAME_ENDED,
+
+	MENUING
 } GAME_STATE;
 
 extern GAME_STATE game_state;
@@ -39,7 +43,7 @@ inline int mod(int num, int den)
 	return n;
 }
 
-inline int pow(int n, int power)
+inline int power(int n, int power)
 {
     int result = 1;
 	while(power--)

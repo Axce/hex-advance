@@ -14,8 +14,9 @@
 */
 
 typedef enum {
-	PLAYER_1_BLACK = 1,	// yellow bee, black stones
-	PLAYER_2_WHITE = 2,	// red bee, white stones
+	NOBODY,
+	PLAYER_1_BLACK,	// yellow bee, black stones
+	PLAYER_2_WHITE,	// red bee, white stones
 	LARVA
 } Player;
 

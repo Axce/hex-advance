@@ -1,8 +1,9 @@
 #include "toolbox.h"
 #include "PlayerSprite.h"
+#include "mem_management.h"
 
 PlayerSprite bee = {
-	&obj_buffer[0],
+	&obj_buffer[OAM_BEE],
 	4, 4,
 	5,
 	4,
@@ -14,7 +15,7 @@ PlayerSprite bee = {
 };
 
 PlayerSprite larva = {
-    &obj_buffer[75],
+    &obj_buffer[OAM_LARVA],
     2, 2,
     12,
     4,

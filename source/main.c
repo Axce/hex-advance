@@ -13,6 +13,8 @@
 #include "game_loop.h"
 #include "minigame_loop.h"
 
+#include "menus.h"
+
 
 int global_frame = 0;
 int current_player = PLAYER_1_BLACK;
@@ -56,6 +58,14 @@ int main()
 
 			case MINIGAME_PUTTING_STONE:
 				minigame_putting_stone_loop();
+				break;
+
+			case MINIGAME_ENDED:
+				minigame_ended_loop();
+				break;
+
+			case MENUING:
+				menu_loop();
 				break;
 		}
 

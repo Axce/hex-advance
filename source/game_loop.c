@@ -39,6 +39,7 @@ void init_game_loop()
 		ATTR0_SQUARE,
 		ATTR1_SIZE_16x16,
 		ATTR2_PALBANK(PAL_GHOST_STONE) | TILE_GHOST_STONE);
+	obj_hide(ghost_stone);
 
 	init_stones_sprites();
 

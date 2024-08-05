@@ -11,42 +11,41 @@
 
 void init_minigame_loop()
 {
-	// sprites
-	// bee
-	memcpy(&tile_mem_obj_tile[TILE_BEE], bee32Tiles, bee32TilesLen/3/16); // on ne prend qu'un sprite dans la sheet de 16 sprites * 3 animations
-	GRIT_CPY(pal_obj_mem, bee32Pal);
-	// ghost_stone
-	GRIT_CPY(&tile_mem_obj_tile[TILE_GHOST_STONE], stoneblackTiles);
-	GRIT_CPY(&pal_obj_bank[PAL_GHOST_STONE], stoneblackPal);
-	// larva
-	memcpy(&tile_mem_obj_tile[TILE_LARVA], larvaTiles, larvaTilesLen/4);
-	GRIT_CPY(&pal_obj_bank[PAL_LARVA], larvaPal);
-
-	oam_init(obj_buffer, OBJ_COUNT);
+	REG_BG0CNT= BG_CBB(CBB_BOARD) | BG_SBB(SBB_BOARD) | BG_4BPP | BG_REG_32x32;
+	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_OBJ | DCNT_OBJ_1D;
 
 	// background
 	GRIT_CPY(pal_bg_bank[BGPAL_BOARD], board11Pal);		// BG_PAL 0
 	GRIT_CPY(&tile_mem[CBB_BOARD], board11Tiles);	// CBB 0
 	GRIT_CPY(&se_mem[SBB_BOARD], board11Map);		// SBB 30-31
 
-	REG_BG0CNT= BG_CBB(CBB_BOARD) | BG_SBB(SBB_BOARD) | BG_4BPP | BG_REG_32x32;
-	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_OBJ | DCNT_OBJ_1D;
 
-
+	// sprites
+	oam_init(obj_buffer, OBJ_COUNT);
+	// bee
+	memcpy(&tile_mem_obj_tile[TILE_BEE], bee32Tiles, bee32TilesLen/3/16); // on ne prend qu'un sprite dans la sheet de 16 sprites * 3 animations
+	GRIT_CPY(pal_obj_mem, bee32Pal);
 	obj_set_attr(bee.obj,
 		ATTR0_SQUARE,				// Square, regular sprite
 		ATTR1_SIZE_32x32,			// 32*32p,
 		ATTR2_PALBANK(PAL_BEE) | TILE_BEE);		// palbank 0, tile 0
 
+	// ghost_stone
+	GRIT_CPY(&tile_mem_obj_tile[TILE_GHOST_STONE], stoneblackTiles);
+	GRIT_CPY(&pal_obj_bank[PAL_GHOST_STONE], stoneblackPal);
+	obj_set_attr(ghost_stone,
+		ATTR0_SQUARE,
+		ATTR1_SIZE_16x16,
+		ATTR2_PALBANK(PAL_GHOST_STONE) | TILE_GHOST_STONE);
+
+	// larva
+	memcpy(&tile_mem_obj_tile[TILE_LARVA], larvaTiles, larvaTilesLen/4);
+	GRIT_CPY(&pal_obj_bank[PAL_LARVA], larvaPal);
 	obj_set_attr(larva.obj,
 		ATTR0_SQUARE,			
 		ATTR1_SIZE_16x16,			
 		ATTR2_PALBANK(PAL_LARVA) | TILE_LARVA);	
 
-	obj_set_attr(ghost_stone,
-		ATTR0_SQUARE,
-		ATTR1_SIZE_16x16,
-		ATTR2_PALBANK(PAL_GHOST_STONE) | TILE_GHOST_STONE);
 
 	init_stones_sprites();
 

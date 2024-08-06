@@ -24,7 +24,7 @@ int main()
 {
 	init_audio();
 
-	mmStart(MOD_TITLESCREEN, MM_PLAY_LOOP);
+	play_music(MOD_TITLESCREEN);
 
 	init_title_screen();
 

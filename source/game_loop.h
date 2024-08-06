@@ -16,3 +16,6 @@ void game_loop_2p();
 void game_ended_loop();
 
 void putting_stone_loop();
+
+
+extern int ofsx, ofsy;

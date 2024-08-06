@@ -57,6 +57,7 @@ mm_sound_effect sfx_confirm = {
 
 void init_audio()
 {
+
     // irqInit();
     // irqSet( IRQ_VBLANK, mmVBlank );
 	// irqEnable(IRQ_VBLANK);
@@ -66,8 +67,10 @@ void init_audio()
 
 	// initialise maxmod with soundbank and 8 channels
     mmInitDefault( (mm_addr)soundbank_bin, 8 );
+}
 
-	// Start playing module
-	//mmStart( MOD_FLATOUTLIES, MM_PLAY_LOOP );
-
+void play_music(int mod_id)
+{
+    if (mod_id == MOD_INGAME_SONG)
+	    mmStart(mod_id, MM_PLAY_LOOP);
 }

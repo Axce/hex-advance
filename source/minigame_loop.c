@@ -62,21 +62,22 @@ void minigame_loop()
 		return;
 	}
 
+	if (minigame_lost)
+		init_menu(MENU_GAMEOVER);
+	// if (minigame_won)
+	// 	init_menu(MENU_YOUWIN);
 
-	if (!minigame_lost && !minigame_won)
+	evaluate_movement();
+	
+	if (key_hit(KEY_A))
 	{
-		evaluate_movement();
-		
-		if (key_hit(KEY_A))
-		{
-			minigame_player_play();
-		}
-
-		update_larva_sprite();
-		update_bee_sprite();
-
-		display_ghost_stone();
+		minigame_player_play();
 	}
+
+	update_larva_sprite();
+	update_bee_sprite();
+
+	display_ghost_stone();
 	
 	check_lose();
 }

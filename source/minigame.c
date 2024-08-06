@@ -6,6 +6,7 @@
 #include "cpu_player.h"
 #include "minigame.h"
 #include "mem_management.h"
+#include "menus.h"
 
 
 bool minigame_won = false;
@@ -76,6 +77,12 @@ void larva_play()
 {
 
     Board_XY new_pos = larva_find_next_move();
+
+    if (minigame_won)
+    {
+        init_menu(MENU_YOUWIN);
+        return;
+    }
 
     larva_move(new_pos);
 }
@@ -214,9 +221,10 @@ void larva_move(Board_XY new_pos)
 void minigame_end_turn() {
 
     update_stones_sprites(current_player, minigame_stone_put_pos);
+    
+    game_state = MINIGAME;
 
     larva_play();
-    game_state = MINIGAME;
 }
 
 void check_lose()

@@ -6,6 +6,7 @@
 #include "cpu_player.h"
 #include "mem_management.h"
 #include "menus.h"
+#include "audio.h"
 
 /*                                              x->
                <-y  ___  x->                     ___________________
@@ -55,6 +56,7 @@ void player_play() {
     putting_stone_delay = bee.anim_frames * bee.anim_delay;
     stone_put_pos = board_xy;
     game_state = PUTTING_STONE;
+    mmEffectEx(&sfx_bee);
     
 }
 
@@ -78,12 +80,14 @@ void cpu_play() {
     bee.y = stone_screen_pos.y - 32;
 
     game_state = PUTTING_STONE;
-    
+    mmEffectEx(&sfx_bee);
 }
 
 void end_turn() {
     
     update_stones_sprites(current_player, stone_put_pos);
+
+    mmEffectEx(&sfx_put_stone);
 
     if (has_won(current_player) != NULL)
     {

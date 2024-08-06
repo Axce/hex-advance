@@ -4,6 +4,7 @@
 #include "game_loop.h"
 #include "minigame_loop.h"
 #include "mem_management.h"
+#include "audio.h"
 
 #define TITLE_MENU_X		153
 #define TITLE_MENU_Y		78
@@ -47,16 +48,23 @@ void init_title_screen()
 void title_screen_loop()
 {
 	if (key_hit(KEY_UP))
+	{
 		titlemenu_selected = mod((titlemenu_selected - 1), TITLE_MENU_NUMBER_OF_CHOICES);
+		mmEffectEx(&sfx_cursor);
+	}
 	if (key_hit(KEY_DOWN))
+	{
 		titlemenu_selected = mod((titlemenu_selected + 1), TITLE_MENU_NUMBER_OF_CHOICES);
+		mmEffectEx(&sfx_cursor);
+	}
 
 	int offset = 1 * ((global_frame>>4)&1);
 
 	obj_set_pos(&obj_buffer[OAM_CURSOR], TITLE_MENU_X - offset, TITLE_MENU_Y + TITLE_MENU_SPACE * titlemenu_selected);
 	
-	if (key_hit(KEY_A) || key_hit(KEY_START))
+	if (key_hit(KEY_A))
 	{
+        mmEffectEx(&sfx_confirm);
 		switch (titlemenu_selected)
 		{
 			case TITLE_MENU_1_PLAYER:

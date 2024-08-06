@@ -30,7 +30,7 @@ BUILD		:= build
 SOURCES		:= source
 INCLUDES	:= include
 DATA		:=
-MUSIC		:=
+MUSIC		:= audio
 GRAPHICS	:= graphics
 
 #---------------------------------------------------------------------------------

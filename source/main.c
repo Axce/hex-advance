@@ -8,12 +8,11 @@
 #include "PlayerSprite.h"
 #include "graphics.h"
 #include "game.h"
-
 #include "title_screen_loop.h"
 #include "game_loop.h"
 #include "minigame_loop.h"
-
 #include "menus.h"
+#include "audio.h"
 
 
 int global_frame = 0;
@@ -23,6 +22,7 @@ GAME_STATE game_state;
 
 int main()
 {
+	init_audio();
 
 	init_title_screen();
 
@@ -31,7 +31,8 @@ int main()
 
 		key_poll();
 
-		vid_vsync();		
+		vid_vsync();
+		mmFrame();
 	
 		global_frame++;
 

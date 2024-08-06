@@ -7,7 +7,7 @@
 #include "minigame.h"
 #include "mem_management.h"
 #include "menus.h"
-
+#include "audio.h"
 
 bool minigame_won = false;
 bool minigame_lost = false;
@@ -70,7 +70,7 @@ void minigame_player_play() {
     putting_stone_delay = bee.anim_frames * bee.anim_delay;
     minigame_stone_put_pos = board_xy;
     game_state = MINIGAME_PUTTING_STONE;
-
+    mmEffectEx(&sfx_bee);
 }
 
 void larva_play()
@@ -83,6 +83,8 @@ void larva_play()
         init_menu(MENU_YOUWIN);
         return;
     }
+
+    mmEffectEx(&sfx_larva);
 
     larva_move(new_pos);
 }
@@ -219,6 +221,8 @@ void larva_move(Board_XY new_pos)
 }
 
 void minigame_end_turn() {
+
+    mmEffectEx(&sfx_put_stone);
 
     update_stones_sprites(current_player, minigame_stone_put_pos);
     

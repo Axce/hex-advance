@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "title_screen_loop.h": "c",
-        "graphics.h": "c",
-        "toolbox.h": "c"
-    }
-}

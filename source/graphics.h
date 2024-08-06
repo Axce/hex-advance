@@ -22,8 +22,11 @@
 #include "menu_youwin.h"
 
 
-//title screen bitmap
-#include "title_screen.h"
+//title screen
+#include "title_bg.h"
+#include "title_beekeeper.h"
+#include "title_hexadvance.h"
+#include "title_menutext.h"
 
 #include "PlayerSprite.h"
 

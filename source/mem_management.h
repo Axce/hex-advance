@@ -7,14 +7,30 @@
 // BACKGROUNDS //
 /////////////////
 
-// PALETTES (PAL RAM)   max 16
-#define BGPAL_BOARD         0
+// set in grit command "-mp#"
+// PALETTES (PAL RAM)     max 16
+#define BGPAL_BOARD           0
+#define BGPAL_TITLEBG         0
+#define BGPAL_TITLEBEEKEEPER  1
+#define BGPAL_TITLEHEXADVANCE 2
+#define BGPAL_TITLEMENUTEXT   3
 
 // CBB (VRAM)           max 4
 #define CBB_BOARD           0
 
+#define CBB_TITLEBG         0
+#define CBB_TITLEBEEKEEPER  1
+#define CBB_TITLEHEXADVANCE 2
+#define CBB_TITLEMENUTEXT   3
+
+
 // SBB (VRAM)           max 32
-#define SBB_BOARD           30      // screenblocks 2
+#define SBB_BOARD           31      // screenblocks 1
+
+#define SBB_TITLEBG         31      // screenblocks 1
+#define SBB_TITLEBEEKEEPER  30
+#define SBB_TITLEHEXADVANCE 29
+#define SBB_TITLEMENUTEXT   28
 
 /////////////
 // OBJECTS //

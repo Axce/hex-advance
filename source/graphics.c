@@ -29,7 +29,7 @@ void switch_player_graphics()
         bee.orientation = WEST;
         bee.x = PLAYER1_SPAWN_X;
         bee.y = PLAYER1_SPAWN_Y;
-        GRIT_CPY(pal_obj_mem, bee32Pal);
+        GRIT_CPY(&pal_obj_bank[PAL_BEE], bee32Pal);
         GRIT_CPY(&tile_mem_obj_tile[TILE_GHOST_STONE], stoneblackTiles);
         GRIT_CPY(&pal_obj_bank[PAL_GHOST_STONE], stoneblackPal);
     }
@@ -38,7 +38,7 @@ void switch_player_graphics()
         bee.orientation = EAST;
         bee.x = PLAYER2_SPAWN_X;
         bee.y = PLAYER2_SPAWN_Y;
-        GRIT_CPY(pal_obj_mem, bee32darkPal);
+        GRIT_CPY(&pal_obj_bank[PAL_BEE], bee32darkPal);
         GRIT_CPY(&tile_mem_obj_tile[TILE_GHOST_STONE], stonewhiteTiles);
         GRIT_CPY(&pal_obj_bank[PAL_GHOST_STONE], stonewhitePal);
     }

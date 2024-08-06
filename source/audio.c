@@ -71,6 +71,6 @@ void init_audio()
 
 void play_music(int mod_id)
 {
-    if (mod_id == MOD_INGAME_SONG)
+    // if (mod_id == MOD_INGAME_SONG)
 	    mmStart(mod_id, MM_PLAY_LOOP);
 }

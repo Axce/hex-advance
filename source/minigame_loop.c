@@ -27,7 +27,7 @@ void init_minigame_loop()
 	oam_init(obj_buffer, OBJ_COUNT);
 	// bee
 	memcpy(&tile_mem_obj_tile[TILE_BEE], bee32Tiles, bee32TilesLen/3/16); // on ne prend qu'un sprite dans la sheet de 16 sprites * 3 animations
-	GRIT_CPY(pal_obj_mem, bee32Pal);
+	GRIT_CPY(&pal_bg_bank[PAL_BEE], bee32Pal);
 	obj_set_attr(bee.obj,
 		ATTR0_SQUARE,				// Square, regular sprite
 		ATTR1_SIZE_32x32,			// 32*32p,

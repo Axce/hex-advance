@@ -14,14 +14,14 @@ void init_game_loop()
 {
 	
 	memcpy(&tile_mem_obj_tile[TILE_BEE], bee32Tiles, bee32TilesLen/3/16); // on ne prend qu'un sprite dans la sheet de 16 sprites * 3 animations
-	GRIT_CPY(&pal_obj_mem[PAL_BEE], bee32Pal);
+	GRIT_CPY(&pal_obj_bank[PAL_BEE], bee32Pal);
 	GRIT_CPY(&tile_mem_obj_tile[TILE_GHOST_STONE], stoneblackTiles);
 	GRIT_CPY(&pal_obj_bank[PAL_GHOST_STONE], stoneblackPal);
 
 	oam_init(obj_buffer, OBJ_COUNT);
 
 	// Load palette
-	GRIT_CPY(&pal_bg_mem[BGPAL_BOARD], board11Pal);
+	GRIT_CPY(&pal_bg_bank[BGPAL_BOARD], board11Pal);
 	// Load tiles into CBB 0
 	GRIT_CPY(&tile_mem[CBB_BOARD], board11Tiles);
 	// Load map into SBB 30

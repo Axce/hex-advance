@@ -7,6 +7,7 @@
 #include "mem_management.h"
 #include "menus.h"
 #include "audio.h"
+#include "game_loop.h"
 
 /*                                              x->
                <-y  ___  x->                     ___________________
@@ -262,10 +263,16 @@ void display_victory()
     switch (winner)
     {
     case PLAYER_1_BLACK:
-        init_menu(MENU_P1WINS);
+        if (mode_1_or_2_players == MODE_1_PLAYER)
+            init_menu(MENU_YOUWIN);
+        else
+            init_menu(MENU_P1WINS);
         break;
     case PLAYER_2_WHITE:
-        init_menu(MENU_P2WINS);
+        if (mode_1_or_2_players == MODE_1_PLAYER)
+            init_menu(MENU_GAMEOVER);
+        else
+            init_menu(MENU_P2WINS);
         break;
     
     default:

@@ -34,6 +34,7 @@ int main()
 
 	while(1)
 	{
+		qran();
 
 		key_poll();
 

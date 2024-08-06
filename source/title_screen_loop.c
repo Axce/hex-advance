@@ -77,12 +77,15 @@ void init_title_screen()
 
 void title_screen_loop()
 {
+	// useless modulo (power of 2)
 	title_bg_hofs = mod(title_bg_hofs-1, 256);
 	title_bg_vofs = mod(title_bg_vofs+1, 256);
 	REG_BG3HOFS = title_bg_hofs;
 	REG_BG3VOFS = title_bg_vofs;
 
-	title_beekeeper_vofs_n++;
+	// useless modulo (power of 2)
+	title_beekeeper_vofs_n = mod(title_beekeeper_vofs_n+1, 0xFFFF);
+
 	// func input is [0, 0xFFFF] for [0,2π[
 	// func output >> 12 is between 0 and 1 (it's a .12f)
 	REG_BG2VOFS = lu_cos(title_beekeeper_vofs_n *500) >> 10; 

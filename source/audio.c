@@ -58,12 +58,10 @@ mm_sound_effect sfx_confirm = {
 void init_audio()
 {
 
-    // irqInit();
-    // irqSet( IRQ_VBLANK, mmVBlank );
-	// irqEnable(IRQ_VBLANK);
-	irq_init(NULL);
-	irq_add(II_VBLANK, mmVBlank);
-    irq_enable(II_VBLANK);
+    // moved into main
+	// irq_init(NULL);
+	// irq_add(II_VBLANK, mmVBlank);
+    // irq_enable(II_VBLANK);
 
 	// initialise maxmod with soundbank and 8 channels
     mmInitDefault( (mm_addr)soundbank_bin, 8 );

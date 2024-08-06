@@ -22,6 +22,10 @@ GAME_STATE game_state;
 
 int main()
 {
+	irq_init(NULL);
+	irq_add(II_VBLANK, mmVBlank);
+    irq_enable(II_VBLANK);
+
 	init_audio();
 
 	play_music(MOD_TITLESCREEN);
@@ -33,7 +37,7 @@ int main()
 
 		key_poll();
 
-		vid_vsync();
+		VBlankIntrWait();
 		mmFrame();
 	
 		global_frame++;

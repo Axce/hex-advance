@@ -9,9 +9,11 @@
 #include "minigame_loop.h"
 #include "mem_management.h"
 #include "menus.h"
+#include "audio.h"
 
 void init_minigame_loop()
 {
+
 	REG_BG0CNT= BG_CBB(CBB_BOARD) | BG_SBB(SBB_BOARD) | BG_4BPP | BG_REG_32x32;
 	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_OBJ | DCNT_OBJ_1D;
 

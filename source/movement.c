@@ -3,6 +3,9 @@
 #include "movement.h"
 #include "toolbox.h"
 #include "PlayerSprite.h"
+#include "audio.h"
+
+enum BEE_ANIMATIONS prev_mvt = BEE_IDLE;
 
 int closer_to_zero(int n) {
 	if (n)
@@ -71,4 +74,18 @@ void evaluate_movement() {
 	bee.x += key_tri_horz();
 	bee.y += key_tri_vert();
 	*/
+
+	// WIP (add loop marker to wav; stop loop if pause or else)
+	// if (prev_mvt != BEE_FLYING && bee.current_animation == BEE_FLYING)
+	// {
+	// 	sfx_beeloop_handle = mmEffectEx(&sfx_beeloop);
+	// }
+
+	// if (prev_mvt == BEE_FLYING && bee.current_animation != BEE_FLYING)
+	// {
+	// 	mmEffectCancel(sfx_beeloop_handle);
+	// }
+
+	// prev_mvt = bee.current_animation;
+
 }

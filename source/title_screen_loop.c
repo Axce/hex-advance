@@ -43,6 +43,8 @@ void init_title_screen()
 
 	game_state = TITLE_SCREEN;
 
+	mmStart( MOD_TITLESCREEN, MM_PLAY_LOOP );
+
 }
 
 void title_screen_loop()
@@ -68,14 +70,17 @@ void title_screen_loop()
 		switch (titlemenu_selected)
 		{
 			case TITLE_MENU_1_PLAYER:
+				mmStart(MOD_INGAME_SONG, MM_PLAY_LOOP);
 				mode_1_or_2_players = MODE_1_PLAYER;
 				init_game_loop();
 				return;
 			case TITLE_MENU_2_PLAYERS:
+				mmStart(MOD_INGAME_SONG, MM_PLAY_LOOP);
 				mode_1_or_2_players = MODE_2_PLAYERS;
 				init_game_loop();
 				return;
 			case TITLE_MENU_MINIGAME:
+				mmStart(MOD_INGAME_SONG, MM_PLAY_LOOP);
 				init_minigame_loop();
 				return;
 		}

@@ -27,6 +27,16 @@ mm_sound_effect sfx_bee = {
     127,	// panning
 };
 
+mm_sound_effect sfx_beeloop = {
+    { SFX_BEELOOP } ,			// id
+    (int)(1.0f * (1<<10)),	// rate
+    0,		// handle
+    255,	// volume
+    127,	// panning
+};
+
+mm_sfxhand sfx_beeloop_handle = 0;
+
 mm_sound_effect sfx_larva = {
     { SFX_LARVA } ,			// id
     (int)(1.0f * (1<<10)),	// rate

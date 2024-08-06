@@ -129,6 +129,7 @@ void menu_pause()
 				    init_game_loop();
 				break;
 			case 2: // Quit
+            	mmStart(MOD_TITLESCREEN, MM_PLAY_LOOP);
 				init_title_screen();
 				break;
 		}
@@ -174,6 +175,7 @@ void menu_restart()
 				    init_game_loop();
 				break;
 			case 1: // Quit
+            	mmStart(MOD_TITLESCREEN, MM_PLAY_LOOP);
 				init_title_screen();
 				break;
 		}

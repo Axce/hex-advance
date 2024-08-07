@@ -31,9 +31,11 @@ Board_XY to_board_xy(Screen_XY screen_xy)
     
     Board_XY board_xy;
 
+    int top = 79 - 6*BOARD_SIZE;
+
     // do not simplify (working with integers)
-    board_xy.x = ((y-13)/6 + (x-112)/10) / 2;
-    board_xy.y = ((y-13)/6 - (x-112)/10) / 2;
+    board_xy.x = ((y-top)/6 + (x-112)/10) / 2;
+    board_xy.y = ((y-top)/6 - (x-112)/10) / 2;
 
     return board_xy;
 }
@@ -45,8 +47,10 @@ Screen_XY to_screen_xy(Board_XY board_xy)
     
     Screen_XY screen_xy;
 
+    int top = 79 - 6*BOARD_SIZE;
+
     screen_xy.x = 10 * (x-y) + 112;
-    screen_xy.y = 6 * (x+y) + 13;
+    screen_xy.y = 6 * (x+y) + top;
 
     return screen_xy;
 }

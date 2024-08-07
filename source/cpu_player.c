@@ -133,6 +133,26 @@ int thinking_progress;
 int thinking_progress_max;
 
 int new_frame = false;
+int last_vcount = 0;
+
+// trying another implementation
+// void check_for_vblank()
+// {
+//     int vcount = REG_VCOUNT;
+
+//     if (vcount < last_vcount) // NEW FRAME !!
+//     {
+//         mmFrame();
+//         global_frame++;
+//         key_poll();
+//         update_bee_thinking_position();
+//         update_bee_sprite();
+// 		obj_copy(obj_mem, obj_buffer, OBJ_COUNT);
+//     }
+
+//     last_vcount = vcount;
+
+// }
 
 // clever hack to keep stuff RUNNING while thinking
 void check_for_vblank()

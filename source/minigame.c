@@ -89,16 +89,16 @@ void larva_play()
     larva_move(new_pos);
 }
 
-// https://stackoverflow.com/a/52999191
+// https://stackoverflow.com/a/52999191 was wrong but kinda helpful
 Board_XY larva_find_next_move()
 {
-    int distance_to_win[BOARD_SIZE][BOARD_SIZE] = {0};
-    int how_many_routes[BOARD_SIZE][BOARD_SIZE] = {0};
+    int distance_to_win[MAX_BOARD_SIZE][MAX_BOARD_SIZE] = {0};
+    int how_many_routes[MAX_BOARD_SIZE][MAX_BOARD_SIZE] = {0};
 
     int neighbor_Ys[6] = {-1,-1, 0, 0,+1,+1};
     int neighbor_Xs[6] = {-1, 0,-1,+1, 0,+1};
 
-    Board_XY queue[BOARD_SIZE*BOARD_SIZE] = {0};
+    Board_XY queue[MAX_BOARD_SIZE*MAX_BOARD_SIZE] = {0};
     int write_cursor = 0;
     int read_cursor = 0;
 

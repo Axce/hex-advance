@@ -114,7 +114,7 @@ const int get_enemy[3] = {NOBODY, PLAYER_2_WHITE, PLAYER_1_BLACK};
 //  2 = bad move from black, white should play
 // 
 // Can be read as "which player is likely to win"
-const int swap_map[11][11] =
+const int swap_map_11[11][11] =
 {
     {0, 1, 0, 0, 0, 0, 1, 0, 0, 2, 2},
     {2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2},
@@ -205,8 +205,8 @@ Board_XY random_ai()
 
     do
     {
-        x = qran_range(0,11);
-        y = qran_range(0,11);
+        x = qran_range(0,BOARD_SIZE);
+        y = qran_range(0,BOARD_SIZE);
     } while(board[y][x]);
     
     return new_board_xy(x,y);
@@ -261,10 +261,10 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player 
 
     // not visited = 0
     // visited = 1
-    int visited_board[BOARD_SIZE][BOARD_SIZE] = {0};
-    uint path_length_board[BOARD_SIZE][BOARD_SIZE];
+    int visited_board[MAX_BOARD_SIZE][MAX_BOARD_SIZE] = {0};
+    uint path_length_board[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
 
-    memset32(path_length_board, 0xFFFFFFFF, BOARD_SIZE*BOARD_SIZE);
+    memset32(path_length_board, 0xFFFFFFFF, MAX_BOARD_SIZE*MAX_BOARD_SIZE);
 
     // for (int i = 0; i < BOARD_SIZE; i++) {
     //     for (int j = 0; j < BOARD_SIZE; j++) {
@@ -272,10 +272,10 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player 
     //     }
     // }
 
-    Board_XY nodes_queue_0[BOARD_SIZE * BOARD_SIZE] = {0};
+    Board_XY nodes_queue_0[MAX_BOARD_SIZE * MAX_BOARD_SIZE] = {0};
     int write_cursor_0 = 0;
     int read_cursor_0 = 0;
-    Board_XY nodes_queue_1[BOARD_SIZE * BOARD_SIZE] = {0};
+    Board_XY nodes_queue_1[MAX_BOARD_SIZE * MAX_BOARD_SIZE] = {0};
     int write_cursor_1 = 0;
     int read_cursor_1 = 0;
 

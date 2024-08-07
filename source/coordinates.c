@@ -1,21 +1,27 @@
 #include <tonc.h>
 
 #include "coordinates.h"
+#include "game.h"
 
 bool is_stone_in_board(Screen_XY screen_xy) {
-    int y = screen_xy.y;
-    int x = screen_xy.x;
 
-	if (5*y - 3*x < -271)	//test si y_orth < 0
-		return false;
-	if (5*y - 3*x > 329)	//test si y_orth > 10
-		return false;
-	if (5*y + 3*x < 401)	//test si x_orth < 0
-		return false;
-	if (5*y + 3*x > 1001)	//test si x_orth > 10
-		return false;
+    Board_XY b_xy = to_board_xy(screen_xy);
 
-	return true;
+    int y = b_xy.y;
+    int x = b_xy.x;
+
+    return is_in_board(x, y);
+
+	// if (5*y - 3*x < -271)	//test si y_orth < 0
+	// 	return false;
+	// if (5*y - 3*x > 329)	//test si y_orth > 10
+	// 	return false;
+	// if (5*y + 3*x < 401)	//test si x_orth < 0
+	// 	return false;
+	// if (5*y + 3*x > 1001)	//test si x_orth > 10
+	// 	return false;
+
+	// return true;
 }
 
 Board_XY to_board_xy(Screen_XY screen_xy)

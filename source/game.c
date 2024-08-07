@@ -9,6 +9,8 @@
 #include "audio.h"
 #include "game_loop.h"
 
+int BOARD_SIZE = 11;
+
 /*                                              x->
                <-y  ___  x->                     ___________________
     (y,x)       ___/0,0\___                   y |0,0|0,1|0,2|0,3| …
@@ -17,7 +19,7 @@
     ___/3,0\___/2,1\___/1,2\___/0,3\___         |3,0| … |   |   |  
 ___/ … \___/ … \___/ … \___/ … \___/ … \___     | … |   |   |   |  
 */
-int board[BOARD_SIZE][BOARD_SIZE] =
+int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE] =
 {
     {0,0,0,0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0,0,0,0},
@@ -135,12 +137,12 @@ void switch_player() {
     }
     */
 
-    current_player ^= 0b11; // switch between 1 and 2 (0b01 and 0b10) (doesn't work)
+    current_player ^= 0b11; // switch between 1 and 2 (0b01 and 0b10)
 
     switch_player_graphics();
 }
 
-Board_XY* reconstruct_path(Board_XY end, Board_XY parents[11][11])
+Board_XY* reconstruct_path(Board_XY end, Board_XY parents[MAX_BOARD_SIZE][MAX_BOARD_SIZE])
 {
     // PLACEHOLDER
     return (Board_XY*)1;
@@ -151,27 +153,14 @@ Board_XY* has_won(Player player) {
     // 0 = not visited
     // 1 = to visit
     // 2 = visited
-    int visit_board[11][11] =
-    {
-        {0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0},
-    };
+    int visit_board[MAX_BOARD_SIZE][MAX_BOARD_SIZE] = {0};
 
-    Board_XY parents[BOARD_SIZE][BOARD_SIZE] = { 0 };
+    Board_XY parents[MAX_BOARD_SIZE][MAX_BOARD_SIZE] = { 0 };
 
     int neighbor_Ys[6] = {-1,-1, 0, 0,+1,+1};
     int neighbor_Xs[6] = {-1, 0,-1,+1, 0,+1};
 
-    Board_XY queue[BOARD_SIZE*BOARD_SIZE] = {0};
+    Board_XY queue[MAX_BOARD_SIZE*MAX_BOARD_SIZE] = {0};
     int write_cursor = 0;
     int read_cursor = 0;
 
@@ -179,7 +168,7 @@ Board_XY* has_won(Player player) {
     if (player == PLAYER_1_BLACK)
     {
 
-        for (int iy = 0 ; iy < 11 ; iy++)
+        for (int iy = 0 ; iy < BOARD_SIZE ; iy++)
         {
             if (board[iy][0] == player)
             {
@@ -191,7 +180,7 @@ Board_XY* has_won(Player player) {
     // path from y=0 to y=10
     if (player == PLAYER_2_WHITE)
     {
-        for (int ix = 0 ; ix < 11 ; ix++)
+        for (int ix = 0 ; ix < BOARD_SIZE ; ix++)
         {
             if (board[0][ix] == player)
             {

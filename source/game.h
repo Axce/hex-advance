@@ -6,7 +6,7 @@
 #define BOARD_SIZE  11
 
 // assumes board coordinates
-inline bool is_in_board(int x, int y)
+static inline bool is_in_board(int x, int y)
 {
     return x>=0 && x<BOARD_SIZE && y>=0 && y<BOARD_SIZE;
 }

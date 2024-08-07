@@ -5,6 +5,8 @@
 
 Board_XY cpu_find_next_move();
 
+void update_bee_thinking_position();
+
 Board_XY random_ai();
 Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player);
 

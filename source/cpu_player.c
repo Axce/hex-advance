@@ -21,8 +21,6 @@ const int bridge_obstacle_1_x[6] =  {-1,-1, 0, 0,+1,+1};
 const int bridge_obstacle_2_y[6] =  {-1, 0, 0, 0, 0,+1};
 const int bridge_obstacle_2_x[6] =  { 0,-1,+1,-1,+1, 0};
 
-
-
 // According to :
 // https://www.hexwiki.net/index.php/Swap#Size_11
 // https://www.hexwiki.net/index.php/Openings_on_11_x_11
@@ -48,7 +46,11 @@ const int swap_map[11][11] =
     {2, 2, 0, 0, 1, 0, 0, 0, 0, 1, 0},
 };
 
+int thinking_progress;
+int thinking_progress_max;
+
 int new_frame = false;
+
 // clever hack to keep stuff RUNNING while thinking
 void check_for_vblank()
 {
@@ -62,15 +64,41 @@ void check_for_vblank()
         mmFrame();
         global_frame++;
         key_poll();
+        update_bee_thinking_position();
         update_bee_sprite();
+		obj_copy(obj_mem, obj_buffer, OBJ_COUNT);
         new_frame = false;
     }
 
 }
 
+// makes a nice circle while thinking
+void update_bee_thinking_position()
+{
+    int theta = thinking_progress * 0xFFFF / thinking_progress_max;
+
+    // position
+    int y = lu_sin(theta - 0x4000) >> 7;
+    int x = lu_cos(theta - 0x4000) >> 7;
+    bee.x = x + SCREEN_WIDTH/2-32;
+    bee.y = y + SCREEN_HEIGHT/2-32;
+
+    // orientation
+    bee.orientation = EAST;
+    if (theta > 0x1000)
+        bee.orientation = SOUTH;
+    if (theta > 0x5000)
+        bee.orientation = WEST;
+    if (theta > 0x9000)
+        bee.orientation = NORTH;
+    if (theta > 0xD000)
+        bee.orientation = EAST;
+
+}
+
 Board_XY cpu_find_next_move()
 {
-    
+
     new_frame = false;  // DO NOT FORGET THIS before a loop with check_for_vblank();
 
     // simulate long thinking time
@@ -103,6 +131,9 @@ Board_XY random_ai()
 
 Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player)
 {
+    thinking_progress = 0; // 1?
+    thinking_progress_max = BOARD_SIZE * BOARD_SIZE;
+
     int best_score = -INFINITY;
     Board_XY best_moves[BOARD_SIZE*BOARD_SIZE]; // TODO get only if valid
     int write_cursor = 0;
@@ -133,6 +164,7 @@ Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player)
                 }
                 board[y][x] = 0;
             }
+            thinking_progress ++;
         }
     }
 
@@ -141,6 +173,7 @@ Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player)
 
 
 // si cette heuristique durait moins d'une frame, ça serait super (pour check_for_vblank)
+// TODO check ziggurats
 int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
 
     check_for_vblank();

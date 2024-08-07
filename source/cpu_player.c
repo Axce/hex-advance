@@ -330,11 +330,6 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player 
     }
 }
 
-// int is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, int direction);
-// int is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], int enemy, int x, int y, int direction);
-// int is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
-// int is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, int x, int y);
-
 
 // works even with borders
 bool is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, enum BRIDGE_NEIGHBORS ni) {
@@ -363,6 +358,7 @@ Player is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
     return board[y][x];
 }
 
+// considering next player to move. Breaking zero-sum principle ? Would not work with minimax ?
 bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], Player enemy, Player next_player, int x, int y, enum DIRECT_NEIGHBORS ni) {
     int x1 = x + direct_obstacle_1_x[ni];
     int y1 = y + direct_obstacle_1_y[ni];

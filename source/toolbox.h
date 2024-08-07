@@ -35,7 +35,7 @@ typedef enum GAME_STATE
 
 extern GAME_STATE game_state;
 
-inline int mod(int num, int den)
+static inline int mod(int num, int den)
 {
 	int n = num % den;
 	if (n < 0)
@@ -43,7 +43,7 @@ inline int mod(int num, int den)
 	return n;
 }
 
-inline int power(int n, int power)
+static inline int power(int n, int power)
 {
     int result = 1;
 	while(power--)

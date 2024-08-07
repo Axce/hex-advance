@@ -19,6 +19,89 @@ const int bridge_obstacle_1_x[6] =  {-1,-1, 0, 0,+1,+1};
 const int bridge_obstacle_2_y[6] =  {-1, 0, 0, 0, 0,+1};
 const int bridge_obstacle_2_x[6] =  { 0,-1,+1,-1,+1, 0};
 
+// black top left
+const Board_XY black_top_ziggurat_center[6] =
+{
+    {-2,0}, {-2,-1}, {-2,-2},
+        {-1,0}, {-1,-1},
+            {0,0}
+};
+const Board_XY black_top_ziggurat_rightside[3] =
+{
+                        {-2,-3},
+                    {-1,-2},
+                {0,-1}
+};
+const Board_XY black_top_ziggurat_leftside[3] =
+{
+{-2,+1},
+    {-1,+1},
+        {0,+1}
+};
+
+// white top right
+const Board_XY white_top_ziggurat_center[6] =
+{
+    {-2,-2}, {-1,-2}, {0,-2},
+        {-1,-1}, {0,-1},
+            {0,0}
+};
+const Board_XY white_top_ziggurat_rightside[3] =
+{
+                        {+1,-2},
+                    {+1,-1},
+                {+1,0}
+};
+const Board_XY white_top_ziggurat_leftside[3] =
+{
+{-3,-2},
+    {-2,-1},
+        {-1,0}
+};
+
+// white bot left
+const Board_XY white_bot_ziggurat_center[6] =
+{
+            {0,0},
+        {0, +1}, {+1,+1},
+    {0, +2}, {+1,+2}, {+2,+2}
+};
+const Board_XY white_bot_ziggurat_rightside[3] =
+{
+                {+1,0},
+                    {+2,+1},
+                        {+3,+2}
+};
+const Board_XY white_bot_ziggurat_leftside[3] =
+{
+        {-1,0},
+    {-1,+1},
+{-1,+2}
+};
+
+// black bot right
+const Board_XY black_bot_ziggurat_center[6] =
+{
+            {0,0},
+        {+1,+1}, {+1,0},
+    {+2,+2}, {+2,+1}, {+2,0}
+};
+const Board_XY black_bot_ziggurat_rightside[3] =
+{
+                {0,-1},
+                    {+1,-1},
+                        {+2,-1}
+};
+const Board_XY black_bot_ziggurat_leftside[3] =
+{
+        {0,+1},
+    {+1,+2},
+{+2,+3}
+};
+
+
+
+
 const int enemy[3] = {NOBODY, PLAYER_2_WHITE, PLAYER_1_BLACK};
 
 #define INFINITY 1000

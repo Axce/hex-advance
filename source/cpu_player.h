@@ -12,12 +12,12 @@ enum DIRECT_NEIGHBORS {
     DN_BOTLEFT,
     DN_BOT
 };
-extern const int direct_neighbors_y[6];
-extern const int direct_neighbors_x[6];
-extern const int direct_obstacle_1_y[6];
-extern const int direct_obstacle_1_x[6];
-extern const int direct_obstacle_2_y[6];
-extern const int direct_obstacle_2_x[6];
+// extern const int direct_neighbors_y[6];
+// extern const int direct_neighbors_x[6];
+// extern const int direct_obstacle_1_y[6];
+// extern const int direct_obstacle_1_x[6];
+// extern const int direct_obstacle_2_y[6];
+// extern const int direct_obstacle_2_x[6];
 
 // directions as seen on screen 
 enum BRIDGE_NEIGHBORS {
@@ -28,12 +28,12 @@ enum BRIDGE_NEIGHBORS {
     BN_BOTRIGHT,
     BN_BOTLEFT
 };
-extern const int bridge_neighbors_y[6];
-extern const int bridge_neighbors_x[6];
-extern const int bridge_obstacle_1_y[6];
-extern const int bridge_obstacle_1_x[6];
-extern const int bridge_obstacle_2_y[6];
-extern const int bridge_obstacle_2_x[6];
+// extern const int bridge_neighbors_y[6];
+// extern const int bridge_neighbors_x[6];
+// extern const int bridge_obstacle_1_y[6];
+// extern const int bridge_obstacle_1_x[6];
+// extern const int bridge_obstacle_2_y[6];
+// extern const int bridge_obstacle_2_x[6];
 
 extern const int enemy[3];
 

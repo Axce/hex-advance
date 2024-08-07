@@ -5,6 +5,8 @@
 #include "audio.h"
 #include "graphics.h"
 
+#define INFINITY 1000
+
 const int direct_neighbors_y[6] =   {-1,-1, 0, 0, 1, 1};
 const int direct_neighbors_x[6] =   {-1, 0,-1, 1, 0, 1};
 const int direct_obstacle_1_y[6] =  { 0,-1,-1,-1, 0, 1};
@@ -99,12 +101,8 @@ const Board_XY black_bot_ziggurat_leftside[3] =
 {+2,+3}
 };
 
-
-
-
 const int get_enemy[3] = {NOBODY, PLAYER_2_WHITE, PLAYER_1_BLACK};
 
-#define INFINITY 1000
 
 // According to :
 // https://www.hexwiki.net/index.php/Swap#Size_11
@@ -427,9 +425,9 @@ bool is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, enum BRIDGE
 // TODO bien relire
 bool is_free_ziggurat(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, Player player) {
 
-    Board_XY (*zig_center)[6];
-    Board_XY (*zig_leftside)[3];
-    Board_XY (*zig_rightside)[3];
+    const Board_XY (*zig_center)[6];
+    const Board_XY (*zig_leftside)[3];
+    const Board_XY (*zig_rightside)[3];
 
     // knowing what zig we're talking about
     if (player == PLAYER_1_BLACK)   // black
@@ -561,8 +559,10 @@ bool is_free_ziggurat(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, Player pl
         int nx = x + zig_xy.x;
         int ny = y + zig_xy.y;
         if (board[ny][nx] == enemy)
+        {
             enemies_leftside++;
             break;
+        }
     }
 
     if (enemies_leftside == 0)
@@ -611,8 +611,8 @@ bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], Player enemy,
     int ny = y + direct_neighbors_y[ni];
 
     // potential blocking bridge scenario
-    if (is_owned_by(board, x1, y1) == get_enemy
-        && is_owned_by(board, x2, y2) == get_enemy)
+    if (is_owned_by(board, x1, y1) == enemy
+        && is_owned_by(board, x2, y2) == enemy)
     {
         // if no friend stones present, the bridge is blocking.
         if (board[y][x] == 0
@@ -621,9 +621,9 @@ bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], Player enemy,
             return true;
         }
 
-        // if we know it's get_enemy's turn after checking this position,
-        // even if one friend stone is present, get_enemy can block.
-        if (next_player == get_enemy)
+        // if we know it's enemy's turn after checking this position,
+        // even if one friend stone is present, enemy can block.
+        if (next_player == enemy)
         {
             if (board[y][x] == 0
                 || board[ny][nx] == 0)
@@ -649,6 +649,15 @@ bool is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, i
                 }
             }
         }
+        if (x == BOARD_SIZE - 3) {  // zig
+            if (y < BOARD_SIZE - 1) {
+                if (is_free_ziggurat(board, x, y, player))
+                {
+                    return true;
+                }
+            }
+        }
+
     }
 
     if (player == PLAYER_2_WHITE) {
@@ -662,7 +671,17 @@ bool is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, i
                 }
             }
         }
+        if (y == BOARD_SIZE - 3) {  // zig
+            if (x < BOARD_SIZE - 2) {
+                if (is_free_ziggurat(board, x, y, player))
+                {
+                    return true;
+                }
+            }
+        }
     }
+
+
     return false;
 }
 

@@ -328,7 +328,7 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
 // int is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, int x, int y);
 
 
-
+// assuming 2 cells inbounds
 bool is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, enum BRIDGE_NEIGHBORS ni) {
     int x1 = x + bridge_obstacle_1_x[ni];
     int y1 = y + bridge_obstacle_1_y[ni];
@@ -355,6 +355,7 @@ int is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
     return board[y][x];
 }
 
+// TODO check out of bounds
 bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], int enemy, int x, int y, enum DIRECT_NEIGHBORS ni) {
     int x1 = x + direct_obstacle_1_x[ni];
     int y1 = y + direct_obstacle_1_y[ni];
@@ -377,7 +378,7 @@ bool is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, i
         }
         if (x == BOARD_SIZE - 2) { // bridge
             if (y < BOARD_SIZE - 1) {
-                if (is_free_bridge(board, x, y, 4)) { // 5th neighbor in LUT
+                if (is_free_bridge(board, x, y, BN_BOTRIGHT)) { // 5th neighbor in LUT
                     return true;
                 }
             }
@@ -385,12 +386,12 @@ bool is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, i
     }
 
     if (player == PLAYER_2_WHITE) {
-        if (y == BOARD_SIZE - 1) {
+        if (y == BOARD_SIZE - 1) {  // direct
             return true;
         }
         if (y == BOARD_SIZE - 2) { // bridge
             if (x < BOARD_SIZE - 1) {
-                if (is_free_bridge(board, x, y, 5)) { // 6th neighbor in LUT
+                if (is_free_bridge(board, x, y, BN_BOTLEFT)) { // 6th neighbor in LUT
                     return true;
                 }
             }

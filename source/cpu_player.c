@@ -371,30 +371,30 @@ bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], Player enemy,
     int nx = x + direct_neighbors_x[ni];
     int ny = y + direct_neighbors_y[ni];
 
-    // if no friend stones already present, the bridge is blocking.
-    if (next_player == enemy)
+    // potential blocking bridge scenario
+    if (is_owned_by(board, x1, y1) == enemy
+        && is_owned_by(board, x2, y2) == enemy)
     {
-        // we know it's enemy's turn after checking this.
-        // So even if one friend stone is present, enemy can block.
-        if (is_owned_by(board, x1, y1) == enemy
-            && is_owned_by(board, x2, y2) == enemy
-            && (board[y][x] == 0
-                || board[ny][nx] == 0)) {
+        // if no friend stones present, the bridge is blocking.
+        if (board[y][x] == 0
+            && board[ny][nx] == 0)
+        {
             return true;
         }
-        return false;
-    }
-    else
-    {
-        // if there is at least one friend stone, (and we know it's our turn after), the bridge is not blocking.
-        if (is_owned_by(board, x1, y1) == enemy
-            && is_owned_by(board, x2, y2) == enemy
-            && board[y][x] == 0
-            && board[ny][nx] == 0) {
-            return true;
+
+        // if we know it's enemy's turn after checking this position,
+        // even if one friend stone is present, enemy can block.
+        if (next_player == enemy)
+        {
+            if (board[y][x] == 0
+                || board[ny][nx] == 0)
+            {
+                return true;
+            }
         }
-        return false;
     }
+    
+    return false;
 
 }
 

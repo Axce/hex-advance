@@ -282,9 +282,27 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player 
 
     // FIRST: filling the queue with the cells next to sides
 
-    // black : from x=0 to x=BOARD_SIZE-1
+    // black : wants to go from x=0 to x=BOARD_SIZE-1
     if (player == PLAYER_1_BLACK) {
         
+        // zigs to border
+        for (int iy = 2; iy < BOARD_SIZE; iy++) {
+            if (board[iy][2] == player) { // cost 0
+                if (is_free_ziggurat(board, 2, iy, player)) {
+                    path_length_board[iy][2] = 0;
+                    nodes_queue_0[write_cursor_0++] = new_board_xy(2, iy);
+                    visited_board[iy][2] = 1;
+                }
+            }
+            if (board[iy][2] == 0) { // cost 1
+                if (is_free_ziggurat(board, 2, iy, player)) {
+                    path_length_board[iy][2] = 1;
+                    nodes_queue_1[write_cursor_1++] = new_board_xy(2, iy);
+                    visited_board[iy][2] = 1;
+                }
+            }
+        }
+
         // bridges to border
         for (int iy = 1; iy < BOARD_SIZE; iy++) {
             if (board[iy][1] == player) { // cost 0
@@ -316,7 +334,25 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player 
                 visited_board[iy][0] = 1;
             }
         }
-    } else {    // white : from y=0 to y=BOARD_SIZE-1
+    } else {    // white : wants to go from y=0 to y=BOARD_SIZE-1
+
+        // zigs to border
+        for (int ix = 2; ix < BOARD_SIZE; ix++) {
+            if (board[2][ix] == player) {   // cost 0
+                if (is_free_ziggurat(board, ix, 2, player)) {
+                    path_length_board[2][ix] = 0;
+                    nodes_queue_0[write_cursor_0++] = new_board_xy(ix,  2);
+                    visited_board[2][ix] = 1;
+                }
+            }
+            if (board[2][ix] == 0) {    // cost 1
+                if (is_free_ziggurat(board, ix, 2, player)) {
+                    path_length_board[2][ix] = 1;
+                    nodes_queue_1[write_cursor_1++] = new_board_xy(ix,  2);
+                    visited_board[2][ix] = 1;
+                }
+            }
+        }
 
         // bridges to border
         for (int ix = 1; ix < BOARD_SIZE; ix++) {

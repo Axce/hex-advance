@@ -102,7 +102,7 @@ const Board_XY black_bot_ziggurat_leftside[3] =
 
 
 
-const int enemy[3] = {NOBODY, PLAYER_2_WHITE, PLAYER_1_BLACK};
+const int get_enemy[3] = {NOBODY, PLAYER_2_WHITE, PLAYER_1_BLACK};
 
 #define INFINITY 1000
 
@@ -230,7 +230,7 @@ Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player)
             if (board[y][x] == 0)
             {
                 board[y][x] = player;
-                int score = least_moves_to_win(board, enemy[player], enemy[player]) - least_moves_to_win(board, player, enemy[player]);
+                int score = least_moves_to_win(board, get_enemy[player], get_enemy[player]) - least_moves_to_win(board, player, get_enemy[player]);
                 if (score == best_score)
                 {
                     best_moves[write_cursor++] = new_board_xy(x, y);
@@ -398,7 +398,7 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player 
         for (int ni = 0; ni < 6; ni++) {
             int nx = x + direct_neighbors_x[ni];
             int ny = y + direct_neighbors_y[ni];
-            if (is_in_board(nx, ny) && visited_board[ny][nx] == 0 && !is_blocked_by_enemy_bridge(board, enemy[player], next_player, x, y, ni)) {
+            if (is_in_board(nx, ny) && visited_board[ny][nx] == 0 && !is_blocked_by_enemy_bridge(board, get_enemy[player], next_player, x, y, ni)) {
                 if (board[ny][nx] == player) {
                     path_length_board[ny][nx] = path_length_board[y][x] + 0;
                     nodes_queue_0[write_cursor_0++] = new_board_xy(nx, ny);
@@ -422,6 +422,166 @@ bool is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, enum BRIDGE
     int y2 = y + bridge_obstacle_2_y[ni];
     return (is_owned_by(board, y1, x1) == NOBODY) && (is_owned_by(board, y2, x2) == NOBODY);
 }
+
+// checks if a stone is connected to its border via one of the two ziggurats possible
+// TODO bien relire
+bool is_free_ziggurat(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, Player player) {
+
+    Board_XY (*zig_center)[6];
+    Board_XY (*zig_leftside)[3];
+    Board_XY (*zig_rightside)[3];
+
+    // knowing what zig we're talking about
+    if (player == PLAYER_1_BLACK)   // black
+    {
+        if (x == 2) // top-left side
+        {
+            if (y < 2 || y >= BOARD_SIZE) return false; // impossible zig
+            zig_center = &black_top_ziggurat_center;
+            zig_leftside = &black_top_ziggurat_leftside;
+            zig_rightside = &black_top_ziggurat_rightside;
+        }
+        else if (x == BOARD_SIZE-3) // bot-right side
+        {
+            if (y < 0 || y > BOARD_SIZE-3) return false; // impossible zig
+            zig_center = &black_bot_ziggurat_center;
+            zig_leftside = &black_bot_ziggurat_leftside;
+            zig_rightside = &black_bot_ziggurat_rightside;
+        }
+        else return false; // invalid zig
+    }
+    else    // white
+    {
+        if (y == 2) // top-right side
+        {
+            if (x < 2 || x >= BOARD_SIZE) return false; // impossible zig
+            zig_center = &white_top_ziggurat_center;
+            zig_leftside = &white_top_ziggurat_leftside;
+            zig_rightside = &white_top_ziggurat_rightside;
+        }
+        else if (y == BOARD_SIZE-3) // bot-left side
+        {
+            if (x < 0 || x > BOARD_SIZE-3) return false; // impossible zig
+            zig_center = &white_bot_ziggurat_center;
+            zig_leftside = &white_bot_ziggurat_leftside;
+            zig_rightside = &white_bot_ziggurat_rightside;
+        }
+        else return false; // invalid zig
+        
+    }
+
+    int enemy = get_enemy[player];
+
+    // checking zig center
+    for (int i=0; i<6; i++)
+    {
+        Board_XY zig_xy = (*zig_center)[i];
+        int nx = x + zig_xy.x;
+        int ny = y + zig_xy.y;
+        if (board[ny][nx] == enemy)
+            return false;
+    }
+
+    // if the center is free, we can look at the sides
+    
+
+
+    // first, special board-edge cases
+
+
+
+    // if can't check left side
+    
+    bool can_check_left_side = true;
+
+    if (player == PLAYER_1_BLACK)   // black
+    {
+        if ((y == BOARD_SIZE-1 && x == 2)    ||    (y == BOARD_SIZE-3 && x == BOARD_SIZE-3))
+            can_check_left_side = false;
+    }
+    else    // white
+    {
+        if ((y == BOARD_SIZE-3 && x == 0)    ||    (y == 2 && x == 2))
+            can_check_left_side = false;
+    }
+    
+    if (can_check_left_side == false)
+    {
+        // only check right side
+        for (int i=0; i<3; i++)
+        {
+            Board_XY zig_xy = (*zig_leftside)[i];
+            int nx = x + zig_xy.x;
+            int ny = y + zig_xy.y;
+            if (board[ny][nx] == enemy)
+                return false;
+        }
+        return true;
+    }
+
+
+
+    // if can't check right side
+    
+    bool can_check_right_side = true;
+
+    if (player == PLAYER_1_BLACK)   // black
+    {
+        if ((y == 2 && x == 2)    ||    (y == 0 && x == BOARD_SIZE-3))
+            can_check_right_side = false;
+    }
+    else    // white
+    {
+        if ((y == BOARD_SIZE-3 && x == BOARD_SIZE-3)    ||    (y == 2 && x == BOARD_SIZE-1))
+            can_check_right_side = false;
+    }
+    
+    if (can_check_right_side == false)
+    {
+        // only check right side
+        for (int i=0; i<3; i++)
+        {
+            Board_XY zig_xy = (*zig_rightside)[i];
+            int nx = x + zig_xy.x;
+            int ny = y + zig_xy.y;
+            if (board[ny][nx] == enemy)
+                return false;
+        }
+        return true;
+    }
+
+
+    // GENERAL CASE
+
+    // check left side
+    int enemies_leftside=0;
+    for (int i=0; i<3; i++)
+    {
+        Board_XY zig_xy = (*zig_leftside)[i];
+        int nx = x + zig_xy.x;
+        int ny = y + zig_xy.y;
+        if (board[ny][nx] == enemy)
+            enemies_leftside++;
+            break;
+    }
+
+    if (enemies_leftside == 0)
+        return true; // left side is free!
+
+    // finally check the right side
+    for (int i=0; i<3; i++)
+    {
+        Board_XY zig_xy = (*zig_rightside)[i];
+        int nx = x + zig_xy.x;
+        int ny = y + zig_xy.y;
+        if (board[ny][nx] == enemy)
+            return false;
+    }
+    return true;
+
+    
+}
+
 
 Player is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
     if (x < 0 || x >= BOARD_SIZE) { // out of bounds for black
@@ -451,8 +611,8 @@ bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], Player enemy,
     int ny = y + direct_neighbors_y[ni];
 
     // potential blocking bridge scenario
-    if (is_owned_by(board, x1, y1) == enemy
-        && is_owned_by(board, x2, y2) == enemy)
+    if (is_owned_by(board, x1, y1) == get_enemy
+        && is_owned_by(board, x2, y2) == get_enemy)
     {
         // if no friend stones present, the bridge is blocking.
         if (board[y][x] == 0
@@ -461,9 +621,9 @@ bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], Player enemy,
             return true;
         }
 
-        // if we know it's enemy's turn after checking this position,
-        // even if one friend stone is present, enemy can block.
-        if (next_player == enemy)
+        // if we know it's get_enemy's turn after checking this position,
+        // even if one friend stone is present, get_enemy can block.
+        if (next_player == get_enemy)
         {
             if (board[y][x] == 0
                 || board[ny][nx] == 0)
@@ -505,3 +665,4 @@ bool is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, i
     }
     return false;
 }
+

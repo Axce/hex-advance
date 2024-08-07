@@ -19,6 +19,8 @@ const int bridge_obstacle_1_x[6] =  {-1,-1, 0, 0,+1,+1};
 const int bridge_obstacle_2_y[6] =  {-1, 0, 0, 0, 0,+1};
 const int bridge_obstacle_2_x[6] =  { 0,-1,+1,-1,+1, 0};
 
+const int enemy[3] = {NOBODY, PLAYER_2_WHITE, PLAYER_1_BLACK};
+
 #define INFINITY 1000
 
 // According to :
@@ -138,12 +140,6 @@ Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player)
     Board_XY best_moves[BOARD_SIZE*BOARD_SIZE]; // TODO get only if valid
     int write_cursor = 0;
 
-    int enemy;
-    if (player == PLAYER_1_BLACK)
-        enemy = PLAYER_2_WHITE;
-    else
-        enemy = PLAYER_1_BLACK;
-
     for (int y = 0; y < BOARD_SIZE; y++)
     {
         for (int x = 0; x < BOARD_SIZE; x++)
@@ -151,7 +147,7 @@ Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player)
             if (board[y][x] == 0)
             {
                 board[y][x] = player;
-                int score = least_moves_to_win(board, enemy) - least_moves_to_win(board, player);
+                int score = least_moves_to_win(board, enemy[player], enemy[player]) - least_moves_to_win(board, player, enemy[player]);
                 if (score == best_score)
                 {
                     best_moves[write_cursor++] = new_board_xy(x, y);
@@ -174,7 +170,8 @@ Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player)
 
 // si cette heuristique durait moins d'une frame, ça serait super (pour check_for_vblank)
 // TODO check ziggurats
-int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
+// knowing the next player to move can be useful to put some cases into perspective
+int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player next_player) {
 
     // This returns the shortest amount of stones needed to connect the sides.
     // Uses 0-1 BFS algorithm.
@@ -204,10 +201,8 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
 
     // FIRST: filling the queue with the cells next to sides
 
-    int enemy;
     // black : from x=0 to x=BOARD_SIZE-1
     if (player == PLAYER_1_BLACK) {
-        enemy = PLAYER_2_WHITE;
         
         // bridges to border
         for (int iy = 1; iy < BOARD_SIZE; iy++) {
@@ -241,7 +236,6 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
             }
         }
     } else {    // white : from y=0 to y=BOARD_SIZE-1
-        enemy = PLAYER_1_BLACK;
 
         // bridges to border
         for (int ix = 1; ix < BOARD_SIZE; ix++) {
@@ -321,7 +315,7 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
         for (int ni = 0; ni < 6; ni++) {
             int nx = x + direct_neighbors_x[ni];
             int ny = y + direct_neighbors_y[ni];
-            if (is_in_board(nx, ny) && visited_board[ny][nx] == 0 && !is_blocked_by_enemy_bridge(board, enemy, x, y, ni)) {
+            if (is_in_board(nx, ny) && visited_board[ny][nx] == 0 && !is_blocked_by_enemy_bridge(board, enemy[player], next_player, x, y, ni)) {
                 if (board[ny][nx] == player) {
                     path_length_board[ny][nx] = path_length_board[y][x] + 0;
                     nodes_queue_0[write_cursor_0++] = new_board_xy(nx, ny);
@@ -369,8 +363,7 @@ int is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
     return board[y][x];
 }
 
-// TODO check out of bounds
-bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], int enemy, int x, int y, enum DIRECT_NEIGHBORS ni) {
+bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], Player enemy, Player next_player, int x, int y, enum DIRECT_NEIGHBORS ni) {
     int x1 = x + direct_obstacle_1_x[ni];
     int y1 = y + direct_obstacle_1_y[ni];
     int x2 = x + direct_obstacle_2_x[ni];
@@ -378,11 +371,31 @@ bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], int enemy, in
     int nx = x + direct_neighbors_x[ni];
     int ny = y + direct_neighbors_y[ni];
 
-    if (is_owned_by(board, x1, y1) == enemy && is_owned_by(board, x2, y2) == enemy
-        && board[y][x] == 0 && board[ny][nx] == 0) {
-        return true;
+    // if no friend stones already present, the bridge is blocking.
+    if (next_player == enemy)
+    {
+        // we know it's enemy's turn after checking this.
+        // So even if one friend stone is present, enemy can block.
+        if (is_owned_by(board, x1, y1) == enemy
+            && is_owned_by(board, x2, y2) == enemy
+            && (board[y][x] == 0
+                || board[ny][nx] == 0)) {
+            return true;
+        }
+        return false;
     }
-    return false;
+    else
+    {
+        // if there is at least one friend stone, (and we know it's our turn after), the bridge is not blocking.
+        if (is_owned_by(board, x1, y1) == enemy
+            && is_owned_by(board, x2, y2) == enemy
+            && board[y][x] == 0
+            && board[ny][nx] == 0) {
+            return true;
+        }
+        return false;
+    }
+
 }
 
 bool is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, int x, int y) {

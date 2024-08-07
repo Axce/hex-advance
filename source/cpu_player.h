@@ -35,6 +35,8 @@ extern const int bridge_obstacle_1_x[6];
 extern const int bridge_obstacle_2_y[6];
 extern const int bridge_obstacle_2_x[6];
 
+extern const int enemy[3];
+
 Board_XY cpu_find_next_move();
 
 void update_bee_thinking_position();
@@ -42,9 +44,9 @@ void update_bee_thinking_position();
 Board_XY random_ai();
 Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player);
 
-int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player);
+int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player next_player);
 
 bool is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, enum BRIDGE_NEIGHBORS ni);
-bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], int enemy, int x, int y, enum DIRECT_NEIGHBORS ni);
+bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], Player enemy, Player next_player, int x, int y, enum DIRECT_NEIGHBORS ni);
 int is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
 bool is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, int x, int y);

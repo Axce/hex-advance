@@ -7,20 +7,6 @@
 
 #define INFINITY 1000
 
-const int direct_neighbors_y[6] =   {-1,-1, 0, 0, 1, 1};
-const int direct_neighbors_x[6] =   {-1, 0,-1, 1, 0, 1};
-const int direct_obstacle_1_y[6] =  { 0,-1,-1,-1, 0, 1};
-const int direct_obstacle_1_x[6] =  {-1,-1,-1, 0,-1, 0};
-const int direct_obstacle_2_y[6] =  {-1, 0, 1, 1, 1, 0};
-const int direct_obstacle_2_x[6] =  { 0, 1, 0, 1, 1, 1};
-
-const int bridge_neighbors_y[6] =   {-2,-1,-1,+1,+1,+2};
-const int bridge_neighbors_x[6] =   {-1,-2,+1,-1,+2,+1};
-const int bridge_obstacle_1_y[6] =  {-1,-1,-1,+1,+1,+1};
-const int bridge_obstacle_1_x[6] =  {-1,-1, 0, 0,+1,+1};
-const int bridge_obstacle_2_y[6] =  {-1, 0, 0, 0, 0,+1};
-const int bridge_obstacle_2_x[6] =  { 0,-1,+1,-1,+1, 0};
-
 // According to :
 // https://www.hexwiki.net/index.php/Swap#Size_11
 // https://www.hexwiki.net/index.php/Openings_on_11_x_11
@@ -176,8 +162,13 @@ Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player)
 // TODO check ziggurats
 int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
 
+    // This returns the shortest amount of stones needed to connect the sides.
+    // Uses 0-1 BFS algorithm.
+
     check_for_vblank();
 
+    // not visited = 0
+    // visited = 1
     int visited_board[BOARD_SIZE][BOARD_SIZE] = {0};
     uint path_length_board[BOARD_SIZE][BOARD_SIZE];
 
@@ -196,21 +187,25 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
     int write_cursor_1 = 0;
     int read_cursor_1 = 0;
 
+
+    // FIRST: filling the queue with the cells next to sides
+
     int enemy;
+    // black : from x=0 to x=BOARD_SIZE-1
     if (player == PLAYER_1_BLACK) {
         enemy = PLAYER_2_WHITE;
         
         // bridges to border
         for (int iy = 1; iy < BOARD_SIZE; iy++) {
             if (board[iy][1] == player) { // cost 0
-                if (is_free_bridge(board, 1, iy, 1)) {
+                if (is_free_bridge(board, 1, iy, BN_TOPLEFT)) {
                     path_length_board[iy][1] = 0;
                     nodes_queue_0[write_cursor_0++] = new_board_xy(1, iy);
                     visited_board[iy][1] = 1;
                 }
             }
             if (board[iy][1] == 0) { // cost 1
-                if (is_free_bridge(board, 1, iy, 1)) {
+                if (is_free_bridge(board, 1, iy, BN_TOPLEFT)) {
                     path_length_board[iy][1] = 1;
                     nodes_queue_1[write_cursor_1++] = new_board_xy(1, iy);
                     visited_board[iy][1] = 1;
@@ -220,29 +215,30 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
 
         // direct neighbors to border
         for (int iy = 0; iy < BOARD_SIZE; iy++) {
-            if (board[iy][0] == player) {
+            if (board[iy][0] == player) {   // cost 0
                 path_length_board[iy][0] = 0;
                 nodes_queue_0[write_cursor_0++] = new_board_xy(0, iy);
                 visited_board[iy][0] = 1;
             }
-            if (board[iy][0] == 0) {
+            if (board[iy][0] == 0) {    // cost 1
                 path_length_board[iy][0] = 1;
                 nodes_queue_1[write_cursor_1++] = new_board_xy(0, iy);
                 visited_board[iy][0] = 1;
             }
         }
-    } else {
+    } else {    // white : from y=0 to y=BOARD_SIZE-1
         enemy = PLAYER_1_BLACK;
 
+        // bridges to border
         for (int ix = 1; ix < BOARD_SIZE; ix++) {
-            if (board[1][ix] == player) {
+            if (board[1][ix] == player) {   // cost 0
                 if (is_free_bridge(board, ix, 1, 1)) {
                     path_length_board[1][ix] = 0;
                     nodes_queue_0[write_cursor_0++] = new_board_xy(ix,  1);
                     visited_board[1][ix] = 1;
                 }
             }
-            if (board[1][ix] == 0) {
+            if (board[1][ix] == 0) {    // cost 1
                 if (is_free_bridge(board, ix, 1, 1)) {
                     path_length_board[1][ix] = 1;
                     nodes_queue_1[write_cursor_1++] = new_board_xy(ix,  1);
@@ -251,13 +247,14 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
             }
         }
 
+        // direct neighbors to border
         for (int ix = 0; ix < BOARD_SIZE; ix++) {
-            if (board[0][ix] == player) {
+            if (board[0][ix] == player) {   // cost 0
                 path_length_board[0][ix] = 0;
                 nodes_queue_0[write_cursor_0++] = new_board_xy(ix,  0);
                 visited_board[0][ix] = 1;
             }
-            if (board[0][ix] == 0) {
+            if (board[0][ix] == 0) {    // cost 1
                 path_length_board[0][ix] = 1;
                 nodes_queue_1[write_cursor_1++] = new_board_xy(ix,  0);
                 visited_board[0][ix] = 1;
@@ -265,6 +262,7 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
         }
     }
 
+    // THEN: proceed to 0-1 BFS
 
     while (1) {
         
@@ -282,6 +280,7 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
         int x = current_node_xy.x;
         int y = current_node_xy.y;
 
+        // found shortest path!
         if (is_connected_to_end_border(board, player, x, y)) {
             return path_length_board[y][x];
         }
@@ -303,11 +302,12 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
                 }
             }
         }
-
+        
+        // for every direct neighbor
         for (int ni = 0; ni < 6; ni++) {
             int nx = x + direct_neighbors_x[ni];
             int ny = y + direct_neighbors_y[ni];
-            if (is_in_board(nx, ny) && visited_board[ny][nx] == 0 && !is_a_blocking_enemy_bridge(board, enemy, x, y, ni)) {
+            if (is_in_board(nx, ny) && visited_board[ny][nx] == 0 && !is_blocked_by_enemy_bridge(board, enemy, x, y, ni)) {
                 if (board[ny][nx] == player) {
                     path_length_board[ny][nx] = path_length_board[y][x] + 0;
                     nodes_queue_0[write_cursor_0++] = new_board_xy(nx, ny);
@@ -323,13 +323,13 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], int player) {
 }
 
 // int is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, int direction);
-// int is_a_blocking_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], int enemy, int x, int y, int direction);
+// int is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], int enemy, int x, int y, int direction);
 // int is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
 // int is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, int x, int y);
 
 
 
-bool is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, int ni) {
+bool is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, enum BRIDGE_NEIGHBORS ni) {
     int x1 = x + bridge_obstacle_1_x[ni];
     int y1 = y + bridge_obstacle_1_y[ni];
     int x2 = x + bridge_obstacle_2_x[ni];
@@ -355,7 +355,7 @@ int is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
     return board[y][x];
 }
 
-bool is_a_blocking_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], int enemy, int x, int y, int ni) {
+bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], int enemy, int x, int y, enum DIRECT_NEIGHBORS ni) {
     int x1 = x + direct_obstacle_1_x[ni];
     int y1 = y + direct_obstacle_1_y[ni];
     int x2 = x + direct_obstacle_2_x[ni];

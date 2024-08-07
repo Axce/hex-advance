@@ -12,12 +12,12 @@ enum DIRECT_NEIGHBORS {
     DN_BOTLEFT,
     DN_BOT
 };
-const int direct_neighbors_y[6] =   {-1,-1, 0, 0, 1, 1};
-const int direct_neighbors_x[6] =   {-1, 0,-1, 1, 0, 1};
-const int direct_obstacle_1_y[6] =  { 0,-1,-1,-1, 0, 1};
-const int direct_obstacle_1_x[6] =  {-1,-1,-1, 0,-1, 0};
-const int direct_obstacle_2_y[6] =  {-1, 0, 1, 1, 1, 0};
-const int direct_obstacle_2_x[6] =  { 0, 1, 0, 1, 1, 1};
+extern const int direct_neighbors_y[6];
+extern const int direct_neighbors_x[6];
+extern const int direct_obstacle_1_y[6];
+extern const int direct_obstacle_1_x[6];
+extern const int direct_obstacle_2_y[6];
+extern const int direct_obstacle_2_x[6];
 
 // directions as seen on screen 
 enum BRIDGE_NEIGHBORS {
@@ -28,12 +28,12 @@ enum BRIDGE_NEIGHBORS {
     BN_BOTRIGHT,
     BN_BOTLEFT
 };
-const int bridge_neighbors_y[6] =   {-2,-1,-1,+1,+1,+2};
-const int bridge_neighbors_x[6] =   {-1,-2,+1,-1,+2,+1};
-const int bridge_obstacle_1_y[6] =  {-1,-1,-1,+1,+1,+1};
-const int bridge_obstacle_1_x[6] =  {-1,-1, 0, 0,+1,+1};
-const int bridge_obstacle_2_y[6] =  {-1, 0, 0, 0, 0,+1};
-const int bridge_obstacle_2_x[6] =  { 0,-1,+1,-1,+1, 0};
+extern const int bridge_neighbors_y[6];
+extern const int bridge_neighbors_x[6];
+extern const int bridge_obstacle_1_y[6];
+extern const int bridge_obstacle_1_x[6];
+extern const int bridge_obstacle_2_y[6];
+extern const int bridge_obstacle_2_x[6];
 
 Board_XY cpu_find_next_move();
 

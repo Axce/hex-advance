@@ -5,6 +5,20 @@
 #include "audio.h"
 #include "graphics.h"
 
+const int direct_neighbors_y[6] =   {-1,-1, 0, 0, 1, 1};
+const int direct_neighbors_x[6] =   {-1, 0,-1, 1, 0, 1};
+const int direct_obstacle_1_y[6] =  { 0,-1,-1,-1, 0, 1};
+const int direct_obstacle_1_x[6] =  {-1,-1,-1, 0,-1, 0};
+const int direct_obstacle_2_y[6] =  {-1, 0, 1, 1, 1, 0};
+const int direct_obstacle_2_x[6] =  { 0, 1, 0, 1, 1, 1};
+
+const int bridge_neighbors_y[6] =   {-2,-1,-1,+1,+1,+2};
+const int bridge_neighbors_x[6] =   {-1,-2,+1,-1,+2,+1};
+const int bridge_obstacle_1_y[6] =  {-1,-1,-1,+1,+1,+1};
+const int bridge_obstacle_1_x[6] =  {-1,-1, 0, 0,+1,+1};
+const int bridge_obstacle_2_y[6] =  {-1, 0, 0, 0, 0,+1};
+const int bridge_obstacle_2_x[6] =  { 0,-1,+1,-1,+1, 0};
+
 #define INFINITY 1000
 
 // According to :

@@ -48,5 +48,5 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player 
 
 bool is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, enum BRIDGE_NEIGHBORS ni);
 bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], Player enemy, Player next_player, int x, int y, enum DIRECT_NEIGHBORS ni);
-int is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
+Player is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
 bool is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, int x, int y);

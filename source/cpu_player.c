@@ -336,16 +336,16 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player 
 // int is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, int x, int y);
 
 
-// assuming 2 cells inbounds
+// works even with borders
 bool is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, enum BRIDGE_NEIGHBORS ni) {
     int x1 = x + bridge_obstacle_1_x[ni];
     int y1 = y + bridge_obstacle_1_y[ni];
     int x2 = x + bridge_obstacle_2_x[ni];
     int y2 = y + bridge_obstacle_2_y[ni];
-    return (board[y1][x1] == 0) && (board[y2][x2] == 0);
+    return (is_owned_by(board, y1, x1) == NOBODY) && (is_owned_by(board, y2, x2) == NOBODY);
 }
 
-int is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
+Player is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
     if (x < 0 || x >= BOARD_SIZE) { // out of bounds for black
         if (y >= 0 && y < BOARD_SIZE) {
             return PLAYER_1_BLACK;

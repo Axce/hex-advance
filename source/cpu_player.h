@@ -35,6 +35,8 @@ enum BRIDGE_NEIGHBORS {
 // extern const int bridge_obstacle_2_y[6];
 // extern const int bridge_obstacle_2_x[6];
 
+extern int thinking_progress;
+
 extern const int get_enemy[3];
 
 Board_XY cpu_find_next_move();

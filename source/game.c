@@ -9,7 +9,9 @@
 #include "audio.h"
 #include "game_loop.h"
 
-int BOARD_SIZE = 11;
+
+// TODO bee gives invalid moves when BS = 5
+int BOARD_SIZE = 7;
 
 /*                                              x->
                <-y  ___  x->                     ___________________

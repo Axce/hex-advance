@@ -129,51 +129,8 @@ const int swap_map_11[11][11] =
     {2, 2, 0, 0, 1, 0, 0, 0, 0, 1, 0},
 };
 
-int thinking_progress;
+int thinking_progress = 0;
 int thinking_progress_max;
-
-int new_frame = false;
-int last_vcount = 0;
-
-// trying another implementation
-// void check_for_vblank()
-// {
-//     int vcount = REG_VCOUNT;
-
-//     if (vcount < last_vcount) // NEW FRAME !!
-//     {
-//         mmFrame();
-//         global_frame++;
-//         key_poll();
-//         update_bee_thinking_position();
-//         update_bee_sprite();
-// 		obj_copy(obj_mem, obj_buffer, OBJ_COUNT);
-//     }
-
-//     last_vcount = vcount;
-
-// }
-
-// clever hack to keep stuff RUNNING while thinking
-void check_for_vblank()
-{
-    if (new_frame == false && REG_VCOUNT < 160)
-    {
-        new_frame = true;
-    }
-
-    if (new_frame == true && REG_VCOUNT >= 160)
-    {
-        mmFrame();
-        global_frame++;
-        key_poll();
-        update_bee_thinking_position();
-        update_bee_sprite();
-		obj_copy(obj_mem, obj_buffer, OBJ_COUNT);
-        new_frame = false;
-    }
-
-}
 
 // makes a nice circle while thinking
 void update_bee_thinking_position()
@@ -201,17 +158,6 @@ void update_bee_thinking_position()
 
 Board_XY cpu_find_next_move()
 {
-
-    new_frame = false;  // DO NOT FORGET THIS before a loop with check_for_vblank();
-
-    // simulate long thinking time
-    // int i=5000;
-    // while(i--)
-    // {
-    //     printf("lol");
-    //     check_for_vblank();
-    // }
-    // return random_ai();
 
     return best_score_ai(board, PLAYER_2_WHITE);
 
@@ -265,19 +211,17 @@ Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player)
         }
     }
 
+    thinking_progress = 0;  // used by onVBlank to know bee is thinking
+
     return best_moves[qran_range(0, write_cursor)];
 }
 
 
-// si cette heuristique durait moins d'une frame, ça serait super (pour check_for_vblank)
-// TODO check ziggurats
 // knowing the next player to move can be useful to put some cases into perspective
 int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player next_player) {
 
     // This returns the shortest amount of stones needed to connect the sides.
     // Uses 0-1 BFS algorithm.
-
-    check_for_vblank();
 
     // not visited = 0
     // visited = 1
@@ -411,8 +355,6 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player 
 
     while (1) {
         
-        check_for_vblank();
-
         Board_XY current_node_xy;
         if (read_cursor_0 < write_cursor_0) {
             current_node_xy = nodes_queue_0[read_cursor_0++];

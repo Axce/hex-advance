@@ -13,17 +13,35 @@
 #include "minigame_loop.h"
 #include "menus.h"
 #include "audio.h"
-
+#include "cpu_player.h"
 
 int global_frame = 0;
 int current_player = PLAYER_1_BLACK;
 OBJ_ATTR obj_buffer[OBJ_COUNT];
 GAME_STATE game_state;
 
+void onVBlank()
+{
+	mmVBlank();
+	
+	global_frame++;
+
+	if (thinking_progress)
+	{
+        // key_poll(); // TODO why ?
+        update_bee_thinking_position();
+        update_bee_sprite();
+		obj_copy(obj_mem, obj_buffer, OBJ_COUNT);
+	}
+
+	mmFrame();
+}
+
 int main()
 {
 	irq_init(NULL);
-	irq_add(II_VBLANK, mmVBlank);
+	//irq_add(II_VBLANK, mmVBlank);
+	irq_add(II_VBLANK, onVBlank);
     irq_enable(II_VBLANK);
 
 	init_audio();
@@ -36,12 +54,7 @@ int main()
 	{
 		qran();
 
-		key_poll();
-
 		VBlankIntrWait();
-		mmFrame();
-	
-		global_frame++;
 
 		key_poll();
 

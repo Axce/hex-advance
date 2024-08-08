@@ -178,13 +178,13 @@ Board_XY random_ai()
     return new_board_xy(x,y);
 }
 
-Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player)
+Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
 {
     thinking_progress = 0; // 1?
     thinking_progress_max = BOARD_SIZE * BOARD_SIZE;
 
     int best_score = -INFINITY;
-    Board_XY best_moves[BOARD_SIZE*BOARD_SIZE]; // TODO get only if valid
+    Board_XY best_moves[MAX_BOARD_SIZE*MAX_BOARD_SIZE]; // TODO get only if valid
     int write_cursor = 0;
 
     for (int y = 0; y < BOARD_SIZE; y++)
@@ -218,7 +218,7 @@ Board_XY best_score_ai(int board[BOARD_SIZE][BOARD_SIZE], int player)
 
 
 // knowing the next player to move can be useful to put some cases into perspective
-int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player next_player) {
+int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player, Player next_player) {
 
     // This returns the shortest amount of stones needed to connect the sides.
     // Uses 0-1 BFS algorithm.
@@ -411,7 +411,7 @@ int least_moves_to_win(int board[BOARD_SIZE][BOARD_SIZE], Player player, Player 
 
 
 // works even with borders
-bool is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, enum BRIDGE_NEIGHBORS ni) {
+bool is_free_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, enum BRIDGE_NEIGHBORS ni) {
     int x1 = x + bridge_obstacle_1_x[ni];
     int y1 = y + bridge_obstacle_1_y[ni];
     int x2 = x + bridge_obstacle_2_x[ni];
@@ -420,8 +420,7 @@ bool is_free_bridge(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, enum BRIDGE
 }
 
 // checks if a stone is connected to its border via one of the two ziggurats possible
-// TODO bien relire
-bool is_free_ziggurat(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, Player player) {
+bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, Player player) {
 
     const Board_XY (*zig_center)[6];
     const Board_XY (*zig_leftside)[3];
@@ -581,7 +580,7 @@ bool is_free_ziggurat(int board[BOARD_SIZE][BOARD_SIZE], int x, int y, Player pl
 }
 
 
-Player is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
+Player is_owned_by(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y) {
     if (x < 0 || x >= BOARD_SIZE) { // out of bounds for black
         if (y >= 0 && y < BOARD_SIZE) {
             return PLAYER_1_BLACK;
@@ -600,7 +599,7 @@ Player is_owned_by(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
 }
 
 // considering next player to move. Breaking zero-sum principle ? Would not work with minimax ?
-bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], Player enemy, Player next_player, int x, int y, enum DIRECT_NEIGHBORS ni) {
+bool is_blocked_by_enemy_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player enemy, Player next_player, int x, int y, enum DIRECT_NEIGHBORS ni) {
     int x1 = x + direct_obstacle_1_x[ni];
     int y1 = y + direct_obstacle_1_y[ni];
     int x2 = x + direct_obstacle_2_x[ni];
@@ -635,7 +634,7 @@ bool is_blocked_by_enemy_bridge(int board[BOARD_SIZE][BOARD_SIZE], Player enemy,
 
 }
 
-bool is_connected_to_end_border(int board[BOARD_SIZE][BOARD_SIZE], int player, int x, int y) {
+bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int x, int y) {
     if (player == PLAYER_1_BLACK) {
         if (x == BOARD_SIZE - 1) { // direct
             return true;

@@ -26,12 +26,17 @@ void onVBlank()
 	
 	global_frame++;
 
+	qran();
+
+	key_poll();
+
 	if (thinking_progress)
 	{
-        // key_poll(); // TODO why ?
         update_bee_thinking_position();
         update_bee_sprite();
 		obj_copy(obj_mem, obj_buffer, OBJ_COUNT);
+		board_bg_vofs--;
+		REG_BG1VOFS = board_bg_vofs >> 2;
 	}
 
 	mmFrame();
@@ -52,11 +57,8 @@ int main()
 
 	while(1)
 	{
-		qran();
 
 		VBlankIntrWait();
-
-		key_poll();
 
 		switch (game_state)
 		{

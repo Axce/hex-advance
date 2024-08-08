@@ -14,13 +14,17 @@
 void init_minigame_loop()
 {
 
-	REG_BG0CNT= BG_CBB(CBB_BOARD) | BG_SBB(SBB_BOARD) | BG_4BPP | BG_REG_32x32;
-	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_OBJ | DCNT_OBJ_1D;
+	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 |  DCNT_OBJ | DCNT_OBJ_1D;
 
-	// background
+	REG_BG0CNT= BG_CBB(CBB_BOARD) | BG_SBB(SBB_BOARD) | BG_4BPP | BG_REG_32x32;
 	GRIT_CPY(&pal_bg_bank[BGPAL_BOARD], board11Pal);		// BG_PAL 0
 	GRIT_CPY(&tile_mem[CBB_BOARD], board11Tiles);	// CBB 0
 	GRIT_CPY(&se_mem[SBB_BOARD], board11Map);		// SBB 30-31
+
+	REG_BG1CNT= BG_CBB(CBB_BOARDBG) | BG_SBB(SBB_BOARDBG) | BG_4BPP | BG_REG_32x32;
+	GRIT_CPY(&tile_mem[CBB_BOARDBG], board_bgTiles);
+	GRIT_CPY(&se_mem[SBB_BOARDBG], board_bgMap);
+
 
 
 	// sprites
@@ -59,6 +63,9 @@ void init_minigame_loop()
 
 void minigame_loop()
 {
+	board_bg_vofs--;
+	REG_BG1VOFS = board_bg_vofs >> 2;
+
 	if (key_hit(KEY_START)) {
 		init_menu(MENU_PAUSE);
 		return;

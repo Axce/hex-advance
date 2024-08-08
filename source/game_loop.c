@@ -10,6 +10,8 @@
 
 int mode_1_or_2_players;
 
+int board_bg_vofs = 0;
+
 void init_game_loop()
 {
 	
@@ -20,15 +22,52 @@ void init_game_loop()
 
 	oam_init(obj_buffer, OBJ_COUNT);
 
-	// Load palette
-	GRIT_CPY(&pal_bg_bank[BGPAL_BOARD], board11Pal);
-	// Load tiles into CBB 0
-	GRIT_CPY(&tile_mem[CBB_BOARD], board11Tiles);
-	// Load map into SBB 30
-	GRIT_CPY(&se_mem[SBB_BOARD], board11Map);
+	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 |  DCNT_OBJ | DCNT_OBJ_1D;
 
 	REG_BG0CNT= BG_CBB(CBB_BOARD) | BG_SBB(SBB_BOARD) | BG_4BPP | BG_REG_32x32;
-	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_OBJ | DCNT_OBJ_1D;
+	switch (BOARD_SIZE)
+	{
+		case 3:
+			GRIT_CPY(&pal_bg_bank[BGPAL_BOARD], board3Pal);
+			GRIT_CPY(&tile_mem[CBB_BOARD], board3Tiles);
+			GRIT_CPY(&se_mem[SBB_BOARD], board3Map);
+			break;
+
+		case 5:
+			GRIT_CPY(&pal_bg_bank[BGPAL_BOARD], board5Pal);
+			GRIT_CPY(&tile_mem[CBB_BOARD], board5Tiles);
+			GRIT_CPY(&se_mem[SBB_BOARD], board5Map);
+			break;
+			
+		case 7:
+			GRIT_CPY(&pal_bg_bank[BGPAL_BOARD], board7Pal);
+			GRIT_CPY(&tile_mem[CBB_BOARD], board7Tiles);
+			GRIT_CPY(&se_mem[SBB_BOARD], board7Map);
+			break;
+			
+		case 9:
+			GRIT_CPY(&pal_bg_bank[BGPAL_BOARD], board9Pal);
+			GRIT_CPY(&tile_mem[CBB_BOARD], board9Tiles);
+			GRIT_CPY(&se_mem[SBB_BOARD], board9Map);
+			break;
+			
+		case 11:
+			GRIT_CPY(&pal_bg_bank[BGPAL_BOARD], board11Pal);
+			GRIT_CPY(&tile_mem[CBB_BOARD], board11Tiles);
+			GRIT_CPY(&se_mem[SBB_BOARD], board11Map);
+			break;
+			
+		case 13:
+			GRIT_CPY(&pal_bg_bank[BGPAL_BOARD], board13Pal);
+			GRIT_CPY(&tile_mem[CBB_BOARD], board13Tiles);
+			GRIT_CPY(&se_mem[SBB_BOARD], board13Map);
+			break;
+	}
+
+	REG_BG1CNT= BG_CBB(CBB_BOARDBG) | BG_SBB(SBB_BOARDBG) | BG_4BPP | BG_REG_32x32;
+	GRIT_CPY(&tile_mem[CBB_BOARDBG], board_bgTiles);
+	GRIT_CPY(&se_mem[SBB_BOARDBG], board_bgMap);
+
 
 
 	obj_set_attr(bee.obj,
@@ -51,6 +90,9 @@ void init_game_loop()
 
 void game_loop()
 {
+	board_bg_vofs--;
+	REG_BG1VOFS = board_bg_vofs >> 2;
+
 	switch (mode_1_or_2_players)
 	{
 		case MODE_1_PLAYER:

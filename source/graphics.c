@@ -7,11 +7,13 @@
 #include "minigame.h"
 #include "mem_management.h"
 
+#define SET_SIZE	7
+
 OBJ_ATTR* ghost_stone = &obj_buffer[OAM_GHOST_STONE];
 
-OBJ_ATTR* stone_set_black[6][6];
+OBJ_ATTR* stone_set_black[SET_SIZE][SET_SIZE];
 
-OBJ_ATTR* stone_set_white[6][6];
+OBJ_ATTR* stone_set_white[SET_SIZE][SET_SIZE];
 
 // in tiles
 int get_sprite_frame_1D(PlayerSprite* sprite, int global_frame)
@@ -109,9 +111,9 @@ void init_stones_sprites()
 
 	int stone_set_id = 0;
 
-	for (int iy = 0 ; iy < 6 ; iy++)
+	for (int iy = 0 ; iy < SET_SIZE ; iy++)
 	{
-		for (int ix = 0 ; ix < 6 ; ix++)
+		for (int ix = 0 ; ix < SET_SIZE ; ix++)
 		{
 			stone_set_black[iy][ix] = &obj_buffer[stone_set_id+OAM_STONESET_FIRSTBLACK];
 			stone_set_white[iy][ix] = &obj_buffer[stone_set_id+OAM_STONESET_FIRSTWHITE];

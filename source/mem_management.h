@@ -10,6 +10,7 @@
 // set in grit command "-mp#"
 // PALETTES (PAL RAM)     max 16
 #define BGPAL_BOARD           0
+
 #define BGPAL_TITLEBG         0
 #define BGPAL_TITLEBEEKEEPER  1
 #define BGPAL_TITLEHEXADVANCE 2
@@ -17,6 +18,7 @@
 
 // CBB (VRAM)           max 4
 #define CBB_BOARD           0
+#define CBB_BOARDBG         1
 
 #define CBB_TITLEBG         0
 #define CBB_TITLEBEEKEEPER  1
@@ -26,6 +28,7 @@
 
 // SBB (VRAM)           max 32
 #define SBB_BOARD           31      // screenblocks 1
+#define SBB_BOARDBG         30      // screenblocks 1
 
 #define SBB_TITLEBG         31      // screenblocks 1
 #define SBB_TITLEBEEKEEPER  30
@@ -50,8 +53,8 @@
 #define OAM_BEE             2
 #define OAM_LARVA           3
 #define OAM_GHOST_STONE     4
-#define OAM_STONESET_FIRSTBLACK  5  // 36 sprites assigned
-#define OAM_STONESET_FIRSTWHITE  36 + OAM_STONESET_FIRSTBLACK // 36 more sprites assigned
+#define OAM_STONESET_FIRSTBLACK  5  // 49 sprites assigned
+#define OAM_STONESET_FIRSTWHITE  49 + OAM_STONESET_FIRSTBLACK // 49 more sprites assigned
 
 // TILES (VRAM)         max 1024
 #define TILE_BEE            0       // spritetiles 16

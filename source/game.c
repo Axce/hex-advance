@@ -11,7 +11,7 @@
 
 
 // TODO bee gives invalid moves when BS = 5 or 7 or 9
-int BOARD_SIZE = 7;
+int BOARD_SIZE = 5;
 
 /*                                              x->
                <-y  ___  x->                     ___________________
@@ -60,7 +60,7 @@ void cpu_play() {
 
     if (!stone_put)
     {
-        while(1); // not supposed to happen
+        while(1); // TODO not supposed to happen
     }
 
     putting_stone_delay = bee.anim_frames * bee.anim_delay;
@@ -196,11 +196,11 @@ Board_XY* has_won(Player player) {
             {
                 parents[ny][nx] = new_board_xy(x, y);           // on note son node parent
                 
-                if (player == PLAYER_1_BLACK && nx==10)
+                if (player == PLAYER_1_BLACK && nx==BOARD_SIZE-1)
                 {
                     return reconstruct_path(new_board_xy(nx,ny), parents);
                 }
-                if (player == PLAYER_2_WHITE && ny==10)
+                if (player == PLAYER_2_WHITE && ny==BOARD_SIZE-1)
                 {
                     return reconstruct_path(new_board_xy(nx,ny), parents);
                 }

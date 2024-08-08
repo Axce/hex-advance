@@ -5,6 +5,7 @@
 #include "minigame_loop.h"
 #include "mem_management.h"
 #include "audio.h"
+#include "game.h"
 
 #define TITLE_MENU_X		153
 #define TITLE_MENU_Y		78
@@ -55,6 +56,16 @@ void init_title_screen()
 
 	title_bg_hofs = 0;
 	title_bg_vofs = 0;
+
+	REG_BG0HOFS = 0;
+	REG_BG1HOFS = 0;
+	REG_BG2HOFS = 0;
+	REG_BG3HOFS = 0;
+	REG_BG0VOFS = 0;
+	REG_BG1VOFS = 0;
+	REG_BG2VOFS = 0;
+	REG_BG3VOFS = 0;
+
 	title_beekeeper_vofs_n = 0;
 
 	GRIT_CPY(&tile_mem_obj_tile[TILE_CURSOR], menu_cursorTiles);
@@ -125,6 +136,21 @@ void title_screen_loop()
 				play_music(MOD_INGAME_SONG);
 				init_minigame_loop();
 				return;
+		}
+	}
+
+	// TODO real options menu
+	if (titlemenu_selected == TITLE_MENU_OPTIONS)
+	{
+		if (key_hit(KEY_L) && BOARD_SIZE > 3)
+		{
+			mmEffectEx(&sfx_cursor);
+			BOARD_SIZE -= 2;
+		}
+		if (key_hit(KEY_R) && BOARD_SIZE < 13)
+		{
+			mmEffectEx(&sfx_cursor);
+			BOARD_SIZE += 2;
 		}
 	}
 }

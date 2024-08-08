@@ -33,6 +33,9 @@
 #include "title_beekeeper.h"
 #include "title_hexadvance.h"
 #include "title_menutext.h"
+#include "menu_options.h"
+#include "menu_cursor_bs.h"
+#include "menu_cursor_fm.h"
 
 #include "PlayerSprite.h"
 

@@ -6,6 +6,7 @@
 #include "mem_management.h"
 #include "audio.h"
 #include "game.h"
+#include "options_loop.h"
 
 #define TITLE_MENU_X		153
 #define TITLE_MENU_Y		78
@@ -28,7 +29,7 @@ int title_beekeeper_vofs_n = 0;
 
 void init_title_screen()
 {
-	vid_vsync();
+	//vid_vsync();
 	oam_init(obj_buffer, OBJ_COUNT);
 
 	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_BG2 | DCNT_BG3 | DCNT_OBJ | DCNT_OBJ_1D;
@@ -135,6 +136,9 @@ void title_screen_loop()
 			case TITLE_MENU_MINIGAME:
 				play_music(MOD_INGAME_SONG);
 				init_minigame_loop();
+				return;
+			case TITLE_MENU_OPTIONS:
+				init_options_loop();
 				return;
 		}
 	}

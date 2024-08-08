@@ -16,6 +16,8 @@
 #define BGPAL_TITLEHEXADVANCE 2
 #define BGPAL_TITLEMENUTEXT   3
 
+#define BGPAL_OPTIONS         1
+
 // CBB (VRAM)           max 4
 #define CBB_BOARD           0
 #define CBB_BOARDBG         1
@@ -25,6 +27,7 @@
 #define CBB_TITLEHEXADVANCE 2
 #define CBB_TITLEMENUTEXT   3
 
+#define CBB_OPTIONS         1
 
 // SBB (VRAM)           max 32
 #define SBB_BOARD           31      // screenblocks 1
@@ -34,6 +37,8 @@
 #define SBB_TITLEBEEKEEPER  30
 #define SBB_TITLEHEXADVANCE 29
 #define SBB_TITLEMENUTEXT   28
+
+#define SBB_OPTIONS         30
 
 /////////////
 // OBJECTS //
@@ -49,6 +54,9 @@
 
 // SPRITES (OAM)        max 128
 #define OAM_CURSOR          0
+#define OAM_CURSOR_BS       1
+#define OAM_CURSOR_FM       2
+
 #define OAM_MENUS           1
 #define OAM_BEE             2
 #define OAM_LARVA           3
@@ -64,5 +72,7 @@
 #define TILE_STONESET       68      // spritetiles 256
 
 #define TILE_MENUS          512     // spritetiles 64
+#define TILE_CURSOR_BS      1017    // spritetiles 1
+#define TILE_CURSOR_FM      1018    // spritetiles 4
 #define TILE_CURSOR	        1022    // spritetiles 2
 

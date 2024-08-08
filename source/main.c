@@ -14,6 +14,7 @@
 #include "menus.h"
 #include "audio.h"
 #include "cpu_player.h"
+#include "options_loop.h"
 
 int global_frame = 0;
 int current_player = PLAYER_1_BLACK;
@@ -64,6 +65,10 @@ int main()
 		{
 			case TITLE_SCREEN:
 				title_screen_loop();
+				break;
+
+			case OPTIONS:
+				options_loop();
 				break;
 
 			case IN_GAME:

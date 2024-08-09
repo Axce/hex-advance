@@ -1,6 +1,14 @@
 #include "toolbox.h"
 #include "PlayerSprite.h"
 #include "mem_management.h"
+#include "game.h"
+
+// for 13x13
+int PLAYER1_SPAWN_X = 176;
+int PLAYER1_SPAWN_Y = 100;
+int PLAYER2_SPAWN_X = 0;
+int PLAYER2_SPAWN_Y = 100;
+
 
 PlayerSprite bee = {
 	&obj_buffer[OAM_BEE],
@@ -9,7 +17,7 @@ PlayerSprite bee = {
 	4,
 	WEST,
 	BEE_IDLE,
-	PLAYER1_SPAWN_X, PLAYER1_SPAWN_Y,
+	0, 0,
 	2, // vitesse max
 	0, 0
 };
@@ -28,3 +36,11 @@ PlayerSprite larva = {
 
 
 int putting_stone_delay = 0;
+
+void init_player_spawns()
+{
+    PLAYER1_SPAWN_X = 111 + 5*BOARD_SIZE;
+    PLAYER1_SPAWN_Y = 61 + 3*BOARD_SIZE;
+    PLAYER2_SPAWN_X = 65 - 5*BOARD_SIZE;
+    PLAYER2_SPAWN_Y = 61 + 3*BOARD_SIZE;
+}

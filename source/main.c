@@ -62,6 +62,7 @@ int main()
 	option_first_move = sram_mem[SRAM_FIRSTMOVE];
 	option_music = sram_mem[SRAM_MUSIC];
 	option_sound = sram_mem[SRAM_SOUND];
+	init_player_spawns();
 	
 	sqran(1312);
 

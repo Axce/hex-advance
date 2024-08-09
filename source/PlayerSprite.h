@@ -4,10 +4,10 @@
 
 #include "toolbox.h"
 
-#define PLAYER1_SPAWN_X 176
-#define PLAYER1_SPAWN_Y 100
-#define PLAYER2_SPAWN_X 0
-#define PLAYER2_SPAWN_Y 100
+extern int PLAYER1_SPAWN_X;
+extern int PLAYER1_SPAWN_Y;
+extern int PLAYER2_SPAWN_X;
+extern int PLAYER2_SPAWN_Y;
 /*
 #define PLAYER_CENTER_X 87
 #define PLAYER_CENTER_Y 40
@@ -42,3 +42,5 @@ extern PlayerSprite bee;
 extern PlayerSprite larva;
 
 extern int putting_stone_delay;
+
+void init_player_spawns();

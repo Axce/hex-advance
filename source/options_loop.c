@@ -147,11 +147,13 @@ void options_loop()
             {
                 play_sfx(&sfx_cursor);
                 BOARD_SIZE -= 2;
+                init_player_spawns();
             }
             if (key_hit(KEY_RIGHT) && BOARD_SIZE < 13)
             {
                 play_sfx(&sfx_cursor);
                 BOARD_SIZE += 2;
+                init_player_spawns();
             }
             obj_set_pos(&obj_buffer[OAM_CURSOR_BS], 69 + 10*BOARD_SIZE, OPTL_BOARDSIZE_Y);
             break;

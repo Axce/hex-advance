@@ -8,6 +8,7 @@
 #include "menus.h"
 #include "audio.h"
 #include "game_loop.h"
+#include "options_loop.h"
 
 
 // TODO bee gives invalid moves when BS = 5 or 7 or 9
@@ -226,7 +227,26 @@ void restart_game()
 {
     memset(board, 0, sizeof(board));
     init_stones_sprites();
-    current_player = PLAYER_1_BLACK;
+
+    switch (option_first_move)
+    {
+        case 0:
+            current_player = PLAYER_1_BLACK;
+            break;
+        
+        case 1:
+            current_player = PLAYER_2_WHITE;
+            break;
+        
+        case 2:
+            if (qran()&1)
+                current_player = PLAYER_1_BLACK;
+            else
+                current_player = PLAYER_2_WHITE;
+            break;
+    }
+    
+    
     switch_player_graphics();
     winner = 0;
     obj_hide(&obj_buffer[OAM_MENUS]);          //hide win text

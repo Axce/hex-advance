@@ -38,8 +38,16 @@ void switch_player_graphics()
     else
     {
         bee.orientation = EAST;
-        bee.x = PLAYER2_SPAWN_X;
-        bee.y = PLAYER2_SPAWN_Y;
+		if (mode_1_or_2_players == MODE_2_PLAYERS)
+		{
+        	bee.x = PLAYER2_SPAWN_X;
+        	bee.y = PLAYER2_SPAWN_Y;
+		}
+		else	// just for preventing bee appearing just for 1 frame at spawn
+		{
+        	bee.x = -64;
+        	bee.y = -64;			
+		}
         GRIT_CPY(&pal_obj_bank[PAL_BEE], bee32darkPal);
         GRIT_CPY(&tile_mem_obj_tile[TILE_GHOST_STONE], stonewhiteTiles);
         GRIT_CPY(&pal_obj_bank[PAL_GHOST_STONE], stonewhitePal);

@@ -45,6 +45,8 @@ void onVBlank()
 
 int main()
 {
+	sqran(1312);
+
 	irq_init(NULL);
 	//irq_add(II_VBLANK, mmVBlank);
 	irq_add(II_VBLANK, onVBlank);

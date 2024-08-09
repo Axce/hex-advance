@@ -154,6 +154,7 @@ void game_loop_2p()
 
 }
 
+// TODO delete?
 void game_ended_loop()
 {
 	if (key_hit(KEY_START)) {
@@ -163,6 +164,9 @@ void game_ended_loop()
 
 void putting_stone_loop() 
 {
+	board_bg_vofs--;
+	REG_BG1VOFS = board_bg_vofs >> 2;
+
     bee.current_animation = BEE_ATTACK;
 	memcpy(&tile_mem_obj_tile[TILE_BEE], &bee32Tiles[(get_sprite_frame_1D(&bee, 20 - putting_stone_delay)) * 8] /*one 4bpp tile = 8 ints*/, bee32TilesLen/16/3);
 	display_ghost_stone();

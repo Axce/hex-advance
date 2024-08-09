@@ -54,7 +54,7 @@ void minigame_player_play() {
 
     Screen_XY ghost_stone_screen_xy = get_sprite_position(ghost_stone);
 
-    if (!is_stone_in_board(ghost_stone_screen_xy))
+    if (!is_stone_puttable)
     {
         return;
     }

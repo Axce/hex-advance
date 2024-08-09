@@ -15,6 +15,8 @@ OBJ_ATTR* stone_set_black[SET_SIZE][SET_SIZE];
 
 OBJ_ATTR* stone_set_white[SET_SIZE][SET_SIZE];
 
+bool is_stone_puttable;
+
 // in tiles
 int get_sprite_frame_1D(PlayerSprite* sprite, int global_frame)
 {
@@ -65,7 +67,7 @@ void display_ghost_stone()
 
 	Screen_XY ghost_coordinates;
 
-	if (mode_1_or_2_players == MODE_1_PLAYER && current_player == PLAYER_2_WHITE)
+	if (mode_1_or_2_players == MODE_1_PLAYER && current_player == PLAYER_2_WHITE)  // why ?
 	{
 		ghost_coordinates = new_screen_xy(bee.x+32, bee.y+32);
 	}
@@ -74,20 +76,23 @@ void display_ghost_stone()
 		ghost_coordinates.x = (bee.x+37)/10*10 - 8;  //adjust de +32px (moitié de largeur de bee) et -8px (moitié de largeur de ghost), et puis fine-tuning
 
 		if ((ghost_coordinates.x/10) & 1)
-			ghost_coordinates.y = (bee.y+32)/12*12 - 8 + 6 + 3;
+			ghost_coordinates.y = (bee.y+40)/12*12 - 8 + 6 + 3;
 		else
-			ghost_coordinates.y = (bee.y+32+6)/12*12 - 8 + 3;
+			ghost_coordinates.y = (bee.y+40+6)/12*12 - 8 + 3;
 	}
 
 	if (is_stone_in_board(ghost_coordinates))
 	{
+		is_stone_puttable = true;
 	    obj_set_pos(ghost_stone, ghost_coordinates.x, ghost_coordinates.y);
 		ghost_stone->attr0 ^= ATTR0_HIDE;
 	}
 	else {
+		is_stone_puttable = false;
+
         ghost_coordinates.x = bee.x + 24;
 
-        ghost_coordinates.y = bee.y + 23;
+        ghost_coordinates.y = bee.y + 26;
 
 	    obj_set_pos(ghost_stone, ghost_coordinates.x, ghost_coordinates.y);
 		obj_unhide(ghost_stone, DCNT_MODE0);

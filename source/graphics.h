@@ -42,6 +42,9 @@
 
 extern OBJ_ATTR* ghost_stone;
 
+extern bool is_stone_puttable;
+
+
 // in tiles
 int get_sprite_frame_2D(PlayerSprite* sprite, int global_frame);
 

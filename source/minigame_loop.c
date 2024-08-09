@@ -84,8 +84,8 @@ void init_minigame_loop()
 	memcpy(&tile_mem_obj_tile[TILE_LARVA], larvaTiles, larvaTilesLen/4);
 	GRIT_CPY(&pal_obj_bank[PAL_LARVA], larvaPal);
 	obj_set_attr(larva.obj,
-		ATTR0_SQUARE,			
-		ATTR1_SIZE_16x16,			
+		ATTR0_WIDE,			
+		ATTR1_SIZE_32x16,			
 		ATTR2_PALBANK(PAL_LARVA) | TILE_LARVA);	
 
 

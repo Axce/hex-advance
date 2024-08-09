@@ -75,7 +75,7 @@
 
 // TILES (VRAM)         max 1024
 #define TILE_BEE            0       // spritetiles 16
-#define TILE_LARVA          16      // spritetiles 4
+#define TILE_LARVA          16      // spritetiles 8
 
 #define TILE_GHOST_STONE    64      // spritetiles 4
 #define TILE_STONESET       68      // spritetiles 256

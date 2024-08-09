@@ -113,7 +113,7 @@ void update_larva_sprite()
 	memcpy(&tile_mem_obj_tile[TILE_LARVA], &larvaTiles[(get_sprite_frame_1D(&larva, global_frame)) * 8] /*one 4bpp tile = 8 ints*/, larvaTilesLen/4);
 	
 	Screen_XY larva_screen_pos = to_screen_xy(larva_board_xy);
-    larva.x = larva_screen_pos.x;
+    larva.x = larva_screen_pos.x-8;
     larva.y = larva_screen_pos.y;
 	obj_set_pos(larva.obj, larva.x, larva.y);
 }

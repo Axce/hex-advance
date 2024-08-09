@@ -24,7 +24,7 @@ PlayerSprite bee = {
 
 PlayerSprite larva = {
     &obj_buffer[OAM_LARVA],
-    2, 2,
+    4, 2,
     12,
     4,
     EAST,

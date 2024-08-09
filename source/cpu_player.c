@@ -114,20 +114,20 @@ const int get_enemy[3] = {NOBODY, PLAYER_2_WHITE, PLAYER_1_BLACK};
 //  2 = bad move from black, white should play
 // 
 // Can be read as "which player is likely to win"
-const int swap_map_11[11][11] =
-{
-    {0, 1, 0, 0, 0, 0, 1, 0, 0, 2, 2},
-    {2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2},
-    {2, 0, 1, 1, 1, 1, 1, 1, 1, 0, 2},
-    {2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2},
-    {2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2},
-    {2, 2, 0, 1, 1, 1, 1, 1, 0, 2, 2},
-    {2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2},
-    {2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2},
-    {2, 0, 1, 1, 1, 1, 1, 1, 1, 0, 2},
-    {2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2},
-    {2, 2, 0, 0, 1, 0, 0, 0, 0, 1, 0},
-};
+// const int swap_map_11[11][11] =
+// {
+//     {0, 1, 0, 0, 0, 0, 1, 0, 0, 2, 2},
+//     {2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2},
+//     {2, 0, 1, 1, 1, 1, 1, 1, 1, 0, 2},
+//     {2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2},
+//     {2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2},
+//     {2, 2, 0, 1, 1, 1, 1, 1, 0, 2, 2},
+//     {2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2},
+//     {2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2},
+//     {2, 0, 1, 1, 1, 1, 1, 1, 1, 0, 2},
+//     {2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2},
+//     {2, 2, 0, 0, 1, 0, 0, 0, 0, 1, 0},
+// };
 
 int thinking_progress = 0;
 int thinking_progress_max;
@@ -159,7 +159,8 @@ void update_bee_thinking_position()
 Board_XY cpu_find_next_move()
 {
 
-    return best_score_ai(board, PLAYER_2_WHITE);
+    // return best_score_ai(board, PLAYER_2_WHITE);
+    return best_own_score_ai(board, PLAYER_2_WHITE);
 
 }
 
@@ -178,6 +179,8 @@ Board_XY random_ai()
     return new_board_xy(x,y);
 }
 
+// lmtw = least moves to win
+// Considers best score = enemy's lmtw - own's lmtw
 Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
 {
     thinking_progress = 0; // 1?
@@ -194,7 +197,11 @@ Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
             if (board[y][x] == 0)
             {
                 board[y][x] = player;
-                int score = least_moves_to_win(board, get_enemy[player], get_enemy[player]) - least_moves_to_win(board, player, get_enemy[player]);
+
+                int lmtw_black = least_moves_to_win(board, get_enemy[player], get_enemy[player]);
+                int lmtw_white = least_moves_to_win(board, player, get_enemy[player]);
+
+                int score = lmtw_black - lmtw_white;
                 if (score == best_score)
                 {
                     best_moves[write_cursor++] = new_board_xy(x, y);
@@ -204,6 +211,64 @@ Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
                     best_score = score;
                     write_cursor = 0;
                     best_moves[write_cursor++] = new_board_xy(x, y);
+                }
+                board[y][x] = 0;
+            }
+            thinking_progress ++;
+        }
+    }
+
+    thinking_progress = 0;  // used by onVBlank to know bee is thinking
+
+    return best_moves[qran_range(0, write_cursor)];
+}
+
+// lmtw = least moves to win
+// Only considers own's best (smallest) lmtw, and only then considers enemy's greatest lmtw
+// Its playing "feels" more logical
+Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
+{
+    thinking_progress = 0; // 1?
+    thinking_progress_max = BOARD_SIZE * BOARD_SIZE;
+
+    int best_own_lmtw = INFINITY;   // we want to min it
+    int worst_enemy_lmtw = -INFINITY;   // we want to max it
+
+    Board_XY best_moves[MAX_BOARD_SIZE*MAX_BOARD_SIZE]; // TODO get only if valid
+    int write_cursor = 0;
+
+    for (int y = 0; y < BOARD_SIZE; y++)
+    {
+        for (int x = 0; x < BOARD_SIZE; x++)
+        {
+            if (board[y][x] == 0)
+            {
+                board[y][x] = player;
+
+                int lmtw_own = least_moves_to_win(board, player, get_enemy[player]);
+
+                if (lmtw_own < best_own_lmtw)
+                {
+                    best_own_lmtw = lmtw_own;
+                    worst_enemy_lmtw = least_moves_to_win(board, get_enemy[player], get_enemy[player]);
+                    write_cursor = 0;
+                    best_moves[write_cursor++] = new_board_xy(x, y);
+                }
+                else if (lmtw_own == best_own_lmtw)
+                {
+                    int lmtw_enemy = least_moves_to_win(board, get_enemy[player], get_enemy[player]);
+
+                    if (lmtw_enemy > worst_enemy_lmtw)
+                    {
+                        worst_enemy_lmtw = lmtw_enemy;
+                        write_cursor = 0;
+                        best_moves[write_cursor++] = new_board_xy(x, y);
+                    }
+                    else if (lmtw_enemy == worst_enemy_lmtw)
+                    {
+                        best_moves[write_cursor++] = new_board_xy(x, y);
+                    }
+
                 }
                 board[y][x] = 0;
             }

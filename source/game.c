@@ -12,7 +12,7 @@
 
 
 // TODO bee gives invalid moves when BS = 5 or 7 or 9
-int BOARD_SIZE = 11;
+int BOARD_SIZE = 7;
 
 /*                                              x->
                <-y  ___  x->                     ___________________

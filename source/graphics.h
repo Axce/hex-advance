@@ -36,6 +36,7 @@
 #include "menu_options.h"
 #include "menu_cursor_bs.h"
 #include "menu_cursor_fm.h"
+#include "tutorial.h"
 
 #include "PlayerSprite.h"
 

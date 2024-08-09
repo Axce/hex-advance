@@ -11,10 +11,12 @@
 // PALETTES (PAL RAM)     max 16
 #define BGPAL_BOARD           0
 
-#define BGPAL_TITLEBG         0
+#define BGPAL_TITLEBG         4
 #define BGPAL_TITLEBEEKEEPER  1
 #define BGPAL_TITLEHEXADVANCE 2
 #define BGPAL_TITLEMENUTEXT   3
+
+#define BGPAL_TUTORIAL        0
 
 #define BGPAL_OPTIONS         1
 
@@ -27,6 +29,8 @@
 #define CBB_TITLEHEXADVANCE 2
 #define CBB_TITLEMENUTEXT   3
 
+#define CBB_TUTORIAL        1   // only 1 charblock (511 tiles!)
+
 #define CBB_OPTIONS         1
 
 // SBB (VRAM)           max 32
@@ -37,6 +41,8 @@
 #define SBB_TITLEBEEKEEPER  30
 #define SBB_TITLEHEXADVANCE 29
 #define SBB_TITLEMENUTEXT   28
+
+#define SBB_TUTORIAL        26      // 2 screenblocks
 
 #define SBB_OPTIONS         30
 

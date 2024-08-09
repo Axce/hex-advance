@@ -7,6 +7,7 @@
 #include "audio.h"
 #include "game.h"
 #include "options_loop.h"
+#include "title_screen_loop.h"
 
 #define TITLE_MENU_X		153
 #define TITLE_MENU_Y		78
@@ -67,8 +68,6 @@ void init_title_screen()
 	REG_BG2VOFS = 0;
 	REG_BG3VOFS = 0;
 
-	title_beekeeper_vofs_n = 0;
-
 	GRIT_CPY(&tile_mem_obj_tile[TILE_CURSOR], menu_cursorTiles);
 	GRIT_CPY(&pal_obj_bank[PAL_MENUS], menu_palettePal);
 
@@ -79,6 +78,9 @@ void init_title_screen()
 	
 	// titlemenu_selected = TITLE_MENU_1_PLAYER;
 	obj_set_pos(&obj_buffer[OAM_CURSOR], TITLE_MENU_X, TITLE_MENU_Y + TITLE_MENU_SPACE * titlemenu_selected);
+
+	title_beekeeper_vofs_n = mod(title_beekeeper_vofs_n+1, 0xFFFF);
+	REG_BG2VOFS = lu_cos(title_beekeeper_vofs_n *500) >> 10; 
 
 	game_state = TITLE_SCREEN;
 
@@ -137,6 +139,9 @@ void title_screen_loop()
 				play_music(MOD_INGAME_SONG);
 				init_minigame_loop();
 				return;
+			case TITLE_MENU_TUTORIAL:
+				init_tutorial_loop();
+				return;
 			case TITLE_MENU_OPTIONS:
 				init_options_loop();
 				return;
@@ -157,4 +162,56 @@ void title_screen_loop()
 			BOARD_SIZE += 2;
 		}
 	}
+}
+
+int tuto_n;
+
+void init_tutorial_loop()
+{
+	REG_DISPCNT= DCNT_MODE0 | DCNT_BG1 | DCNT_BG3;
+
+	REG_BG1CNT= BG_CBB(CBB_TUTORIAL) | BG_SBB(SBB_TUTORIAL) | BG_8BPP | BG_REG_64x32;
+	GRIT_CPY(&pal_bg_bank[BGPAL_TUTORIAL], tutorialPal);
+	GRIT_CPY(&tile_mem[CBB_TUTORIAL], tutorialTiles);
+	GRIT_CPY(&se_mem[SBB_TUTORIAL], tutorialMap);
+
+	game_state = TUTORIAL;
+
+	tuto_n = 0;
+}
+
+void tutorial_loop()
+{
+	title_bg_hofs = mod(title_bg_hofs-1, 256);
+	title_bg_vofs = mod(title_bg_vofs+1, 256);
+	REG_BG3HOFS = title_bg_hofs;
+	REG_BG3VOFS = title_bg_vofs;
+
+	if (tuto_n == 0)	// page 1
+	{
+		if (key_hit(KEY_B))
+		{
+			init_title_screen();
+		}
+		if (key_hit(KEY_A) || key_hit(KEY_RIGHT))
+		{
+			tuto_n = 1;
+			REG_BG1HOFS = 240;
+			// for (int i=0)
+		}
+	}
+	else			// page 2
+	{
+		if (key_hit(KEY_B) || key_hit(KEY_LEFT))
+		{
+			tuto_n = 0;
+			REG_BG1HOFS = 0;
+		}
+		if (key_hit(KEY_A))
+		{
+			init_title_screen();
+		}
+	}
+
+
 }

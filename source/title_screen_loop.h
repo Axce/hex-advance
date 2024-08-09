@@ -8,3 +8,6 @@ void init_title_screen();
 
 void title_screen_loop();
 
+void init_tutorial_loop();
+
+void tutorial_loop();

@@ -69,6 +69,10 @@ int main()
 				title_screen_loop();
 				break;
 
+			case TUTORIAL:
+				tutorial_loop();
+				break;
+
 			case OPTIONS:
 				options_loop();
 				break;

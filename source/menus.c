@@ -135,8 +135,9 @@ void menu_pause()
 		}
 	}
 
-    if (key_hit(KEY_START))
+    if (key_hit(KEY_START) || key_hit(KEY_B))
     {
+        play_sfx(&sfx_cursor);
         close_menu();
         if (was_in_minigame)
             game_state = MINIGAME;

@@ -54,3 +54,27 @@ static inline int power(int n, int power)
 	}
 	return result;
 }
+
+static inline int ease_out(int n, int max)
+{
+	int theta = n * 0x4000 / max;
+	int j = lu_sin(theta) * max >> 12;
+
+	return j;
+}
+
+static inline int ease_in(int n, int max)
+{
+	int theta = (max-n) * 0x4000 / max;
+	int j = lu_cos(theta) * max >> 12;
+
+	return j;
+}
+
+static inline int ease_in_out(int n, int max)
+{
+	int theta = n * 0x8000 / max;	// theta from 0 to 180°
+	int j = lu_cos(theta) * max >> 13;	// cos from max to -max
+
+	return -j + max/2;
+}

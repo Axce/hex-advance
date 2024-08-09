@@ -191,24 +191,45 @@ void tutorial_loop()
 	{
 		if (key_hit(KEY_B))
 		{
+			mmEffectEx(&sfx_cursor);
 			init_title_screen();
 		}
 		if (key_hit(KEY_A) || key_hit(KEY_RIGHT))
 		{
+			mmEffectEx(&sfx_cursor);
 			tuto_n = 1;
-			REG_BG1HOFS = 240;
-			// for (int i=0)
+			for (int i=0; i<=240; i+=12)
+			{
+				VBlankIntrWait();
+				title_bg_hofs = mod(title_bg_hofs-1, 256);
+				title_bg_vofs = mod(title_bg_vofs+1, 256);
+				REG_BG3HOFS = title_bg_hofs;
+				REG_BG3VOFS = title_bg_vofs;
+
+				REG_BG1HOFS = ease_in_out(ease_in_out(i, 240), 240);
+			}
 		}
 	}
 	else			// page 2
 	{
 		if (key_hit(KEY_B) || key_hit(KEY_LEFT))
 		{
+			mmEffectEx(&sfx_cursor);
 			tuto_n = 0;
-			REG_BG1HOFS = 0;
+			for (int i=240; i>=0; i-=12)
+			{
+				VBlankIntrWait();
+				title_bg_hofs = mod(title_bg_hofs-1, 256);
+				title_bg_vofs = mod(title_bg_vofs+1, 256);
+				REG_BG3HOFS = title_bg_hofs;
+				REG_BG3VOFS = title_bg_vofs;
+
+				REG_BG1HOFS = ease_in_out(ease_in_out(i, 240), 240);
+			}
 		}
 		if (key_hit(KEY_A))
 		{
+			mmEffectEx(&sfx_cursor);
 			init_title_screen();
 		}
 	}

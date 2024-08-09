@@ -14,4 +14,7 @@ extern mm_sound_effect sfx_larva;
 extern mm_sound_effect sfx_confirm;
 
 void init_audio();
-void play_music();
+
+void play_music(int mod_id);
+
+void play_sfx(mm_sound_effect* sfx);

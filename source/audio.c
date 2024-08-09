@@ -2,6 +2,7 @@
 #include <maxmod.h>
 #include "soundbank.h"
 #include "soundbank_bin.h"
+#include "options_loop.h"
 
 mm_sound_effect sfx_cursor = {
     { SFX_CURSOR } ,			// id
@@ -69,6 +70,12 @@ void init_audio()
 
 void play_music(int mod_id)
 {
-    // if (mod_id == MOD_INGAME_SONG)
+    if (option_music)
 	    mmStart(mod_id, MM_PLAY_LOOP);
+}
+
+void play_sfx(mm_sound_effect* sfx)
+{
+    if (option_sound)
+        mmEffectEx(sfx);
 }

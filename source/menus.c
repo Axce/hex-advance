@@ -25,7 +25,7 @@ bool was_in_minigame = false;
 
 void init_menu(MENU_TYPE type)
 {
-    mmEffectEx(&sfx_cursor);
+    play_sfx(&sfx_cursor);
     current_menu_type = type;
     selected = 0;
     
@@ -97,13 +97,13 @@ void menu_pause()
     {
 
 		selected = mod((selected - 1), PAUSE_MENU_NUMBER_OF_CHOICES);
-        mmEffectEx(&sfx_cursor);
+        play_sfx(&sfx_cursor);
     }
 	if (key_hit(KEY_DOWN))
 	{
 
     	selected = mod((selected + 1), PAUSE_MENU_NUMBER_OF_CHOICES);
-        mmEffectEx(&sfx_cursor);
+        play_sfx(&sfx_cursor);
     }
 
 	int offset = 1 * ((global_frame>>4)&1);
@@ -112,7 +112,7 @@ void menu_pause()
 	
 	if (key_hit(KEY_A))
 	{
-        mmEffectEx(&sfx_confirm);
+        play_sfx(&sfx_confirm);
 		switch (selected)
 		{
 			case 0: // Continue
@@ -151,12 +151,12 @@ void menu_restart()
 	if (key_hit(KEY_UP))
     {
 		selected = mod((selected - 1), RESTART_MENU_NUMBER_OF_CHOICES);
-        mmEffectEx(&sfx_cursor);
+        play_sfx(&sfx_cursor);
     }
 	if (key_hit(KEY_DOWN))
     {
 		selected = mod((selected + 1), RESTART_MENU_NUMBER_OF_CHOICES);
-        mmEffectEx(&sfx_cursor);
+        play_sfx(&sfx_cursor);
     }
 
 	int offset = 1 * ((global_frame>>4)&1);
@@ -165,7 +165,7 @@ void menu_restart()
 	
 	if (key_hit(KEY_A))
 	{
-        mmEffectEx(&sfx_confirm);
+        play_sfx(&sfx_confirm);
 		switch (selected)
 		{
 			case 0: // Restart

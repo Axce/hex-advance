@@ -15,6 +15,7 @@
 #include "audio.h"
 #include "cpu_player.h"
 #include "options_loop.h"
+#include "mem_management.h"
 
 int global_frame = 0;
 int current_player = PLAYER_1_BLACK;
@@ -45,6 +46,23 @@ void onVBlank()
 
 int main()
 {
+
+	// init SRAM
+	if (sram_mem[SRAM_BOARDSIZE] == 0xFF)
+		sram_mem[SRAM_BOARDSIZE] = 11;
+	if (sram_mem[SRAM_FIRSTMOVE] == 0xFF)
+		sram_mem[SRAM_FIRSTMOVE] = 0;
+	if (sram_mem[SRAM_MUSIC] == 0xFF)
+		sram_mem[SRAM_MUSIC] = 1;
+	if (sram_mem[SRAM_SOUND] == 0xFF)
+		sram_mem[SRAM_SOUND] = 1;
+
+	// init game from SRAM
+	BOARD_SIZE = sram_mem[SRAM_BOARDSIZE];
+	option_first_move = sram_mem[SRAM_FIRSTMOVE];
+	option_music = sram_mem[SRAM_MUSIC];
+	option_sound = sram_mem[SRAM_SOUND];
+	
 	sqran(1312);
 
 	irq_init(NULL);
@@ -57,6 +75,10 @@ int main()
 	play_music(MOD_TITLESCREEN);
 
 	init_title_screen();
+
+
+
+
 
 	while(1)
 	{

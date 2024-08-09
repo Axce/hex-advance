@@ -108,12 +108,12 @@ void title_screen_loop()
 	if (key_hit(KEY_UP))
 	{
 		titlemenu_selected = mod((titlemenu_selected - 1), TITLE_MENU_NUMBER_OF_CHOICES);
-		mmEffectEx(&sfx_cursor);
+		play_sfx(&sfx_cursor);
 	}
 	if (key_hit(KEY_DOWN))
 	{
 		titlemenu_selected = mod((titlemenu_selected + 1), TITLE_MENU_NUMBER_OF_CHOICES);
-		mmEffectEx(&sfx_cursor);
+		play_sfx(&sfx_cursor);
 	}
 
 	int offset = 1 * ((global_frame>>4)&1);
@@ -122,7 +122,7 @@ void title_screen_loop()
 	
 	if (key_hit(KEY_A))
 	{
-        mmEffectEx(&sfx_confirm);
+        play_sfx(&sfx_confirm);
 		switch (titlemenu_selected)
 		{
 			case TITLE_MENU_1_PLAYER:
@@ -153,12 +153,12 @@ void title_screen_loop()
 	{
 		if (key_hit(KEY_L) && BOARD_SIZE > 3)
 		{
-			mmEffectEx(&sfx_cursor);
+			play_sfx(&sfx_cursor);
 			BOARD_SIZE -= 2;
 		}
 		if (key_hit(KEY_R) && BOARD_SIZE < 13)
 		{
-			mmEffectEx(&sfx_cursor);
+			play_sfx(&sfx_cursor);
 			BOARD_SIZE += 2;
 		}
 	}
@@ -191,12 +191,12 @@ void tutorial_loop()
 	{
 		if (key_hit(KEY_B))
 		{
-			mmEffectEx(&sfx_cursor);
+			play_sfx(&sfx_cursor);
 			init_title_screen();
 		}
 		if (key_hit(KEY_A) || key_hit(KEY_RIGHT))
 		{
-			mmEffectEx(&sfx_cursor);
+			play_sfx(&sfx_cursor);
 			tuto_n = 1;
 			for (int i=0; i<=240; i+=12)
 			{
@@ -214,7 +214,7 @@ void tutorial_loop()
 	{
 		if (key_hit(KEY_B) || key_hit(KEY_LEFT))
 		{
-			mmEffectEx(&sfx_cursor);
+			play_sfx(&sfx_cursor);
 			tuto_n = 0;
 			for (int i=240; i>=0; i-=12)
 			{
@@ -229,7 +229,7 @@ void tutorial_loop()
 		}
 		if (key_hit(KEY_A))
 		{
-			mmEffectEx(&sfx_cursor);
+			play_sfx(&sfx_cursor);
 			init_title_screen();
 		}
 	}

@@ -8,6 +8,9 @@ enum FIRST_MOVE
 };
 
 extern int option_first_move;
+extern bool option_music;
+extern bool option_sound;
+
 
 void init_options_loop();
 

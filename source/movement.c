@@ -78,7 +78,7 @@ void evaluate_movement() {
 	// WIP (add loop marker to wav; stop loop if pause or else)
 	// if (prev_mvt != BEE_FLYING && bee.current_animation == BEE_FLYING)
 	// {
-	// 	sfx_beeloop_handle = mmEffectEx(&sfx_beeloop);
+	// 	sfx_beeloop_handle = play_sfx(&sfx_beeloop);
 	// }
 
 	// if (prev_mvt == BEE_FLYING && bee.current_animation != BEE_FLYING)

@@ -46,6 +46,7 @@
 
 #define SBB_OPTIONS         30
 
+
 /////////////
 // OBJECTS //
 /////////////
@@ -62,6 +63,8 @@
 #define OAM_CURSOR          0
 #define OAM_CURSOR_BS       1
 #define OAM_CURSOR_FM       2
+#define OAM_CURSOR_MUSIC    3
+#define OAM_CURSOR_SOUND    4
 
 #define OAM_MENUS           1
 #define OAM_BEE             2
@@ -82,3 +85,11 @@
 #define TILE_CURSOR_FM      1018    // spritetiles 4
 #define TILE_CURSOR	        1022    // spritetiles 2
 
+//////////
+// SRAM //
+//////////
+
+#define SRAM_BOARDSIZE      0
+#define SRAM_FIRSTMOVE      1
+#define SRAM_MUSIC          2
+#define SRAM_SOUND          3

@@ -16,7 +16,9 @@ enum OPTIONS_LINES
 };
 
 int options_line_selected = 0;
-int first_move = 0;
+int option_first_move = 0;
+
+const int opt_fm_cursor_positions[3] = {88, 148, 200};
 
 int opt_cursor_x;
 int opt_cursor_y;
@@ -45,21 +47,21 @@ void init_options_loop()
 		ATTR0_WIDE,
 		ATTR1_SIZE_8x16,
 		ATTR2_PALBANK(PAL_MENUS) | TILE_CURSOR);
-    obj_set_pos(&obj_buffer[OAM_CURSOR_BS], opt_cursor_x, opt_cursor_y);
+    obj_set_pos(&obj_buffer[OAM_CURSOR], opt_cursor_x, opt_cursor_y);
 
     GRIT_CPY(&tile_mem_obj_tile[TILE_CURSOR_BS], menu_cursor_bsTiles);
 	obj_set_attr(&obj_buffer[OAM_CURSOR_BS],
 		ATTR0_SQUARE,
 		ATTR1_SIZE_8x8,
 		ATTR2_PALBANK(PAL_MENUS) | TILE_CURSOR_BS);
-    obj_set_pos(&obj_buffer[OAM_CURSOR_BS], 99, 143);
+    obj_set_pos(&obj_buffer[OAM_CURSOR_BS], 69 + 10*BOARD_SIZE, 143);
 
     GRIT_CPY(&tile_mem_obj_tile[TILE_CURSOR_FM], menu_cursor_fmTiles);
 	obj_set_attr(&obj_buffer[OAM_CURSOR_FM],
 		ATTR0_WIDE,
 		ATTR1_SIZE_32x8,
 		ATTR2_PALBANK(PAL_MENUS) | TILE_CURSOR_FM);
-    obj_set_pos(&obj_buffer[OAM_CURSOR_FM], 87, 119);
+    obj_set_pos(&obj_buffer[OAM_CURSOR_FM], opt_fm_cursor_positions[option_first_move], 119);
 
 	game_state = OPTIONS;
 
@@ -89,6 +91,43 @@ void options_loop()
 
 	obj_set_pos(&obj_buffer[OAM_CURSOR], opt_cursor_x - offset, opt_cursor_y + OPTIONS_LINE_SPACE * options_line_selected);
 	
+    if (key_hit(KEY_B))
+    {
+        init_title_screen();
+        return;
+    }
+
+    switch (options_line_selected)
+    {
+        case OPTL_FIRSTMOVE:
+            if (key_hit(KEY_LEFT) && option_first_move > 0)
+            {
+                mmEffectEx(&sfx_cursor);
+                option_first_move--;
+            }
+            if (key_hit(KEY_RIGHT) && option_first_move < 2)
+            {
+                mmEffectEx(&sfx_cursor);
+                option_first_move++;
+            }
+            obj_set_pos(&obj_buffer[OAM_CURSOR_FM], opt_fm_cursor_positions[option_first_move], 119);
+            break;
+
+        case OPTL_BOARDSIZE:
+            if (key_hit(KEY_LEFT) && BOARD_SIZE > 3)
+            {
+                mmEffectEx(&sfx_cursor);
+                BOARD_SIZE -= 2;
+            }
+            if (key_hit(KEY_RIGHT) && BOARD_SIZE < 13)
+            {
+                mmEffectEx(&sfx_cursor);
+                BOARD_SIZE += 2;
+            }
+            obj_set_pos(&obj_buffer[OAM_CURSOR_BS], 69 + 10*BOARD_SIZE, 143);
+            break;
+    }
+
 	// if (key_hit(KEY_A))
 	// {
     //     mmEffectEx(&sfx_confirm);

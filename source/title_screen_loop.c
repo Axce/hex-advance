@@ -78,11 +78,11 @@ void init_title_screen()
 		ATTR2_PALBANK(PAL_MENUS) | TILE_CURSOR);
 	
 	// titlemenu_selected = TITLE_MENU_1_PLAYER;
-	obj_set_pos(&obj_buffer[OAM_CURSOR], TITLE_MENU_X, TITLE_MENU_Y);
+	obj_set_pos(&obj_buffer[OAM_CURSOR], TITLE_MENU_X, TITLE_MENU_Y + TITLE_MENU_SPACE * titlemenu_selected);
 
 	game_state = TITLE_SCREEN;
 
-	play_music( MOD_TITLESCREEN);
+	// play_music( MOD_TITLESCREEN);
 
 }
 

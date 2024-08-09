@@ -81,7 +81,10 @@ void display_ghost_stone()
 			ghost_coordinates.y = (bee.y+40+6)/12*12 - 8 + 3;
 	}
 
-	if (is_stone_in_board(ghost_coordinates))
+	Board_XY xy = to_board_xy(ghost_coordinates);
+
+	if (is_in_board(xy.x, xy.y) &&
+		(board[xy.y][xy.x] == 0 || game_state == PUTTING_STONE || game_state == MINIGAME_PUTTING_STONE))
 	{
 		is_stone_puttable = true;
 	    obj_set_pos(ghost_stone, ghost_coordinates.x, ghost_coordinates.y);

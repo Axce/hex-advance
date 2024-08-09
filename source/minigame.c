@@ -26,7 +26,8 @@ void restart_minigame()
 
     // placeholder
     sqran(global_frame);
-    int starting_stones = qran_range(10,15);
+    // int starting_stones = qran_range(10,15);
+    int starting_stones = BOARD_SIZE + 4;
     for (int i = 0; i < starting_stones; i++)
     {
         int x = qran_range(0, BOARD_SIZE);
@@ -36,8 +37,8 @@ void restart_minigame()
     }
 
     board[BOARD_SIZE/2][BOARD_SIZE/2] = LARVA;
-    larva_board_xy = new_board_xy(5,5);
-    update_stones_sprites(PLAYER_1_BLACK, new_board_xy(5, 5));  // in case need to remove stone at center
+    larva_board_xy = new_board_xy(BOARD_SIZE/2, BOARD_SIZE/2);
+    update_stones_sprites(PLAYER_1_BLACK, new_board_xy(BOARD_SIZE/2, BOARD_SIZE/2));  // in case need to remove stone at center
 
     current_player = PLAYER_1_BLACK;
     switch_player_graphics();

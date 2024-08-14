@@ -46,6 +46,10 @@ void update_bee_thinking_position();
 Board_XY random_ai();
 Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player);
 Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player);
+Board_XY minimax_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player);
+
+int minimax(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int beta);
+int heuristic(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player next_player);
 
 int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player, Player next_player);
 

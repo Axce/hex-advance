@@ -7,6 +7,9 @@
 
 #define INFINITY 1000
 
+#define MAXING_PLAYER PLAYER_1_BLACK
+#define MINING_PLAYER PLAYER_2_WHITE
+
 const int direct_neighbors_y[6] =   {-1,-1, 0, 0, 1, 1};
 const int direct_neighbors_x[6] =   {-1, 0,-1, 1, 0, 1};
 const int direct_obstacle_1_y[6] =  { 0,-1,-1,-1, 0, 1};
@@ -161,6 +164,7 @@ Board_XY cpu_find_next_move()
 
     // return best_score_ai(board, PLAYER_2_WHITE);
     return best_own_score_ai(board, PLAYER_2_WHITE);
+    // return minimax_ai(board, PLAYER_2_WHITE);
 
 }
 
@@ -281,6 +285,103 @@ Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player
     return best_moves[qran_range(0, write_cursor)];
 }
 
+// always mining
+Board_XY minimax_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
+{
+    thinking_progress = 1; // 0?
+    thinking_progress_max = BOARD_SIZE * BOARD_SIZE * BOARD_SIZE * BOARD_SIZE;
+
+    int best_score;
+    if (player == MAXING_PLAYER)
+        best_score = -INFINITY;
+    else
+        best_score = INFINITY;
+
+    Board_XY best_moves[MAX_BOARD_SIZE*MAX_BOARD_SIZE]; // TODO get only if valid
+    int write_cursor = 0;
+
+    for (int y = 0; y < BOARD_SIZE; y++)
+    {
+        for (int x = 0; x < BOARD_SIZE; x++)
+        {
+            if (board[y][x] == 0)
+            {
+                board[y][x] = player;
+
+                int score = minimax(board, get_enemy[player], best_score);
+
+                if (score == best_score)
+                {
+                    best_moves[write_cursor++] = new_board_xy(x, y);
+                }
+                if (player == MAXING_PLAYER && score > best_score
+                    || player == MINING_PLAYER && score < best_score)
+                {
+                    best_score = score;
+                    write_cursor = 0;
+                    best_moves[write_cursor++] = new_board_xy(x, y);
+                }
+                board[y][x] = 0;
+            }
+            thinking_progress = BOARD_SIZE * BOARD_SIZE * (BOARD_SIZE * y + x+1);
+        }
+    }
+
+    thinking_progress = 0;  // used by onVBlank to know bee is thinking
+
+    return best_moves[qran_range(0, write_cursor)];
+
+}
+
+// always maxing
+int minimax(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int beta)
+{
+    int best_score;
+    if (player == MAXING_PLAYER)
+        best_score = -INFINITY;
+    else
+        best_score = INFINITY;
+
+
+    for (int y = 0; y < BOARD_SIZE; y++)
+    {
+        for (int x = 0; x < BOARD_SIZE; x++)
+        {
+            if (board[y][x] == 0)
+            {
+                board[y][x] = player;
+
+                int score = heuristic(board, get_enemy[player]);
+
+                if (score > beta)
+                {
+                    board[y][x] = 0;
+                    return score;
+                }
+
+                if (player == MAXING_PLAYER && score > best_score
+                    || player == MINING_PLAYER && score < best_score)
+                {
+                    best_score = score;
+                }
+                
+                board[y][x] = 0;
+            }
+            thinking_progress++;
+        }
+    }
+
+
+    return best_score;
+}
+
+// positive is in favor of MAXING_PLAYER (1)
+int heuristic(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player next_player)
+{
+    return least_moves_to_win(board, MINING_PLAYER, next_player) - least_moves_to_win(board, MAXING_PLAYER, next_player);
+    // return least_moves_to_win(board, MINING_PLAYER, PLAYER_2_WHITE);
+    // return -least_moves_to_win(board, MAXING_PLAYER, PLAYER_2_WHITE);
+}
 
 // knowing the next player to move can be useful to put some cases into perspective
 int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player, Player next_player) {

@@ -81,10 +81,15 @@
 #define OAM_TR_B_6          108
 #define OAM_TR_B_7          109
 #define OAM_TR_B_8          110
+
 #define OAM_TR_S_1          111
 #define OAM_TR_S_2          112
 #define OAM_TR_S_3          113
 #define OAM_TR_S_4          114
+#define OAM_TR_S_5          115
+#define OAM_TR_S_6          116
+#define OAM_TR_S_7          117
+#define OAM_TR_S_8          118
 
 // TILES (VRAM)         max 1024
 #define TILE_BEE            0       // spritetiles 16

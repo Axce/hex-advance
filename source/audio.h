@@ -5,6 +5,7 @@
 #include "soundbank.h"
 #include "soundbank_bin.h"
 
+extern mm_sound_effect sfx_whoosh;
 extern mm_sound_effect sfx_cursor;
 extern mm_sound_effect sfx_put_stone;
 extern mm_sound_effect sfx_bee;

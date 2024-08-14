@@ -4,6 +4,14 @@
 #include "soundbank_bin.h"
 #include "options_loop.h"
 
+mm_sound_effect sfx_whoosh = {
+    { SFX_WHOOSH } ,			// id
+    (int)(1.0f * (1<<10)),	// rate
+    0,		// handle
+    255,	// volume
+    127,	// panning
+};
+
 mm_sound_effect sfx_cursor = {
     { SFX_CURSOR } ,			// id
     (int)(1.0f * (1<<10)),	// rate

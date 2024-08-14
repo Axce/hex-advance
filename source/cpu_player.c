@@ -314,8 +314,8 @@ Board_XY minimax_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
                 {
                     best_moves[write_cursor++] = new_board_xy(x, y);
                 }
-                if (player == MAXING_PLAYER && score > best_score
-                    || player == MINING_PLAYER && score < best_score)
+                if ((player == MAXING_PLAYER && score > best_score)
+                    || (player == MINING_PLAYER && score < best_score))
                 {
                     best_score = score;
                     write_cursor = 0;
@@ -351,7 +351,7 @@ int minimax(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int beta)
             {
                 board[y][x] = player;
 
-                int score = heuristic(board, get_enemy[player]);
+                int score = minimax_heuristic(board, get_enemy[player]);
 
                 if (score > beta)
                 {
@@ -359,8 +359,8 @@ int minimax(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int beta)
                     return score;
                 }
 
-                if (player == MAXING_PLAYER && score > best_score
-                    || player == MINING_PLAYER && score < best_score)
+                if ((player == MAXING_PLAYER && score > best_score)
+                    || (player == MINING_PLAYER && score < best_score))
                 {
                     best_score = score;
                 }
@@ -376,11 +376,12 @@ int minimax(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int beta)
 }
 
 // positive is in favor of MAXING_PLAYER (1)
-int heuristic(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player next_player)
+int minimax_heuristic(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player next_player)
 {
     return least_moves_to_win(board, MINING_PLAYER, next_player) - least_moves_to_win(board, MAXING_PLAYER, next_player);
     // return least_moves_to_win(board, MINING_PLAYER, PLAYER_2_WHITE);
     // return -least_moves_to_win(board, MAXING_PLAYER, PLAYER_2_WHITE);
+    // return least_moves_to_win_fast(board, MINING_PLAYER, next_player) - least_moves_to_win(board, MAXING_PLAYER, next_player);
 }
 
 // knowing the next player to move can be useful to put some cases into perspective
@@ -418,14 +419,14 @@ int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player,
         // zigs to border
         for (int iy = 2; iy < BOARD_SIZE; iy++) {
             if (board[iy][2] == player) { // cost 0
-                if (is_free_ziggurat(board, 2, iy, player)) {
+                if (is_free_ziggurat(board, 2, iy, player, next_player)) {
                     path_length_board[iy][2] = 0;
                     nodes_queue_0[write_cursor_0++] = new_board_xy(2, iy);
                     visited_board[iy][2] = 1;
                 }
             }
             if (board[iy][2] == 0) { // cost 1
-                if (is_free_ziggurat(board, 2, iy, player)) {
+                if (is_free_ziggurat(board, 2, iy, player, next_player)) {
                     path_length_board[iy][2] = 1;
                     nodes_queue_1[write_cursor_1++] = new_board_xy(2, iy);
                     visited_board[iy][2] = 1;
@@ -469,14 +470,14 @@ int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player,
         // zigs to border
         for (int ix = 2; ix < BOARD_SIZE; ix++) {
             if (board[2][ix] == player) {   // cost 0
-                if (is_free_ziggurat(board, ix, 2, player)) {
+                if (is_free_ziggurat(board, ix, 2, player, next_player)) {
                     path_length_board[2][ix] = 0;
                     nodes_queue_0[write_cursor_0++] = new_board_xy(ix,  2);
                     visited_board[2][ix] = 1;
                 }
             }
             if (board[2][ix] == 0) {    // cost 1
-                if (is_free_ziggurat(board, ix, 2, player)) {
+                if (is_free_ziggurat(board, ix, 2, player, next_player)) {
                     path_length_board[2][ix] = 1;
                     nodes_queue_1[write_cursor_1++] = new_board_xy(ix,  2);
                     visited_board[2][ix] = 1;
@@ -534,7 +535,7 @@ int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player,
         int y = current_node_xy.y;
 
         // found shortest path!
-        if (is_connected_to_end_border(board, player, x, y)) {
+        if (is_connected_to_end_border(board, player, x, y, next_player)) {
             return path_length_board[y][x];
         }
 
@@ -575,6 +576,162 @@ int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player,
     }
 }
 
+// knowing the next player to move can be useful to put some cases into perspective
+int least_moves_to_win_fast(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player, Player next_player) {
+
+    // This returns the shortest amount of stones needed to connect the sides.
+    // Uses 0-1 BFS algorithm.
+
+    // not visited = 0
+    // visited = 1
+    int visited_board[MAX_BOARD_SIZE][MAX_BOARD_SIZE] = {0};
+    uint path_length_board[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
+
+    memset32(path_length_board, 0xFFFFFFFF, MAX_BOARD_SIZE*MAX_BOARD_SIZE);
+
+    // for (int i = 0; i < BOARD_SIZE; i++) {
+    //     for (int j = 0; j < BOARD_SIZE; j++) {
+    //         path_length_board[i][j] = INFINITY;     // SO SLOW : replace with memcpy 0xFFFF chaipaquoi
+    //     }
+    // }
+
+    Board_XY nodes_queue_0[MAX_BOARD_SIZE * MAX_BOARD_SIZE] = {0};
+    int write_cursor_0 = 0;
+    int read_cursor_0 = 0;
+    Board_XY nodes_queue_1[MAX_BOARD_SIZE * MAX_BOARD_SIZE] = {0};
+    int write_cursor_1 = 0;
+    int read_cursor_1 = 0;
+
+
+    // FIRST: filling the queue with the cells next to sides
+
+    // black : wants to go from x=0 to x=BOARD_SIZE-1
+    if (player == PLAYER_1_BLACK) {
+        
+        // bridges to border
+        for (int iy = 1; iy < BOARD_SIZE; iy++) {
+            if (board[iy][1] == player) { // cost 0
+                if (is_free_bridge(board, 1, iy, BN_TOPLEFT)) {
+                    path_length_board[iy][1] = 0;
+                    nodes_queue_0[write_cursor_0++] = new_board_xy(1, iy);
+                    visited_board[iy][1] = 1;
+                }
+            }
+            if (board[iy][1] == 0) { // cost 1
+                if (is_free_bridge(board, 1, iy, BN_TOPLEFT)) {
+                    path_length_board[iy][1] = 1;
+                    nodes_queue_1[write_cursor_1++] = new_board_xy(1, iy);
+                    visited_board[iy][1] = 1;
+                }
+            }
+        }
+
+        // direct neighbors to border
+        for (int iy = 0; iy < BOARD_SIZE; iy++) {
+            if (board[iy][0] == player) {   // cost 0
+                path_length_board[iy][0] = 0;
+                nodes_queue_0[write_cursor_0++] = new_board_xy(0, iy);
+                visited_board[iy][0] = 1;
+            }
+            if (board[iy][0] == 0) {    // cost 1
+                path_length_board[iy][0] = 1;
+                nodes_queue_1[write_cursor_1++] = new_board_xy(0, iy);
+                visited_board[iy][0] = 1;
+            }
+        }
+    } else {    // white : wants to go from y=0 to y=BOARD_SIZE-1
+
+        // bridges to border
+        for (int ix = 1; ix < BOARD_SIZE; ix++) {
+            if (board[1][ix] == player) {   // cost 0
+                if (is_free_bridge(board, ix, 1, 1)) {
+                    path_length_board[1][ix] = 0;
+                    nodes_queue_0[write_cursor_0++] = new_board_xy(ix,  1);
+                    visited_board[1][ix] = 1;
+                }
+            }
+            if (board[1][ix] == 0) {    // cost 1
+                if (is_free_bridge(board, ix, 1, 1)) {
+                    path_length_board[1][ix] = 1;
+                    nodes_queue_1[write_cursor_1++] = new_board_xy(ix,  1);
+                    visited_board[1][ix] = 1;
+                }
+            }
+        }
+
+        // direct neighbors to border
+        for (int ix = 0; ix < BOARD_SIZE; ix++) {
+            if (board[0][ix] == player) {   // cost 0
+                path_length_board[0][ix] = 0;
+                nodes_queue_0[write_cursor_0++] = new_board_xy(ix,  0);
+                visited_board[0][ix] = 1;
+            }
+            if (board[0][ix] == 0) {    // cost 1
+                path_length_board[0][ix] = 1;
+                nodes_queue_1[write_cursor_1++] = new_board_xy(ix,  0);
+                visited_board[0][ix] = 1;
+            }
+        }
+    }
+
+    // THEN: proceed to 0-1 BFS
+
+    while (1) {
+        
+        Board_XY current_node_xy;
+        if (read_cursor_0 < write_cursor_0) {
+            current_node_xy = nodes_queue_0[read_cursor_0++];
+        } else if (read_cursor_1 < write_cursor_1) {
+            current_node_xy = nodes_queue_1[read_cursor_1++];
+        } else {
+            return INFINITY; // no path
+        }
+
+        int x = current_node_xy.x;
+        int y = current_node_xy.y;
+
+        // found shortest path!
+        if (is_connected_to_end_border_fast(board, player, x, y, next_player)) {
+            return path_length_board[y][x];
+        }
+
+        // for every bridge neighbor
+        for (int ni = 0; ni < 6; ni++) {
+            int nx = x + bridge_neighbors_x[ni];
+            int ny = y + bridge_neighbors_y[ni];
+
+            if (is_in_board(nx, ny) && visited_board[ny][nx] == 0 && is_free_bridge(board, x, y, ni)) {
+                if (board[ny][nx] == player) {
+                    path_length_board[ny][nx] = path_length_board[y][x] + 0;
+                    nodes_queue_0[write_cursor_0++] = new_board_xy(nx, ny);
+                    visited_board[ny][nx] = 1;
+                } else if (board[ny][nx] == 0) {
+                    path_length_board[ny][nx] = path_length_board[y][x] + 1;
+                    nodes_queue_1[write_cursor_1++] = new_board_xy(nx, ny);
+                    visited_board[ny][nx] = 1;
+                }
+            }
+        }
+        
+        // for every direct neighbor
+        for (int ni = 0; ni < 6; ni++) {
+            int nx = x + direct_neighbors_x[ni];
+            int ny = y + direct_neighbors_y[ni];
+            if (is_in_board(nx, ny) && visited_board[ny][nx] == 0) {
+                if (board[ny][nx] == player) {
+                    path_length_board[ny][nx] = path_length_board[y][x] + 0;
+                    nodes_queue_0[write_cursor_0++] = new_board_xy(nx, ny);
+                    visited_board[ny][nx] = 1;
+                } else if (board[ny][nx] == 0) {
+                    path_length_board[ny][nx] = path_length_board[y][x] + 1;
+                    nodes_queue_1[write_cursor_1++] = new_board_xy(nx, ny);
+                    visited_board[ny][nx] = 1;
+                }
+            }
+        }
+    }
+}
+
 
 // works even with borders
 bool is_free_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, enum BRIDGE_NEIGHBORS ni) {
@@ -586,11 +743,20 @@ bool is_free_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, enu
 }
 
 // checks if a stone is connected to its border via one of the two ziggurats possible
-bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, Player player) {
+// considering next player to move. Breaking zero-sum principle ? Would not work with minimax ?
+bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, Player player, Player next_player) {
 
     const Board_XY (*zig_center)[6];
     const Board_XY (*zig_leftside)[3];
     const Board_XY (*zig_rightside)[3];
+
+    // if it's my turn, one enemy can be in ziggurat and it's still free
+    int can_meet_one_enemy;
+    if (next_player == player)
+        can_meet_one_enemy = true;
+    else
+        can_meet_one_enemy = false;
+
 
     // knowing what zig we're talking about
     if (player == PLAYER_1_BLACK)   // black
@@ -640,7 +806,16 @@ bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, P
         int nx = x + zig_xy.x;
         int ny = y + zig_xy.y;
         if (board[ny][nx] == enemy)
-            return false;
+        {
+            if (can_meet_one_enemy)
+            {
+                can_meet_one_enemy = false;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
     // if the center is free, we can look at the sides
@@ -675,7 +850,16 @@ bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, P
             int nx = x + zig_xy.x;
             int ny = y + zig_xy.y;
             if (board[ny][nx] == enemy)
-                return false;
+            {
+                if (can_meet_one_enemy)
+                {
+                    can_meet_one_enemy = false;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
         return true;
     }
@@ -706,7 +890,16 @@ bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, P
             int nx = x + zig_xy.x;
             int ny = y + zig_xy.y;
             if (board[ny][nx] == enemy)
-                return false;
+            {
+                if (can_meet_one_enemy)
+                {
+                    can_meet_one_enemy = false;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
         return true;
     }
@@ -730,6 +923,8 @@ bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, P
 
     if (enemies_leftside == 0)
         return true; // left side is free!
+    if (can_meet_one_enemy && enemies_leftside == 1)
+        return true; // left side is free!
 
     // finally check the right side
     for (int i=0; i<3; i++)
@@ -738,7 +933,16 @@ bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, P
         int nx = x + zig_xy.x;
         int ny = y + zig_xy.y;
         if (board[ny][nx] == enemy)
-            return false;
+        {
+            if (can_meet_one_enemy)
+            {
+                can_meet_one_enemy = false;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
     return true;
 
@@ -800,7 +1004,7 @@ bool is_blocked_by_enemy_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Playe
 
 }
 
-bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int x, int y) {
+bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int x, int y, Player next_player) {
     if (player == PLAYER_1_BLACK) {
         if (x == BOARD_SIZE - 1) { // direct
             return true;
@@ -814,7 +1018,7 @@ bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int p
         }
         if (x == BOARD_SIZE - 3) {  // zig
             if (y < BOARD_SIZE - 1) {
-                if (is_free_ziggurat(board, x, y, player))
+                if (is_free_ziggurat(board, x, y, player, next_player))
                 {
                     return true;
                 }
@@ -836,8 +1040,39 @@ bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int p
         }
         if (y == BOARD_SIZE - 3) {  // zig
             if (x < BOARD_SIZE - 2) {
-                if (is_free_ziggurat(board, x, y, player))
+                if (is_free_ziggurat(board, x, y, player, next_player))
                 {
+                    return true;
+                }
+            }
+        }
+    }
+
+
+    return false;
+}
+
+bool is_connected_to_end_border_fast(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int x, int y, Player next_player) {
+    if (player == PLAYER_1_BLACK) {
+        if (x == BOARD_SIZE - 1) { // direct
+            return true;
+        }
+        if (x == BOARD_SIZE - 2) { // bridge
+            if (y < BOARD_SIZE - 1) {
+                if (is_free_bridge(board, x, y, BN_BOTRIGHT)) { // 5th neighbor in LUT
+                    return true;
+                }
+            }
+        }
+    }
+
+    if (player == PLAYER_2_WHITE) {
+        if (y == BOARD_SIZE - 1) {  // direct
+            return true;
+        }
+        if (y == BOARD_SIZE - 2) { // bridge
+            if (x < BOARD_SIZE - 1) {
+                if (is_free_bridge(board, x, y, BN_BOTLEFT)) { // 6th neighbor in LUT
                     return true;
                 }
             }

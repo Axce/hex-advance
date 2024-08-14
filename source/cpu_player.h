@@ -49,12 +49,14 @@ Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player
 Board_XY minimax_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player);
 
 int minimax(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int beta);
-int heuristic(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player next_player);
+int minimax_heuristic(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player next_player);
 
 int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player, Player next_player);
+int least_moves_to_win_fast(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player, Player next_player);
 
 bool is_free_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, enum BRIDGE_NEIGHBORS ni);
-bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, Player player);
+bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, Player player, Player next_player);
 bool is_blocked_by_enemy_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player enemy, Player next_player, int x, int y, enum DIRECT_NEIGHBORS ni);
 Player is_owned_by(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y);
-bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int x, int y);
+bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int x, int y, Player next_player);
+bool is_connected_to_end_border_fast(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int x, int y, Player next_player);

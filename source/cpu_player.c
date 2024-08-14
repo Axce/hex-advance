@@ -2,8 +2,6 @@
 #include "cpu_player.h"
 #include "game.h"
 #include "toolbox.h"
-#include "audio.h"
-#include "graphics.h"
 
 #define INFINITY 1000
 
@@ -39,9 +37,9 @@ const Board_XY black_top_ziggurat_rightside[3] =
 };
 const Board_XY black_top_ziggurat_leftside[3] =
 {
-{-2,+1},
-    {-1,+1},
-        {0,+1}
+    {-2,+1},
+        {-1,+1},
+            {0,+1}
 };
 
 // white top right
@@ -59,9 +57,9 @@ const Board_XY white_top_ziggurat_rightside[3] =
 };
 const Board_XY white_top_ziggurat_leftside[3] =
 {
-{-3,-2},
-    {-2,-1},
-        {-1,0}
+    {-3,-2},
+        {-2,-1},
+            {-1,0}
 };
 
 // white bot left
@@ -73,15 +71,15 @@ const Board_XY white_bot_ziggurat_center[6] =
 };
 const Board_XY white_bot_ziggurat_rightside[3] =
 {
-                {+1,0},
-                    {+2,+1},
-                        {+3,+2}
+            {+1,0},
+                {+2,+1},
+                    {+3,+2}
 };
 const Board_XY white_bot_ziggurat_leftside[3] =
 {
-        {-1,0},
-    {-1,+1},
-{-1,+2}
+            {-1,0},
+        {-1,+1},
+    {-1,+2}
 };
 
 // black bot right
@@ -99,13 +97,12 @@ const Board_XY black_bot_ziggurat_rightside[3] =
 };
 const Board_XY black_bot_ziggurat_leftside[3] =
 {
-        {0,+1},
-    {+1,+2},
-{+2,+3}
+            {0,+1},
+        {+1,+2},
+    {+2,+3}
 };
 
 const int get_enemy[3] = {NOBODY, PLAYER_2_WHITE, PLAYER_1_BLACK};
-
 
 // According to :
 // https://www.hexwiki.net/index.php/Swap#Size_11
@@ -135,7 +132,11 @@ const int get_enemy[3] = {NOBODY, PLAYER_2_WHITE, PLAYER_1_BLACK};
 int thinking_progress = 0;
 int thinking_progress_max;
 
-// makes a nice circle while thinking
+/*
+ * make a nice circle while thinking
+ *
+ * Aeredren: Why is it there ? shouldn't graphical matters be handle elsewhere ?
+ */
 void update_bee_thinking_position()
 {
     int theta = thinking_progress * 0xFFFF / thinking_progress_max;
@@ -156,16 +157,16 @@ void update_bee_thinking_position()
         bee.orientation = NORTH;
     if (theta > 0xD000)
         bee.orientation = EAST;
-
 }
 
+/*
+ * Stub entry point for CPU Player
+ */
 Board_XY cpu_find_next_move()
 {
-
     // return best_score_ai(board, PLAYER_2_WHITE);
     return best_own_score_ai(board, PLAYER_2_WHITE);
     // return minimax_ai(board, PLAYER_2_WHITE);
-
 }
 
 Board_XY random_ai()
@@ -174,8 +175,7 @@ Board_XY random_ai()
 
     int x,y;
 
-    do
-    {
+    do {
         x = qran_range(0,BOARD_SIZE);
         y = qran_range(0,BOARD_SIZE);
     } while(board[y][x]);
@@ -194,24 +194,19 @@ Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
     Board_XY best_moves[MAX_BOARD_SIZE*MAX_BOARD_SIZE]; // TODO get only if valid
     int write_cursor = 0;
 
-    for (int y = 0; y < BOARD_SIZE; y++)
-    {
-        for (int x = 0; x < BOARD_SIZE; x++)
-        {
-            if (board[y][x] == 0)
-            {
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            if (board[y][x] == NOBODY) {
                 board[y][x] = player;
 
                 int lmtw_black = least_moves_to_win(board, get_enemy[player], get_enemy[player]);
                 int lmtw_white = least_moves_to_win(board, player, get_enemy[player]);
 
                 int score = lmtw_black - lmtw_white;
-                if (score == best_score)
-                {
+                if (score == best_score) {
                     best_moves[write_cursor++] = new_board_xy(x, y);
                 }
-                if (score > best_score)
-                {
+                if (score > best_score) {
                     best_score = score;
                     write_cursor = 0;
                     best_moves[write_cursor++] = new_board_xy(x, y);
@@ -222,6 +217,7 @@ Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
         }
     }
 
+    // Aeredren: thinking_progress already reset at the beginning of function
     thinking_progress = 0;  // used by onVBlank to know bee is thinking
 
     return best_moves[qran_range(0, write_cursor)];
@@ -229,7 +225,7 @@ Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
 
 // lmtw = least moves to win
 // Only considers own's best (smallest) lmtw, and only then considers enemy's greatest lmtw
-// Its playing "feels" more logical
+// this play style "feels" more logical
 Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
 {
     thinking_progress = 0; // 1?
@@ -241,29 +237,23 @@ Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player
     Board_XY best_moves[MAX_BOARD_SIZE*MAX_BOARD_SIZE]; // TODO get only if valid
     int write_cursor = 0;
 
-    for (int y = 0; y < BOARD_SIZE; y++)
-    {
-        for (int x = 0; x < BOARD_SIZE; x++)
-        {
-            if (board[y][x] == 0)
-            {
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            if (board[y][x] == NOBODY) {
                 board[y][x] = player;
 
                 int lmtw_own = least_moves_to_win(board, player, get_enemy[player]);
 
-                if (lmtw_own < best_own_lmtw)
-                {
+                if (lmtw_own < best_own_lmtw) {
                     best_own_lmtw = lmtw_own;
                     worst_enemy_lmtw = least_moves_to_win(board, get_enemy[player], get_enemy[player]);
                     write_cursor = 0;
                     best_moves[write_cursor++] = new_board_xy(x, y);
                 }
-                else if (lmtw_own == best_own_lmtw)
-                {
+                else if (lmtw_own == best_own_lmtw) {
                     int lmtw_enemy = least_moves_to_win(board, get_enemy[player], get_enemy[player]);
 
-                    if (lmtw_enemy > worst_enemy_lmtw)
-                    {
+                    if (lmtw_enemy > worst_enemy_lmtw) {
                         worst_enemy_lmtw = lmtw_enemy;
                         write_cursor = 0;
                         best_moves[write_cursor++] = new_board_xy(x, y);
@@ -292,31 +282,27 @@ Board_XY minimax_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
     thinking_progress_max = BOARD_SIZE * BOARD_SIZE * BOARD_SIZE * BOARD_SIZE;
 
     int best_score;
-    if (player == MAXING_PLAYER)
+    if (player == MAXING_PLAYER) {
         best_score = -INFINITY;
-    else
+    } else {
         best_score = INFINITY;
+    }
 
     Board_XY best_moves[MAX_BOARD_SIZE*MAX_BOARD_SIZE]; // TODO get only if valid
     int write_cursor = 0;
 
-    for (int y = 0; y < BOARD_SIZE; y++)
-    {
-        for (int x = 0; x < BOARD_SIZE; x++)
-        {
-            if (board[y][x] == 0)
-            {
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            if (board[y][x] == 0) {
                 board[y][x] = player;
 
                 int score = minimax(board, get_enemy[player], best_score);
 
-                if (score == best_score)
-                {
+                if (score == best_score) {
                     best_moves[write_cursor++] = new_board_xy(x, y);
                 }
                 if (player == MAXING_PLAYER && score > best_score
-                    || player == MINING_PLAYER && score < best_score)
-                {
+                    || player == MINING_PLAYER && score < best_score) {
                     best_score = score;
                     write_cursor = 0;
                     best_moves[write_cursor++] = new_board_xy(x, y);
@@ -330,23 +316,20 @@ Board_XY minimax_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
     thinking_progress = 0;  // used by onVBlank to know bee is thinking
 
     return best_moves[qran_range(0, write_cursor)];
-
 }
 
 // always maxing
 int minimax(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int beta)
 {
     int best_score;
-    if (player == MAXING_PLAYER)
+    if (player == MAXING_PLAYER) {
         best_score = -INFINITY;
-    else
+    } else {
         best_score = INFINITY;
+    }
 
-
-    for (int y = 0; y < BOARD_SIZE; y++)
-    {
-        for (int x = 0; x < BOARD_SIZE; x++)
-        {
+    for (int y=0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
             if (board[y][x] == 0)
             {
                 board[y][x] = player;
@@ -383,24 +366,26 @@ int heuristic(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player next_player)
     // return -least_moves_to_win(board, MAXING_PLAYER, PLAYER_2_WHITE);
 }
 
-// knowing the next player to move can be useful to put some cases into perspective
-int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player, Player next_player) {
+/*
+ * This returns the shortest amount of stones needed to connect the sides.
+ * Uses 0-1 BFS algorithm.
+ * not visited = 0
+ * visited = 1
+ *
+ * knowing the next player to move can be useful to put some cases into perspective
+ *
+ * Aeredren: Why always use MAX_BOARD_SIZE when we know BOARD_SIZE ?
+ * (btw BOARD_SIZE shouldn't be caps anymore)
+ */
+int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player, Player next_player)
+{
 
-    // This returns the shortest amount of stones needed to connect the sides.
-    // Uses 0-1 BFS algorithm.
-
-    // not visited = 0
-    // visited = 1
     int visited_board[MAX_BOARD_SIZE][MAX_BOARD_SIZE] = {0};
     uint path_length_board[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
 
+    // Aeredren: Should use INFINITY instead of 0xFFFFFFFF ?
+    // init path_length_board[BOARD_SIZE][BOARD_SIZE] to INFINITY
     memset32(path_length_board, 0xFFFFFFFF, MAX_BOARD_SIZE*MAX_BOARD_SIZE);
-
-    // for (int i = 0; i < BOARD_SIZE; i++) {
-    //     for (int j = 0; j < BOARD_SIZE; j++) {
-    //         path_length_board[i][j] = INFINITY;     // SO SLOW : replace with memcpy 0xFFFF chaipaquoi
-    //     }
-    // }
 
     Board_XY nodes_queue_0[MAX_BOARD_SIZE * MAX_BOARD_SIZE] = {0};
     int write_cursor_0 = 0;
@@ -408,7 +393,6 @@ int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player,
     Board_XY nodes_queue_1[MAX_BOARD_SIZE * MAX_BOARD_SIZE] = {0};
     int write_cursor_1 = 0;
     int read_cursor_1 = 0;
-
 
     // FIRST: filling the queue with the cells next to sides
 
@@ -575,9 +559,18 @@ int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player,
     }
 }
 
-
-// works even with borders
-bool is_free_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, enum BRIDGE_NEIGHBORS ni) {
+/*
+ * Works even with borders
+ *
+ * Aeredren: I don't get this fnct... maybe describing inputs will help
+ *
+ * int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE]
+ * int x
+ * int y
+ * enum BRIDGE_NEIGHBORS ni
+ */
+bool is_free_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, enum BRIDGE_NEIGHBORS ni)
+{
     int x1 = x + bridge_obstacle_1_x[ni];
     int y1 = y + bridge_obstacle_1_y[ni];
     int x2 = x + bridge_obstacle_2_x[ni];
@@ -585,57 +578,47 @@ bool is_free_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, enu
     return (is_owned_by(board, y1, x1) == NOBODY) && (is_owned_by(board, y2, x2) == NOBODY);
 }
 
-// checks if a stone is connected to its border via one of the two ziggurats possible
-bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, Player player) {
-
+// checks a stone connection to the corresponding borders via either two possible ziggurats
+bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, Player player)
+{
     const Board_XY (*zig_center)[6];
     const Board_XY (*zig_leftside)[3];
     const Board_XY (*zig_rightside)[3];
 
     // knowing what zig we're talking about
-    if (player == PLAYER_1_BLACK)   // black
-    {
-        if (x == 2) // top-left side
-        {
+    if (player == PLAYER_1_BLACK) { // black
+        if (x == 2) { // top-left side
             if (y < 2 || y >= BOARD_SIZE) return false; // impossible zig
             zig_center = &black_top_ziggurat_center;
             zig_leftside = &black_top_ziggurat_leftside;
             zig_rightside = &black_top_ziggurat_rightside;
         }
-        else if (x == BOARD_SIZE-3) // bot-right side
-        {
+        else if (x == BOARD_SIZE-3) { // bot-right side
             if (y < 0 || y > BOARD_SIZE-3) return false; // impossible zig
             zig_center = &black_bot_ziggurat_center;
             zig_leftside = &black_bot_ziggurat_leftside;
             zig_rightside = &black_bot_ziggurat_rightside;
         }
         else return false; // invalid zig
-    }
-    else    // white
-    {
-        if (y == 2) // top-right side
-        {
+    } else { // white
+        if (y == 2) { // top-right side
             if (x < 2 || x >= BOARD_SIZE) return false; // impossible zig
             zig_center = &white_top_ziggurat_center;
             zig_leftside = &white_top_ziggurat_leftside;
             zig_rightside = &white_top_ziggurat_rightside;
-        }
-        else if (y == BOARD_SIZE-3) // bot-left side
-        {
+        } else if (y == BOARD_SIZE-3) { // bot-left side
             if (x < 0 || x > BOARD_SIZE-3) return false; // impossible zig
             zig_center = &white_bot_ziggurat_center;
             zig_leftside = &white_bot_ziggurat_leftside;
             zig_rightside = &white_bot_ziggurat_rightside;
         }
         else return false; // invalid zig
-        
     }
 
     int enemy = get_enemy[player];
 
     // checking zig center
-    for (int i=0; i<6; i++)
-    {
+    for (int i=0; i<6; i++) {
         Board_XY zig_xy = (*zig_center)[i];
         int nx = x + zig_xy.x;
         int ny = y + zig_xy.y;
@@ -644,33 +627,24 @@ bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, P
     }
 
     // if the center is free, we can look at the sides
-    
-
 
     // first, special board-edge cases
-
-
 
     // if can't check left side
     
     bool can_check_left_side = true;
 
-    if (player == PLAYER_1_BLACK)   // black
-    {
+    if (player == PLAYER_1_BLACK) { // black
         if ((y == BOARD_SIZE-1 && x == 2)    ||    (y == BOARD_SIZE-3 && x == BOARD_SIZE-3))
             can_check_left_side = false;
-    }
-    else    // white
-    {
+    } else { // white
         if ((y == BOARD_SIZE-3 && x == 0)    ||    (y == 2 && x == 2))
             can_check_left_side = false;
     }
     
-    if (can_check_left_side == false)
-    {
+    if (can_check_left_side == false) {
         // only check right side
-        for (int i=0; i<3; i++)
-        {
+        for (int i=0; i<3; i++) {
             Board_XY zig_xy = (*zig_leftside)[i];
             int nx = x + zig_xy.x;
             int ny = y + zig_xy.y;
@@ -686,22 +660,19 @@ bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, P
     
     bool can_check_right_side = true;
 
-    if (player == PLAYER_1_BLACK)   // black
-    {
+    if (player == PLAYER_1_BLACK) { // black
         if ((y == 2 && x == 2)    ||    (y == 0 && x == BOARD_SIZE-3))
             can_check_right_side = false;
     }
-    else    // white
+    else if ((y == BOARD_SIZE-3 && x == BOARD_SIZE-3) || (y == 2 && x == BOARD_SIZE-1))   // white
     {
-        if ((y == BOARD_SIZE-3 && x == BOARD_SIZE-3)    ||    (y == 2 && x == BOARD_SIZE-1))
+        
             can_check_right_side = false;
     }
     
-    if (can_check_right_side == false)
-    {
+    if (can_check_right_side == false) {
         // only check right side
-        for (int i=0; i<3; i++)
-        {
+        for (int i=0; i<3; i++) {
             Board_XY zig_xy = (*zig_rightside)[i];
             int nx = x + zig_xy.x;
             int ny = y + zig_xy.y;
@@ -711,18 +682,14 @@ bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, P
         return true;
     }
 
-
     // GENERAL CASE
-
     // check left side
     int enemies_leftside=0;
-    for (int i=0; i<3; i++)
-    {
+    for (int i=0; i<3; i++) {
         Board_XY zig_xy = (*zig_leftside)[i];
         int nx = x + zig_xy.x;
         int ny = y + zig_xy.y;
-        if (board[ny][nx] == enemy)
-        {
+        if (board[ny][nx] == enemy) {
             enemies_leftside++;
             break;
         }
@@ -732,8 +699,7 @@ bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, P
         return true; // left side is free!
 
     // finally check the right side
-    for (int i=0; i<3; i++)
-    {
+    for (int i=0; i<3; i++) {
         Board_XY zig_xy = (*zig_rightside)[i];
         int nx = x + zig_xy.x;
         int ny = y + zig_xy.y;
@@ -741,12 +707,11 @@ bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, P
             return false;
     }
     return true;
-
-    
 }
 
 
-Player is_owned_by(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y) {
+Player is_owned_by(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y)
+{
     if (x < 0 || x >= BOARD_SIZE) { // out of bounds for black
         if (y >= 0 && y < BOARD_SIZE) {
             return PLAYER_1_BLACK;
@@ -765,7 +730,8 @@ Player is_owned_by(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y) {
 }
 
 // considering next player to move. Breaking zero-sum principle ? Would not work with minimax ?
-bool is_blocked_by_enemy_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player enemy, Player next_player, int x, int y, enum DIRECT_NEIGHBORS ni) {
+bool is_blocked_by_enemy_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player enemy, Player next_player, int x, int y, enum DIRECT_NEIGHBORS ni)
+{
     int x1 = x + direct_obstacle_1_x[ni];
     int y1 = y + direct_obstacle_1_y[ni];
     int x2 = x + direct_obstacle_2_x[ni];
@@ -800,7 +766,8 @@ bool is_blocked_by_enemy_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Playe
 
 }
 
-bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int x, int y) {
+bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int x, int y)
+{
     if (player == PLAYER_1_BLACK) {
         if (x == BOARD_SIZE - 1) { // direct
             return true;
@@ -814,8 +781,7 @@ bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int p
         }
         if (x == BOARD_SIZE - 3) {  // zig
             if (y < BOARD_SIZE - 1) {
-                if (is_free_ziggurat(board, x, y, player))
-                {
+                if (is_free_ziggurat(board, x, y, player)) {
                     return true;
                 }
             }
@@ -847,4 +813,3 @@ bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int p
 
     return false;
 }
-

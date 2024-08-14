@@ -38,6 +38,9 @@
 #include "menu_cursor_fm.h"
 #include "tutorial.h"
 
+#include "trans_black.h"
+#include "trans_side.h"
+
 #include "PlayerSprite.h"
 
 extern OBJ_ATTR* ghost_stone;

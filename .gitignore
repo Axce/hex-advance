@@ -4,3 +4,4 @@ build/
 *.gba
 *.elf
 .vscode/settings.json
+Archive.zip

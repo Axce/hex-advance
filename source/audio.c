@@ -55,6 +55,7 @@ mm_sound_effect sfx_confirm = {
     127,	// panning
 };
 
+int currently_playing = -1;
 
 void init_audio()
 {
@@ -70,8 +71,11 @@ void init_audio()
 
 void play_music(int mod_id)
 {
-    if (option_music)
+    if (option_music && mod_id != currently_playing)
+    {
 	    mmStart(mod_id, MM_PLAY_LOOP);
+        currently_playing = mod_id;
+    }
 }
 
 void play_sfx(mm_sound_effect* sfx)

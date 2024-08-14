@@ -13,6 +13,8 @@
 #define TITLE_MENU_Y		78
 #define TITLE_MENU_SPACE	12
 
+#define HALF_DURATION		30
+
 enum TITLE_MENU_CHOICES {
 	TITLE_MENU_1_PLAYER,
 	TITLE_MENU_2_PLAYERS,
@@ -126,7 +128,6 @@ void title_screen_loop()
 		switch (titlemenu_selected)
 		{
 			case TITLE_MENU_1_PLAYER:
-				play_music(MOD_INGAME_SONG);
 				mode_1_or_2_players = MODE_1_PLAYER;
 				init_game_loop();
 				return;
@@ -235,4 +236,123 @@ void tutorial_loop()
 	}
 
 
+}
+
+void play_transition_in()
+{
+	oam_init(obj_buffer, OBJ_COUNT);
+
+	GRIT_CPY(&tile_mem_obj_tile[TILE_TR_B], trans_blackTiles);
+	GRIT_CPY(&tile_mem_obj_tile[TILE_TR_S], trans_sideTiles);
+	GRIT_CPY(&pal_obj_bank[PAL_MENUS], menu_palettePal);
+
+	obj_set_attr(&obj_buffer[OAM_TR_B_1], 
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64,
+		ATTR2_PALBANK(PAL_MENUS) | TILE_TR_B);
+	obj_set_attr(&obj_buffer[OAM_TR_B_2],
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64,
+		ATTR2_PALBANK(PAL_MENUS) | TILE_TR_B);
+	obj_set_attr(&obj_buffer[OAM_TR_B_3],
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64,
+		ATTR2_PALBANK(PAL_MENUS) | TILE_TR_B);
+	obj_set_attr(&obj_buffer[OAM_TR_B_4],
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64,
+		ATTR2_PALBANK(PAL_MENUS) | TILE_TR_B);
+	obj_set_attr(&obj_buffer[OAM_TR_B_5],
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64,
+		ATTR2_PALBANK(PAL_MENUS) | TILE_TR_B);
+	obj_set_attr(&obj_buffer[OAM_TR_B_6],
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64,
+		ATTR2_PALBANK(PAL_MENUS) | TILE_TR_B);
+	obj_set_attr(&obj_buffer[OAM_TR_B_7],
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64,
+		ATTR2_PALBANK(PAL_MENUS) | TILE_TR_B);
+	obj_set_attr(&obj_buffer[OAM_TR_B_8],
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64,
+		ATTR2_PALBANK(PAL_MENUS) | TILE_TR_B);
+
+	obj_set_attr(&obj_buffer[OAM_TR_S_1],
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64,
+		ATTR2_PALBANK(PAL_MENUS) | TILE_TR_S);
+	obj_set_attr(&obj_buffer[OAM_TR_S_2],
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64 | ATTR1_HFLIP,
+		ATTR2_PALBANK(PAL_MENUS) | TILE_TR_S);
+	obj_set_attr(&obj_buffer[OAM_TR_S_3],
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64 | ATTR1_VFLIP,
+		ATTR2_PALBANK(PAL_MENUS) | TILE_TR_S);
+	obj_set_attr(&obj_buffer[OAM_TR_S_4],
+		ATTR0_SQUARE,
+		ATTR1_SIZE_64 | ATTR1_VFLIP | ATTR1_HFLIP,
+		ATTR2_PALBANK(PAL_MENUS) | TILE_TR_S);
+
+	obj_set_pos(&obj_buffer[OAM_TR_S_1], 0, 	80-64);
+	obj_set_pos(&obj_buffer[OAM_TR_S_2], 240-64, 80-64);
+	obj_set_pos(&obj_buffer[OAM_TR_S_3], 0, 	80);
+	obj_set_pos(&obj_buffer[OAM_TR_S_4], 240-64, 80);
+
+	for (int i=0; i<=HALF_DURATION; i++)
+	{
+		int black_y = i * 80 / HALF_DURATION;
+
+		VBlankIntrWait();
+		obj_set_pos(&obj_buffer[OAM_TR_B_1], 0, black_y-64);
+		obj_set_pos(&obj_buffer[OAM_TR_B_2], 64, black_y-64);
+		obj_set_pos(&obj_buffer[OAM_TR_B_3], 128, black_y-64);
+		obj_set_pos(&obj_buffer[OAM_TR_B_4], 192, black_y-64);
+		obj_set_pos(&obj_buffer[OAM_TR_B_5], 0, 160-black_y);
+		obj_set_pos(&obj_buffer[OAM_TR_B_6], 64, 160-black_y);
+		obj_set_pos(&obj_buffer[OAM_TR_B_7], 128, 160-black_y);
+		obj_set_pos(&obj_buffer[OAM_TR_B_8], 192, 160-black_y);
+
+		int side_x = i * 120 / HALF_DURATION;
+
+		obj_set_pos(&obj_buffer[OAM_TR_S_1], side_x, 	80-64);
+		obj_set_pos(&obj_buffer[OAM_TR_S_2], 240-64-side_x, 80-64);
+		obj_set_pos(&obj_buffer[OAM_TR_S_3], side_x, 	80);
+		obj_set_pos(&obj_buffer[OAM_TR_S_4], 240-64-side_x, 80);
+
+		obj_copy(obj_mem, obj_buffer, OBJ_COUNT);
+	}
+
+	for (int i=0; i<4; i++)
+	{
+		VBlankIntrWait();
+	}
+}
+
+void play_transition_out()
+{
+	for (int i=HALF_DURATION; i>=0; i--)
+	{
+		int y = i * 80 / HALF_DURATION;
+		VBlankIntrWait();
+		obj_set_pos(&obj_buffer[OAM_TR_B_1], 0, y-64);
+		obj_set_pos(&obj_buffer[OAM_TR_B_2], 64, y-64);
+		obj_set_pos(&obj_buffer[OAM_TR_B_3], 128, y-64);
+		obj_set_pos(&obj_buffer[OAM_TR_B_4], 192, y-64);
+		obj_set_pos(&obj_buffer[OAM_TR_B_5], 0, 160-y);
+		obj_set_pos(&obj_buffer[OAM_TR_B_6], 64, 160-y);
+		obj_set_pos(&obj_buffer[OAM_TR_B_7], 128, 160-y);
+		obj_set_pos(&obj_buffer[OAM_TR_B_8], 192, 160-y);
+
+		int side_x = i * 120 / HALF_DURATION;
+
+		obj_set_pos(&obj_buffer[OAM_TR_S_1], side_x, 	80-64);
+		obj_set_pos(&obj_buffer[OAM_TR_S_2], 240-64-side_x, 80-64);
+		obj_set_pos(&obj_buffer[OAM_TR_S_3], side_x, 	80);
+		obj_set_pos(&obj_buffer[OAM_TR_S_4], 240-64-side_x, 80);
+
+		obj_copy(obj_mem, obj_buffer, OBJ_COUNT);
+	}
 }

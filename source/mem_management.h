@@ -73,6 +73,19 @@
 #define OAM_STONESET_FIRSTBLACK  5  // 49 sprites assigned
 #define OAM_STONESET_FIRSTWHITE  49 + OAM_STONESET_FIRSTBLACK // 49 more sprites assigned
 
+#define OAM_TR_B_1          103
+#define OAM_TR_B_2          104
+#define OAM_TR_B_3          105
+#define OAM_TR_B_4          106
+#define OAM_TR_B_5          107
+#define OAM_TR_B_6          108
+#define OAM_TR_B_7          109
+#define OAM_TR_B_8          110
+#define OAM_TR_S_1          111
+#define OAM_TR_S_2          112
+#define OAM_TR_S_3          113
+#define OAM_TR_S_4          114
+
 // TILES (VRAM)         max 1024
 #define TILE_BEE            0       // spritetiles 16
 #define TILE_LARVA          16      // spritetiles 8
@@ -81,6 +94,8 @@
 #define TILE_STONESET       68      // spritetiles 256
 
 #define TILE_MENUS          512     // spritetiles 64
+#define TILE_TR_B           576     // spritetiles 64
+#define TILE_TR_S           640     // spritetiles 64
 #define TILE_CURSOR_BS      1017    // spritetiles 1
 #define TILE_CURSOR_FM      1018    // spritetiles 4
 #define TILE_CURSOR	        1022    // spritetiles 2

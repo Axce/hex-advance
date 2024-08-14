@@ -7,6 +7,7 @@
 #include "title_screen_loop.h"
 #include "mem_management.h"
 #include "menus.h"
+#include "audio.h"
 
 int mode_1_or_2_players;
 
@@ -14,13 +15,13 @@ int board_bg_vofs = 0;
 
 void init_game_loop()
 {
+
+	play_transition_in();
 	
 	memcpy(&tile_mem_obj_tile[TILE_BEE], bee32Tiles, bee32TilesLen/3/16); // on ne prend qu'un sprite dans la sheet de 16 sprites * 3 animations
 	GRIT_CPY(&pal_obj_bank[PAL_BEE], bee32Pal);
 	GRIT_CPY(&tile_mem_obj_tile[TILE_GHOST_STONE], stoneblackTiles);
 	GRIT_CPY(&pal_obj_bank[PAL_GHOST_STONE], stoneblackPal);
-
-	oam_init(obj_buffer, OBJ_COUNT);
 
 	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 |  DCNT_OBJ | DCNT_OBJ_1D;
 
@@ -68,7 +69,11 @@ void init_game_loop()
 	GRIT_CPY(&tile_mem[CBB_BOARDBG], board_bgTiles);
 	GRIT_CPY(&se_mem[SBB_BOARDBG], board_bgMap);
 
+	play_transition_out();
 
+	play_music(MOD_INGAME_SONG);
+
+	oam_init(obj_buffer, OBJ_COUNT);
 
 	obj_set_attr(bee.obj,
 		ATTR0_SQUARE,				// Square, regular sprite
@@ -86,6 +91,7 @@ void init_game_loop()
 	restart_game();
 
 	game_state = IN_GAME;
+
 }
 
 void game_loop()

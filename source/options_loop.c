@@ -72,7 +72,7 @@ void init_options_loop()
 		ATTR0_SQUARE,
 		ATTR1_SIZE_8x8,
 		ATTR2_PALBANK(PAL_MENUS) | TILE_CURSOR_BS);
-    obj_set_pos(&obj_buffer[OAM_CURSOR_BS], 69 + 10*BOARD_SIZE, OPTL_BOARDSIZE_Y);
+    obj_set_pos(&obj_buffer[OAM_CURSOR_BS], 63 + 12*BOARD_SIZE, OPTL_BOARDSIZE_Y);
 
 	obj_set_attr(&obj_buffer[OAM_CURSOR_MUSIC],
 		ATTR0_SQUARE,
@@ -149,13 +149,13 @@ void options_loop()
                 BOARD_SIZE -= 2;
                 init_player_spawns();
             }
-            if (key_hit(KEY_RIGHT) && BOARD_SIZE < 13)
+            if (key_hit(KEY_RIGHT) && BOARD_SIZE < 11)
             {
                 play_sfx(&sfx_cursor);
                 BOARD_SIZE += 2;
                 init_player_spawns();
             }
-            obj_set_pos(&obj_buffer[OAM_CURSOR_BS], 69 + 10*BOARD_SIZE, OPTL_BOARDSIZE_Y);
+            obj_set_pos(&obj_buffer[OAM_CURSOR_BS], 63 + 12*BOARD_SIZE, OPTL_BOARDSIZE_Y);
             break;
 
         case OPTL_MUSIC:

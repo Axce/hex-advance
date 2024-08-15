@@ -73,7 +73,7 @@
 #define OAM_STONESET_FIRSTBLACK  5  // 49 sprites assigned
 #define OAM_STONESET_FIRSTWHITE  49 + OAM_STONESET_FIRSTBLACK // 49 more sprites assigned
 
-#define OAM_TR_B_1          103
+#define OAM_TR_B_1          103 // caches intérieurs des côtés haut et bas
 #define OAM_TR_B_2          104
 #define OAM_TR_B_3          105
 #define OAM_TR_B_4          106
@@ -81,6 +81,15 @@
 #define OAM_TR_B_6          108
 #define OAM_TR_B_7          109
 #define OAM_TR_B_8          110
+
+#define OAM_TR_B_1bis       95 // caches extérieurs des côtés haut et bas
+#define OAM_TR_B_2bis       96
+#define OAM_TR_B_3bis       97
+#define OAM_TR_B_4bis       98
+#define OAM_TR_B_5bis       99
+#define OAM_TR_B_6bis       100
+#define OAM_TR_B_7bis       101
+#define OAM_TR_B_8bis       102
 
 #define OAM_TR_S_1          111
 #define OAM_TR_S_2          112
@@ -90,6 +99,18 @@
 #define OAM_TR_S_6          116
 #define OAM_TR_S_7          117
 #define OAM_TR_S_8          118
+
+#define OAM_TR_SB_1         119
+#define OAM_TR_SB_2         120
+#define OAM_TR_SB_3         121
+#define OAM_TR_SB_4         122
+#define OAM_TR_SB_5         123
+#define OAM_TR_SB_6         124
+#define OAM_TR_SB_7         125
+#define OAM_TR_SB_8         126
+#define OAM_TR_SB_9         127
+#define OAM_TR_SB_10         94
+
 
 // TILES (VRAM)         max 1024
 #define TILE_BEE            0       // spritetiles 16

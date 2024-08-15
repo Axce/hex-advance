@@ -43,6 +43,8 @@
 
 #include "PlayerSprite.h"
 
+#include "gbajam.h"
+
 extern OBJ_ATTR* ghost_stone;
 
 extern bool is_stone_puttable;

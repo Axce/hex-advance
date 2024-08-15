@@ -73,6 +73,26 @@ int main()
 
 	init_audio();
 
+	
+	// splash screen
+
+	GRIT_CPY(vid_mem, gbajamBitmap);
+	GRIT_CPY(pal_bg_mem, gbajamPal);
+
+	REG_DISPCNT = DCNT_MODE4 | DCNT_BG2;
+
+	int timer = 180;
+	while (timer--)
+	{
+		VBlankIntrWait();
+		if (key_hit(KEY_FULL))
+		{
+			break;
+		}
+	}
+
+	// game
+
 	play_music(MOD_TITLESCREEN);
 
 	init_title_screen();

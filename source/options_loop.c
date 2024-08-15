@@ -169,7 +169,9 @@ void options_loop()
             {
                 play_sfx(&sfx_cursor);
                 option_music = 1;
-                play_music(MOD_TITLESCREEN);
+                // play_music(MOD_TITLESCREEN);
+        	    mmStart(MOD_TITLESCREEN, MM_PLAY_LOOP);
+
             }
             obj_set_pos(&obj_buffer[OAM_CURSOR_MUSIC], 123 + 48*(!option_music), OPTL_MUSIC_Y);
             break;

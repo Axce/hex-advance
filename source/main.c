@@ -47,6 +47,11 @@ void onVBlank()
 int main()
 {
 
+	irq_init(NULL);
+	//irq_add(II_VBLANK, mmVBlank);
+	irq_add(II_VBLANK, onVBlank);
+    irq_enable(II_VBLANK);
+
 	// init SRAM
 	if (sram_mem[SRAM_BOARDSIZE] == 0xFF)
 		sram_mem[SRAM_BOARDSIZE] = 11;
@@ -66,20 +71,17 @@ int main()
 	
 	sqran(1312);
 
-	irq_init(NULL);
-	//irq_add(II_VBLANK, mmVBlank);
-	irq_add(II_VBLANK, onVBlank);
-    irq_enable(II_VBLANK);
-
 	init_audio();
 
 	
 	// splash screen
+	
+	REG_DISPCNT = DCNT_MODE4 | DCNT_BG2;
+
+	VBlankIntrWait();
 
 	GRIT_CPY(vid_mem, gbajamBitmap);
 	GRIT_CPY(pal_bg_mem, gbajamPal);
-
-	REG_DISPCNT = DCNT_MODE4 | DCNT_BG2;
 
 	int timer = 180;
 	while (timer--)

@@ -13,7 +13,7 @@
 #define TITLE_MENU_Y		78
 #define TITLE_MENU_SPACE	12
 
-#define HALF_DURATION		30
+#define HALF_DURATION		24
 #define BLACK_OFFSET 		60
 
 
@@ -34,8 +34,11 @@ int title_beekeeper_vofs_n = 0;
 
 void init_title_screen()
 {
-	//vid_vsync();
+
 	oam_init(obj_buffer, OBJ_COUNT);
+	
+	if (game_state > 2)
+		play_transition_in();
 
 	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 | DCNT_BG2 | DCNT_BG3 | DCNT_OBJ | DCNT_OBJ_1D;
 
@@ -59,7 +62,6 @@ void init_title_screen()
 	GRIT_CPY(&tile_mem[CBB_TITLEMENUTEXT], title_menutextTiles);
 	GRIT_CPY(&se_mem[SBB_TITLEMENUTEXT], title_menutextMap);
 
-
 	title_bg_hofs = 0;
 	title_bg_vofs = 0;
 
@@ -72,6 +74,12 @@ void init_title_screen()
 	REG_BG2VOFS = 0;
 	REG_BG3VOFS = 0;
 
+	title_beekeeper_vofs_n = mod(title_beekeeper_vofs_n+1, 0xFFFF);
+	REG_BG2VOFS = lu_cos(title_beekeeper_vofs_n *500) >> 10; 
+
+	if (game_state > 2)
+		play_transition_out();
+
 	GRIT_CPY(&tile_mem_obj_tile[TILE_CURSOR], menu_cursorTiles);
 	GRIT_CPY(&pal_obj_bank[PAL_MENUS], menu_palettePal);
 
@@ -83,12 +91,11 @@ void init_title_screen()
 	// titlemenu_selected = TITLE_MENU_1_PLAYER;
 	obj_set_pos(&obj_buffer[OAM_CURSOR], TITLE_MENU_X, TITLE_MENU_Y + TITLE_MENU_SPACE * titlemenu_selected);
 
-	title_beekeeper_vofs_n = mod(title_beekeeper_vofs_n+1, 0xFFFF);
-	REG_BG2VOFS = lu_cos(title_beekeeper_vofs_n *500) >> 10; 
 
 	game_state = TITLE_SCREEN;
 
 	// play_music( MOD_TITLESCREEN);
+
 
 }
 
@@ -130,16 +137,17 @@ void title_screen_loop()
 		switch (titlemenu_selected)
 		{
 			case TITLE_MENU_1_PLAYER:
+				// play_music(MOD_INGAME_SONG);
 				mode_1_or_2_players = MODE_1_PLAYER;
 				init_game_loop();
 				return;
 			case TITLE_MENU_2_PLAYERS:
-				play_music(MOD_INGAME_SONG);
+				// play_music(MOD_INGAME_SONG);
 				mode_1_or_2_players = MODE_2_PLAYERS;
 				init_game_loop();
 				return;
 			case TITLE_MENU_MINIGAME:
-				play_music(MOD_INGAME_SONG);
+				// play_music(MOD_INGAME_SONG);
 				init_minigame_loop();
 				return;
 			case TITLE_MENU_TUTORIAL:
@@ -422,7 +430,7 @@ void disp_transition_sprites(int i)
 
 	// vertical black boards
 
-	int black_y = ease_out(i * (80+BLACK_OFFSET) / HALF_DURATION, (80+BLACK_OFFSET));
+	int black_y = ease_out(ease_out(i * (80+BLACK_OFFSET) / HALF_DURATION, (80+BLACK_OFFSET)), (80+BLACK_OFFSET));
 
 	obj_set_pos_safe(&obj_buffer[OAM_TR_B_1], 0, (black_y-BLACK_OFFSET)-64);
 	obj_set_pos_safe(&obj_buffer[OAM_TR_B_2], 64, (black_y-BLACK_OFFSET)-64);
@@ -444,7 +452,7 @@ void disp_transition_sprites(int i)
 	
 	// horizontal black boards
 
-	int side_x = ease_out(i * 168 / HALF_DURATION, 168);
+	int side_x = ease_out(ease_out(i * 168 / HALF_DURATION, 168), 168);
 
 	obj_set_pos_safe(&obj_buffer[OAM_TR_S_5], (side_x-88)+24, 	80-64-40);
 	obj_set_pos_safe(&obj_buffer[OAM_TR_S_1], (side_x-88), 	80-64);

@@ -20,7 +20,7 @@
 int global_frame = 0;
 int current_player = PLAYER_1_BLACK;
 OBJ_ATTR obj_buffer[OBJ_COUNT];
-GAME_STATE game_state;
+GAME_STATE game_state = TITLE_SCREEN;
 
 void onVBlank()
 {

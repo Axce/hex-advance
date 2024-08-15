@@ -14,6 +14,8 @@
 void init_minigame_loop()
 {
 
+	play_transition_in();
+
 	REG_DISPCNT= DCNT_MODE0 | DCNT_BG0 | DCNT_BG1 |  DCNT_OBJ | DCNT_OBJ_1D;
 
 	REG_BG0CNT= BG_CBB(CBB_BOARD) | BG_SBB(SBB_BOARD) | BG_4BPP | BG_REG_32x32;
@@ -60,7 +62,9 @@ void init_minigame_loop()
 	GRIT_CPY(&tile_mem[CBB_BOARDBG], board_bgTiles);
 	GRIT_CPY(&se_mem[SBB_BOARDBG], board_bgMap);
 
+	play_transition_out();
 
+	play_music(MOD_INGAME_SONG);
 
 	// sprites
 	oam_init(obj_buffer, OBJ_COUNT);

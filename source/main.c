@@ -85,7 +85,7 @@ int main()
 	while (timer--)
 	{
 		VBlankIntrWait();
-		if (key_hit(KEY_FULL))
+		if (key_hit(KEY_ANY))
 		{
 			break;
 		}

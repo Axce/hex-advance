@@ -10,6 +10,8 @@
 #include "game_loop.h"
 #include "options_loop.h"
 
+Board_XY list_of_moves[MAX_BOARD_SIZE*MAX_BOARD_SIZE] = {0};
+int list_of_moves_cursor = 0;
 
 // TODO bee gives invalid moves when BS = 5 or 7 or 9
 int BOARD_SIZE = 7;
@@ -96,6 +98,40 @@ void end_turn() {
 
 }
 
+void undo_last_move()
+{
+    if (mode_1_or_2_players == MODE_2_PLAYERS && list_of_moves_cursor > 0)
+    {
+        play_sfx(&sfx_undo);
+        list_of_moves_cursor--;
+        int x = list_of_moves[list_of_moves_cursor].x;
+        int y = list_of_moves[list_of_moves_cursor].y;
+        board[y][x] = 0;
+        switch_player();
+        update_stones_sprites(current_player, list_of_moves[list_of_moves_cursor]);
+    }
+
+    if (mode_1_or_2_players == MODE_1_PLAYER && list_of_moves_cursor > 1)
+    {
+        play_sfx(&sfx_undo);
+        list_of_moves_cursor--;
+        int x = list_of_moves[list_of_moves_cursor].x;
+        int y = list_of_moves[list_of_moves_cursor].y;
+        board[y][x] = 0;
+        update_stones_sprites(PLAYER_2_WHITE, list_of_moves[list_of_moves_cursor]);
+        list_of_moves_cursor--;
+        x = list_of_moves[list_of_moves_cursor].x;
+        y = list_of_moves[list_of_moves_cursor].y;
+        board[y][x] = 0;
+        update_stones_sprites(PLAYER_1_BLACK, list_of_moves[list_of_moves_cursor]);
+
+        bee.orientation = WEST;
+        bee.x = PLAYER1_SPAWN_X;
+        bee.y = PLAYER1_SPAWN_Y;
+
+    }
+}
+
 // board_xy parameter wants coordinates inside the board
 // returns false if a stone is already here
 // returns true if stone has been put successfully
@@ -111,6 +147,8 @@ bool put_stone(Player player, Board_XY board_XY)
 
     board[y][x] = player; //(player == PLAYER_1_BLACK) ? 1 : 0;
     
+    list_of_moves[list_of_moves_cursor++] = board_XY;
+
     return true;
 }
 
@@ -246,6 +284,7 @@ void restart_game()
             break;
     }
     
+    list_of_moves_cursor = 0;
     
     switch_player_graphics();
     winner = 0;

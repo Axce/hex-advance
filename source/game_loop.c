@@ -126,6 +126,9 @@ void game_loop_1p_vs_cpu()
 		if (key_hit(KEY_A)) {
 			player_play();
 		}
+		if (key_hit(KEY_B)) {
+			undo_last_move();
+		}
 	}
 	else
 	{
@@ -151,6 +154,9 @@ void game_loop_2p()
 
 	if (key_hit(KEY_A)) {
 		player_play();
+	}
+	if (key_hit(KEY_B)) {
+		undo_last_move();
 	}
 
 	update_bee_sprite();

@@ -25,6 +25,8 @@ void end_turn();
 
 bool put_stone(Player player, Board_XY Board_XY);
 
+void undo_last_move();
+
 void switch_player();
 
 Board_XY* reconstruct_path(Board_XY end, Board_XY parents[MAX_BOARD_SIZE][MAX_BOARD_SIZE]);

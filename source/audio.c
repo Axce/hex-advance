@@ -63,6 +63,14 @@ mm_sound_effect sfx_confirm = {
     127,	// panning
 };
 
+mm_sound_effect sfx_undo = {
+    { SFX_UNDO } ,			// id
+    (int)(1.0f * (1<<10)),	// rate
+    0,		// handle
+    255,	// volume
+    127,	// panning
+};
+
 int currently_playing = -1;
 
 void init_audio()

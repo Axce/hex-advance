@@ -13,6 +13,7 @@ extern mm_sound_effect sfx_beeloop;
 extern mm_sfxhand sfx_beeloop_handle;
 extern mm_sound_effect sfx_larva;
 extern mm_sound_effect sfx_confirm;
+extern mm_sound_effect sfx_undo;
 
 void init_audio();
 

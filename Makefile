@@ -38,7 +38,13 @@ GRAPHICS	:= graphics
 #---------------------------------------------------------------------------------
 ARCH	:=	-mthumb -mthumb-interwork
 
-CFLAGS	:=	-g -Wall -O3\
+## Remove optimization for debugging purpose
+#CFLAGS	:=	-g -Wall \
+#		-mcpu=arm7tdmi -mtune=arm7tdmi\
+#		$(ARCH)
+
+## Remove debugging option when optimizing
+CFLAGS	:=	-Wall -O3\
 		-mcpu=arm7tdmi -mtune=arm7tdmi\
 		$(ARCH)
 

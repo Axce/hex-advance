@@ -43,7 +43,6 @@ Board_XY cpu_find_next_move();
 
 void update_bee_thinking_position();
 
-Board_XY random_ai();
 Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player);
 Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player);
 Board_XY minimax_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player);

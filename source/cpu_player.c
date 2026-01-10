@@ -189,6 +189,7 @@ Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
                 int lmtw_white = least_moves_to_win(board, player, get_enemy[player]);
 
                 int score = lmtw_black - lmtw_white;
+                
                 if (score == best_score)
                 {
                     best_moves[write_cursor++] = new_board_xy(x, y);
@@ -230,6 +231,7 @@ Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player
         {
             if (board[y][x] == 0)
             {
+                // simulate put the stone
                 board[y][x] = player;
 
                 int lmtw_own = least_moves_to_win(board, player, get_enemy[player]);
@@ -257,6 +259,8 @@ Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player
                     }
 
                 }
+
+                // remove the simulated stone
                 board[y][x] = 0;
             }
             thinking_progress ++;
@@ -268,8 +272,10 @@ Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player
     return best_moves[qran_range(0, write_cursor)];
 }
 
+//////////////////////////////////////////////////////
+// TODO: triangles (double bridges) are not ZERO !! //
+//////////////////////////////////////////////////////
 
-// TODO: triangles are not ZERO !!
 // knowing the next player to move can be useful to put some cases into perspective
 int least_moves_to_win(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player, Player next_player) {
 

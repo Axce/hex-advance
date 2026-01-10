@@ -624,7 +624,7 @@ bool is_free_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, enu
     int y1 = y + bridge_obstacle_1_y[ni];
     int x2 = x + bridge_obstacle_2_x[ni];
     int y2 = y + bridge_obstacle_2_y[ni];
-    return (is_owned_by(board, y1, x1) == NOBODY) && (is_owned_by(board, y2, x2) == NOBODY);
+    return (is_owned_by(board, x1, y1) == NOBODY) && (is_owned_by(board, x2, y2) == NOBODY);
 }
 
 // checks if a stone is connected to its border via one of the two ziggurats possible

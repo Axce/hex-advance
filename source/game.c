@@ -170,9 +170,15 @@ void switch_player() {
     switch_player_graphics();
 }
 
+
 Board_XY* reconstruct_path(Board_XY end, Board_XY parents[MAX_BOARD_SIZE][MAX_BOARD_SIZE])
 {
     // PLACEHOLDER
+    
+    // prevent unused warning
+    (void)(end);
+    (void)(parents);
+
     return (Board_XY*)1;
 }
 

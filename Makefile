@@ -38,7 +38,7 @@ GRAPHICS	:= graphics
 #---------------------------------------------------------------------------------
 ARCH	:=	-mthumb -mthumb-interwork
 
-CFLAGS	:=	-g -Wall -O3\
+CFLAGS	:=	-g -Wall -Wextra -O2\
 		-mcpu=arm7tdmi -mtune=arm7tdmi\
 		$(ARCH)
 

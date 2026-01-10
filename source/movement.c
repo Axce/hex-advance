@@ -14,6 +14,9 @@ int closer_to_zero(int n) {
 }
 int cap_speed_and_apply_friction(int n, int accel_friction, int max_speed) {
 	
+	//remove unused warning
+	(void) accel_friction;
+
 	return clamp(n, -max_speed, max_speed+1);
 	/*
 	if (n==0) return 0;

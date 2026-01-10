@@ -787,35 +787,3 @@ bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int p
 
     return false;
 }
-
-bool is_connected_to_end_border_fast(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int x, int y, Player next_player) {
-    if (player == PLAYER_1_BLACK) {
-        if (x == BOARD_SIZE - 1) { // direct
-            return true;
-        }
-        if (x == BOARD_SIZE - 2) { // bridge
-            if (y < BOARD_SIZE - 1) {
-                if (is_free_bridge(board, x, y, BN_BOTRIGHT)) { // 5th neighbor in LUT
-                    return true;
-                }
-            }
-        }
-    }
-
-    if (player == PLAYER_2_WHITE) {
-        if (y == BOARD_SIZE - 1) {  // direct
-            return true;
-        }
-        if (y == BOARD_SIZE - 2) { // bridge
-            if (x < BOARD_SIZE - 1) {
-                if (is_free_bridge(board, x, y, BN_BOTLEFT)) { // 6th neighbor in LUT
-                    return true;
-                }
-            }
-        }
-    }
-
-
-    return false;
-}
-

@@ -58,3 +58,12 @@ bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, P
 bool is_blocked_by_enemy_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player enemy, Player next_player, int x, int y, enum DIRECT_NEIGHBORS ni);
 Player is_owned_by(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y);
 bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int x, int y, Player next_player);
+
+typedef struct {
+    int x, y;
+    int score;  // plus petit = meilleur pour le joueur courant
+} MoveCandidate;
+
+Board_XY mcts_find_next_move(int base_board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player ai_player);
+
+int fast_lmtw(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player);

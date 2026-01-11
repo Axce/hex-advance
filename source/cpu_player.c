@@ -159,17 +159,23 @@ void update_bee_thinking_position()
 
 }
 
-Board_XY cpu_find_next_move()
+Board_XY cpu_find_next_move(Board_XY last_move)
 {
 
-    return best_own_score_ai(board, PLAYER_2_WHITE);
+    return best_own_score_ai(board, PLAYER_2_WHITE, last_move);
 
 }
 
 // lmtw = least moves to win
 // Considers best score = enemy's lmtw - own's lmtw
-Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
+Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, Board_XY last_move)
 {
+
+    Board_XY defense;
+    if (find_bridge_defense_move(board, last_move.x, last_move.y, PLAYER_2_WHITE, &defense)) {
+        return defense; // coup forcé
+    }
+
     thinking_progress = 0; // 1?
     thinking_progress_max = BOARD_SIZE * BOARD_SIZE;
 
@@ -214,8 +220,14 @@ Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
 // lmtw = least moves to win
 // Only considers own's best (smallest) lmtw, and only then considers enemy's greatest lmtw
 // Its playing "feels" more logical
-Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player)
+Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, Board_XY last_move)
 {
+
+    Board_XY defense;
+    if (find_bridge_defense_move(board, last_move.x, last_move.y, PLAYER_2_WHITE, &defense)) {
+        return defense; // coup forcé
+    }
+
     thinking_progress = 0; // 1?
     thinking_progress_max = BOARD_SIZE * BOARD_SIZE;
 
@@ -784,6 +796,76 @@ bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int p
         }
     }
 
+
+    return false;
+}
+
+bool find_bridge_defense_move(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE],
+                              int last_x, int last_y,
+                              Player me,
+                              Board_XY *out_move)
+{
+    Player enemy = get_enemy[me];
+
+    // si le dernier coup n'est pas ennemi, on ne fait rien
+    if (is_owned_by(board, last_x, last_y) != enemy) {
+        return false;
+    }
+
+    // On explore tous les types de pont
+    for (int ni = 0; ni < 6; ni++) {
+
+        // 1) Cas où last move = obstacle 1
+        {
+            int cx = last_x - bridge_obstacle_1_x[ni];
+            int cy = last_y - bridge_obstacle_1_y[ni];
+
+            if (!is_in_board(cx, cy))
+                goto check_obstacle2_case;
+
+            int nx = cx + bridge_neighbors_x[ni];
+            int ny = cy + bridge_neighbors_y[ni];
+            int ox2 = cx + bridge_obstacle_2_x[ni];
+            int oy2 = cy + bridge_obstacle_2_y[ni];
+
+            if (!is_in_board(nx, ny) || !is_in_board(ox2, oy2))
+                goto check_obstacle2_case;
+
+            // Le pont existe-t-il ? Deux pierres à moi aux extrémités ?
+            if (is_owned_by(board, cx, cy) == me && is_owned_by(board, nx, ny) == me) {
+                // L'autre obstacle est-il libre ?
+                if (board[oy2][ox2] == 0) {
+                    *out_move = new_board_xy(ox2, oy2);
+                    return true;
+                }
+            }
+        }
+
+        // 2) Cas où last move = obstacle 2
+        check_obstacle2_case:
+        {
+            int cx = last_x - bridge_obstacle_2_x[ni];
+            int cy = last_y - bridge_obstacle_2_y[ni];
+
+            if (!is_in_board(cx, cy))
+                continue;
+
+            int nx = cx + bridge_neighbors_x[ni];
+            int ny = cy + bridge_neighbors_y[ni];
+            int ox1 = cx + bridge_obstacle_1_x[ni];
+            int oy1 = cy + bridge_obstacle_1_y[ni];
+
+            if (!is_in_board(nx, ny) || !is_in_board(ox1, oy1))
+                continue;
+
+            if (is_owned_by(board, cx, cy) == me && is_owned_by(board, nx, ny) == me) {
+                if (is_owned_by(board, ox1, oy1) == NOBODY) {
+                    *out_move = new_board_xy(ox1, oy1);
+                    return true;
+                }
+            }
+        }
+    }
 
     return false;
 }

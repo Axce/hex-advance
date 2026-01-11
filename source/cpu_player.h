@@ -39,12 +39,12 @@ extern int thinking_progress;
 
 extern const int get_enemy[3];
 
-Board_XY cpu_find_next_move();
+Board_XY cpu_find_next_move(Board_XY last_move);
 
 void update_bee_thinking_position();
 
-Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player);
-Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player);
+Board_XY best_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, Board_XY last_move);
+Board_XY best_own_score_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, Board_XY last_move);
 Board_XY minimax_ai(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player);
 
 int minimax(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int beta);
@@ -58,3 +58,8 @@ bool is_free_ziggurat(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y, P
 bool is_blocked_by_enemy_bridge(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player enemy, Player next_player, int x, int y, enum DIRECT_NEIGHBORS ni);
 Player is_owned_by(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int x, int y);
 bool is_connected_to_end_border(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], int player, int x, int y, Player next_player);
+
+bool find_bridge_defense_move(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE],
+                              int last_x, int last_y,
+                              Player me,
+                              Board_XY *out_move);

@@ -57,7 +57,7 @@ void player_play() {
 
 void cpu_play() {
 
-    Board_XY board_xy = cpu_find_next_move();
+    Board_XY board_xy = cpu_find_next_move(stone_put_pos);
 
     bool stone_put = put_stone(current_player, board_xy);
 

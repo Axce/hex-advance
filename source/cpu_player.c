@@ -1105,18 +1105,18 @@ static int mcts_expand_if_possible(int leaf_index,
     }
 
     // on reconstruit le board pour ce leaf
-    int work_board[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
-    rebuild_board_from_root(leaf_index, base_board, work_board, root_player);
+        int work_board[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
+        rebuild_board_from_root(leaf_index, base_board, work_board, root_player);
 
-    int created = generate_children(leaf_index, work_board);
-    if (created == 0) {
-        // pas d’enfants possibles, on reste sur la feuille
-        return leaf_index;
-    }
-    
-    // choisir un enfant au hasard pour la simulation
-    int child_offset = qran_range(0, leaf->child_count);
-    return leaf->first_child + child_offset;
+        int created = generate_children(leaf_index, work_board);
+        if (created == 0) {
+            // pas d’enfants possibles, on reste sur la feuille
+            return leaf_index;
+        }
+
+        // choisir un enfant au hasard pour la simulation
+        int child_offset = qran_range(0, leaf->child_count);
+        return leaf->first_child + child_offset;
 }
 
 static void mcts_backpropagate(int node_index, int value)
@@ -1151,6 +1151,10 @@ Board_XY mcts_find_next_move(int base_board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Pla
     root->total_value = 0;
 
     mcts_node_count = 1;
+    
+    int work_board[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
+    copy_board(work_board, base_board);
+    generate_children(0, work_board);
 
     // simulations
     for (int sim = 0; sim < MCTS_SIMULATIONS; sim++) {
@@ -1267,7 +1271,7 @@ int fast_lmtw(int board[MAX_BOARD_SIZE][MAX_BOARD_SIZE], Player player)
             int nx = x + dx[i];
             int ny = y + dy[i];
 
-            if (nx >= BOARD_SIZE || ny >= BOARD_SIZE)
+            if ((unsigned)nx >= (unsigned)BOARD_SIZE || (unsigned)ny >= (unsigned)BOARD_SIZE)
                 continue;
 
             if (visited[ny][nx])

@@ -162,7 +162,7 @@ void update_bee_thinking_position()
 Board_XY cpu_find_next_move(Board_XY last_move)
 {
 
-    return best_own_score_ai(board, PLAYER_2_WHITE, last_move);
+    return best_score_ai(board, PLAYER_2_WHITE, last_move);
 
 }
 
